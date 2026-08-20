@@ -1,0 +1,25 @@
+<div class="confirm-dialog">
+
+  <h2>Delete {{data?.title}}</h2>
+  <p>
+    Are you sure you want to delete
+    <strong>{{ data?.name }}</strong>?
+  </p>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button
+      class="cancel-btn"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+
+    <button
+      class="delete-btn"
+      (click)="confirm()"
+    >
+      Delete
+    </button>
+  </div>
+</div>

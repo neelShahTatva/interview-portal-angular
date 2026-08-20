@@ -1,0 +1,215 @@
+<div class="assessments-wrapper">
+  <div class="header">
+    <div class="header__text">
+      <h1 class="header__title">Assessments</h1>
+      <p class="header__subtitle">Create and manage candidate assessments</p>
+    </div>
+
+    <button class="btn btn-primary flex flex-row gap-2" (click)="openModal()">
+      <lucide-angular [img]="Plus" class="btn-icon"> </lucide-angular>
+
+      Create Assessment
+    </button>
+  </div>
+
+  <div class="empty-state" *ngIf="isLoading">
+    <p>Loading assessments...</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && assessments.length === 0">
+    <div class="empty-state__icon">📋</div>
+
+    <h3>No Assessments Found</h3>
+
+    <p>Create your first assessment</p>
+  </div>
+
+  <div class="assessment-list" *ngIf="!isLoading && assessments.length > 0">
+    <div class="assessment-card" *ngFor="let assessment of assessments; trackBy: trackByAssessment">
+      <div class="assessment-info">
+        <div class="assessment-header">
+          <h3>
+            {{ assessment.title }}
+          </h3>
+
+          <div class="status-wrapper">
+            <span class="status-badge" [ngClass]="assessment.status?.toLowerCase()">
+              {{ assessment.status.replace("_", " ") }}
+            </span>
+          </div>
+        </div>
+
+        <div class="assessment-meta">
+          <span>
+            {{ getQuestionCount(assessment) }}
+            question{{ getQuestionCount(assessment) !== 1 ? "s" : "" }}
+          </span>
+
+          <span>•</span>
+
+          <span>
+            {{ assessment.timeLimitMinutes }}
+            min
+          </span>
+
+          <span>•</span>
+
+          <span>
+            {{ getCandidateName(assessment.candidateId) }}
+          </span>
+        </div>
+      </div>
+
+      <div class="assessment-actions">
+        <select [ngModel]="assessment.status" (ngModelChange)="changeStatus(assessment, $event)">
+          <option value="PENDING">Pending</option>
+
+          <option value="IN_PROGRESS">In Progress</option>
+
+          <option value="COMPLETED">Completed</option>
+        </select>
+
+        <button
+          class="delete-btn inline-flex items-center justify-center w-11 h-11 rounded-2xl border border-red-200 bg-white text-red-500 hover:bg-red-50 transition-colors duration-200 cursor-pointer"
+          (click)="deleteAssessment(assessment.id)">
+          <lucide-angular [img]="Trash2" class="w-[18px] h-[18px]">
+          </lucide-angular>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="open">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Create Assessment</h2>
+
+          <p>Step {{ step }} of 2</p>
+        </div>
+
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="step-indicator">
+        <div class="step" [class.active]="step >= 1"></div>
+
+        <div class="step" [class.active]="step >= 2"></div>
+      </div>
+
+      <div class="modal-body" *ngIf="step === 1">
+        <div class="form-group">
+          <label> Assessment Title <span class="required">*</span></label>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput [(ngModel)]="draft.title" placeholder="Enter assessment title" />
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <label> Time Limit (Minutes) <span class="required">*</span></label>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput type="number" [value]="90" [(ngModel)]="draft.timeLimitMinutes" />
+
+            <span matTextSuffix>mins</span>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <label> Select Candidate <span class="required">*</span></label>
+
+          <div class="candidate-list">
+            <div class="candidate-item" *ngFor="let candidate of candidates; trackBy: trackByCandidate"
+              [class.selected]="isCandidateSelected(candidate.id)" (click)="selectCandidate(candidate.id)">
+              <div class="candidate-avatar">
+                {{ candidate.firstName?.charAt(0) }}
+                {{ candidate.lastName?.charAt(0) }}
+              </div>
+
+              <div class="candidate-info">
+                <div class="candidate-name">
+                  {{ candidate.firstName }}
+                  {{ candidate.lastName }}
+                </div>
+
+                <div class="candidate-email">
+                  {{ candidate.email }}
+                </div>
+              </div>
+
+              <div class="selection-indicator" *ngIf="isCandidateSelected(candidate.id)">
+                ✓
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body" *ngIf="step === 2">
+        <div class="loading-container" *ngIf="isGeneratingQuestions">
+          <p>Generating AI recommended questions...</p>
+        </div>
+
+        <div *ngIf="!isGeneratingQuestions">
+          <div class="question-header">
+            <h3>Recommended Questions</h3>
+
+            <span>
+              {{ recommendedQuestions.length }}
+              Questions
+            </span>
+          </div>
+
+          <div class="question-list">
+            <div class="question-item" *ngFor="
+                let question of recommendedQuestions;
+                trackBy: trackByQuestion
+              ">
+              <div class="question-content">
+                <h4>
+                  {{ question.title }}
+                </h4>
+
+                <p>
+                  {{ question.description }}
+                </p>
+
+                <div class="question-meta">
+                  <span class="difficulty" [ngClass]="question.difficulty?.toLowerCase()">
+                    {{ question.difficulty }}
+                  </span>
+
+                  <span>
+                    ⏱️
+                    {{ question.estimatedTime }}
+                    mins
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" *ngIf="step === 2" (click)="prevStep()">
+          Back
+        </button>
+
+        <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+
+        <button class="btn btn-primary" *ngIf="step === 1"
+          [disabled]="isGeneratingQuestions || !this.draft.candidateId || !this.draft.title.trim()"
+          (click)="nextStep()">
+          {{ isGeneratingQuestions ? "Generating..." : "Generate Questions" }}
+        </button>
+
+        <button class="btn btn-primary" *ngIf="step === 2" [disabled]="isCreatingAssessment"
+          (click)="createAssessment()">
+          {{ isCreatingAssessment ? "Creating..." : "Create Assessment" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,273 @@
+<!-- dashboard.component.html -->
+
+<div class="dashboard-page">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <div>
+            <h2>Dashboard</h2>
+            <p>AIPS Portal overview</p>
+        </div>
+        <button class="refresh-btn" (click)="loadDashboard()">
+            <mat-icon>refresh</mat-icon>
+            Refresh
+        </button>
+    </div>
+
+    <!-- LOADING SKELETON -->
+    @if (isLoading) {
+    <div class="skeleton-grid">
+        @for (i of [1,2,3,4]; track i) {
+        <div class="skeleton-card"></div>
+        }
+    </div>
+    }
+
+    @if (!isLoading && stats) {
+
+    <!-- ── METRIC CARDS ── -->
+    <div class="section-label">Overview</div>
+    <div class="metric-grid">
+
+        <div class="metric">
+            <div class="metric-label">
+                <mat-icon>group</mat-icon>
+                Total candidates
+            </div>
+            <div class="metric-val">{{ stats.totalCandidates }}</div>
+            <div class="metric-sub">
+                <span class="badge badge-success">
+                    <mat-icon>trending_up</mat-icon>
+                    +{{ stats.newCandidatesThisMonth }}
+                </span>
+                this month
+            </div>
+        </div>
+
+        <div class="metric">
+            <div class="metric-label">
+                <mat-icon>assignment</mat-icon>
+                Assessments
+            </div>
+            <div class="metric-val">{{ stats.totalAssessments }}</div>
+            <div class="metric-sub">
+                <span class="badge badge-warn">{{ stats.inProgressAssessments }} in progress</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <div class="metric-label">
+                <mat-icon>help_outline</mat-icon>
+                Questions
+            </div>
+            <div class="metric-val">{{ stats.totalQuestions }}</div>
+            <div class="metric-sub">
+                <span class="badge badge-info">{{ stats.totalCategories }} categories</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <div class="metric-label">
+                <mat-icon>smart_toy</mat-icon>
+                Avg Candidate score
+            </div>
+            <div class="metric-val">
+                {{ stats.avgAiScore | number:'1.1-1' }}
+                <span class="metric-denom">/10</span>
+            </div>
+            <div class="metric-sub">
+                <span class="badge" [ngClass]="avgScoreDelta >= 0 ? 'badge-success' : 'badge-danger'">
+                    <mat-icon>{{ avgScoreDelta >= 0 ? 'trending_up' : 'trending_down' }}</mat-icon>
+                    {{ avgScoreDelta >= 0 ? '+' : '' }}{{ avgScoreDelta }}
+                </span>
+                vs last month
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── ROW 2: STATUS CHART + PIPELINE ── -->
+    <div class="row2">
+
+        <!-- Assessment status chart -->
+        <div class="card">
+            <div class="card-title">
+                Assessment status breakdown
+                <span>last 30 days</span>
+            </div>
+            <div class="chart-legend">
+                <span class="legend-item">
+                    <span class="legend-dot" style="background:#185FA5"></span> Completed
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot" style="background:#3B6D11"></span> In progress
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot" style="background:#888780"></span> Pending
+                </span>
+            </div>
+            <div class="chart-wrap" style="height:200px">
+                <canvas #statusChartRef role="img" aria-label="Bar chart showing assessment status breakdown">
+                    Completed {{ stats.completedAssessments }},
+                    In progress {{ stats.inProgressAssessments }},
+                    Pending {{ stats.pendingAssessments }}.
+                </canvas>
+            </div>
+        </div>
+
+        <!-- Candidate pipeline -->
+        <div class="card">
+            <div class="card-title">Candidate pipeline</div>
+
+            @if (pipeline) {
+            <div class="prog-row">
+                <div class="prog-label">Applied</div>
+                <div class="prog-bar-bg">
+                    <div class="prog-bar" style="width:100%;background:#185FA5"></div>
+                </div>
+                <div class="prog-val">{{ pipeline.totalApplied }}</div>
+            </div>
+
+            <div class="prog-row">
+                <div class="prog-label">Assessed</div>
+                <div class="prog-bar-bg">
+                    <div class="prog-bar" [style.width]="pipelineWidth(pipeline.totalAssessed)"
+                        style="background:#1D9E75"></div>
+                </div>
+                <div class="prog-val">{{ pipeline.totalAssessed }}</div>
+            </div>
+
+            <div class="prog-row">
+                <div class="prog-label">Evaluated</div>
+                <div class="prog-bar-bg">
+                    <div class="prog-bar" [style.width]="pipelineWidth(pipeline.totalEvaluated)"
+                        style="background:#EF9F27"></div>
+                </div>
+                <div class="prog-val">{{ pipeline.totalEvaluated }}</div>
+            </div>
+
+            <div class="prog-row">
+                <div class="prog-label">Shortlisted</div>
+                <div class="prog-bar-bg">
+                    <div class="prog-bar" [style.width]="pipelineWidth(pipeline.totalShortlisted)"
+                        style="background:#7F77DD"></div>
+                </div>
+                <div class="prog-val">{{ pipeline.totalShortlisted }}</div>
+            </div>
+
+            <div class="designations">
+                <div class="section-label" style="margin-bottom:8px">By designation</div>
+                <div class="desig-chips">
+                    @for (d of pipeline.byDesignation; track d.designation) {
+                    <span class="badge badge-info">{{ d.designation }} · {{ d.count }}</span>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+
+    </div>
+
+    <!-- ── ROW 3: SUBMISSIONS + DIFFICULTY + ACTIVITY ── -->
+    <div class="row3">
+
+        <!-- Top recent submissions -->
+        <div class="card">
+            <div class="card-title">Top recent submissions</div>
+            @for (sub of recentSubmissions; track sub.submissionId; let i = $index) {
+            <div class="cand-row">
+                <div class="avatar" [ngClass]="avatarClass(i)">{{ initials(sub.candidateName) }}</div>
+                <div class="cand-info">
+                    <div class="cand-name">{{ sub.candidateName }}</div>
+                    <div class="cand-role">{{ sub.designation }} · {{ sub.language }}</div>
+                </div>
+                <span class="score-pill" [ngClass]="scorePillClass(sub.aiScore)">
+                    {{ sub.aiScore | number:'1.1-1' }}
+                </span>
+            </div>
+            }
+            @empty {
+            <div class="empty-state">
+                <mat-icon>inbox</mat-icon>
+                <p>No submissions yet</p>
+            </div>
+            }
+        </div>
+
+        <!-- Questions by difficulty (donut) -->
+        <div class="card">
+            <div class="card-title">Questions by difficulty</div>
+            <div class="donut-wrap">
+                <div class="donut-container">
+                    <canvas #diffChartRef role="img" aria-label="Donut chart showing questions by difficulty">
+                        Easy {{ easyCount }}, Medium {{ mediumCount }}, Hard {{ hardCount }}.
+                    </canvas>
+                    <div class="donut-center">
+                        <div class="donut-total">{{ totalQuestionsDiff }}</div>
+                        <div class="donut-sub">total</div>
+                    </div>
+                </div>
+            </div>
+            <div class="diff-legend">
+                <div class="diff-legend-row">
+                    <span class="legend-dot" style="background:#3B6D11"></span>
+                    <span class="diff-name">Easy</span>
+                    <span class="badge" style="background:#EAF3DE;color:#3B6D11">{{ easyCount }}</span>
+                </div>
+                <div class="diff-legend-row">
+                    <span class="legend-dot" style="background:#854F0B"></span>
+                    <span class="diff-name">Medium</span>
+                    <span class="badge" style="background:#FAEEDA;color:#854F0B">{{ mediumCount }}</span>
+                </div>
+                <div class="diff-legend-row">
+                    <span class="legend-dot" style="background:#A32D2D"></span>
+                    <span class="diff-name">Hard</span>
+                    <span class="badge" style="background:#FCEBEB;color:#A32D2D">{{ hardCount }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="card">
+            <div class="card-title">Recent activity</div>
+            @for (act of recentActivity; track act.timestamp) {
+            <div class="activity-item">
+                <div class="act-icon" [ngClass]="activityIconColor(act.type)">
+                    <mat-icon>{{ activityIcon(act.type) }}</mat-icon>
+                </div>
+                <div class="act-body">
+                    <div class="act-text">{{ act.description }}</div>
+                    <div class="act-time">{{ relativeTime(act.timestamp) }}</div>
+                </div>
+            </div>
+            }
+            @empty {
+            <div class="empty-state">
+                <mat-icon>notifications_none</mat-icon>
+                <p>No recent activity</p>
+            </div>
+            }
+        </div>
+
+    </div>
+
+    <!-- ── AI SCORE DISTRIBUTION ── -->
+    <div class="card" style="margin-bottom: 0">
+        <div class="card-title">
+            AI score distribution
+        </div>
+        <div class="chart-legend">
+            <span class="legend-item"><span class="legend-dot" style="background:#A32D2D"></span> Low (1–3)</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#854F0B"></span> Mid (4–6)</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#185FA5"></span> High (7–10)</span>
+        </div>
+        <div class="chart-wrap" style="height:160px">
+            <canvas #scoreChartRef role="img" aria-label="Bar chart showing AI score distribution from 1 to 10">
+                AI score distribution across all evaluated submissions.
+            </canvas>
+        </div>
+    </div>
+
+    }
+
+</div>

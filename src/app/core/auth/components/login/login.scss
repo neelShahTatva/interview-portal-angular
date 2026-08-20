@@ -1,0 +1,184 @@
+/* ── Page ── */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e8eaed;        /* image 1: slightly darker gray */
+}
+
+/* ── Card ── */
+.login-card {
+  width: 390px;
+  padding: 40px 44px 32px;          /* more top room so logo breathes */
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  background: #ffffff;
+}
+
+/* ── Logo ── */
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.logo-icon {
+  width: 56px;
+  height: 56px;
+  background-color: #0f172a;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon mat-icon {
+  color: #ffffff;
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+/* ── Title ── */
+.title {
+  font-size: 21px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 5px;
+  letter-spacing: -0.2px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0 0 22px;
+}
+
+/* ── Tab switcher ──
+   Image 1: "Sign in" pill has white bg + visible border,
+   inactive tabs have NO background — just gray text          */
+.tab-switcher {
+  display: flex;
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 20px;
+  gap: 2px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 700;
+  border: 1px solid #e2e8f0;        /* key detail from image 1 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.tab-btn:not(.active):hover {
+  color: #0f172a;
+}
+
+/* ── Field groups ── */
+.field-group {
+  text-align: left;
+  margin-bottom: 6px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e293b;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* ── Material form field overrides ──
+   Image 1: inputs have light gray fill, clean border, no label float  */
+.full-width {
+  width: 100%;
+}
+
+/* hide the subscript/error spacing row so fields sit tight */
+.full-width .mat-mdc-form-field-subscript-wrapper {
+  height: 0;
+  overflow: hidden;
+}
+
+/* input background — light gray like image 1 */
+.full-width .mdc-text-field--outlined {
+  border-radius: 8px;
+  background-color: #f8fafc;
+}
+
+/* border color — subtle, matches image 1 */
+.full-width .mdc-notched-outline__leading,
+.full-width .mdc-notched-outline__notch,
+.full-width .mdc-notched-outline__trailing {
+  border-color: #cbd5e1 !important;
+}
+
+/* focused border */
+.full-width.mat-focused .mdc-notched-outline__leading,
+.full-width.mat-focused .mdc-notched-outline__notch,
+.full-width.mat-focused .mdc-notched-outline__trailing {
+  border-color: #0f172a !important;
+}
+
+/* hide the floating notch gap — no label inside field */
+.full-width .mdc-notched-outline__notch {
+  border-top: 1px solid #cbd5e1 !important;
+}
+
+/* input text size */
+.full-width input.mat-mdc-input-element {
+  font-size: 14px;
+  color: #0f172a;
+}
+
+/* ── Sign in button ── */
+.signin-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s ease;
+  letter-spacing: 0.3px;
+}
+
+.signin-btn:hover:not(:disabled) {
+  background-color: #1e293b;
+}
+
+.signin-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── Mock note at bottom ── */
+.mock-note {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 18px 0 0;
+  text-align: center;
+}

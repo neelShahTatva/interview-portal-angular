@@ -1,0 +1,22 @@
+.sidebar {
+  width: 250px;
+  background: white;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+a {
+  padding: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: black;
+}
+
+.active {
+  background: #0f172a;
+  color: white;
+}

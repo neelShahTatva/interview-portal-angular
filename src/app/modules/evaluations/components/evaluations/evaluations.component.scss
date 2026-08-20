@@ -1,0 +1,1113 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
+
+// ── Variables ────────────────────────────────────────────────────────
+$bg: #f5f7fb; // page background — matches your portal
+$surface: #ffffff; // card background
+$surface2: #f0f4f9; // inner surfaces, inputs bg
+$border: #e5e7eb; // primary border — matches portal border
+$border2: #d1d9e6; // inner borders, drop zones
+$text: #0f172a; // primary text — matches portal dark navy
+$muted: #64748b; // secondary text — matches portal muted
+$accent: #2563eb; // blue accent
+$accent2: #1d4ed8; // darker blue hover
+$green: #16a34a; // success
+$amber: #d97706; // warning
+$red: #dc2626; // error
+$mono: "IBM Plex Mono", monospace;
+$sans: "IBM Plex Sans", sans-serif;
+
+// ── Base ─────────────────────────────────────────────────────────────
+:host {
+  display: block;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.page {
+  min-height: 100%;
+  background: $bg;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem 4rem;
+  font-family: $sans;
+  color: $text;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.shell {
+  min-height: 100%;
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+// ── Top Bar ───────────────────────────────────────────────────────────
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 14px;
+  gap: 1rem;
+  flex-wrap: nowrap; // prevent wrapping that causes overlap
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto; // do NOT grow or shrink — fixed size
+  min-width: 0;
+  max-width: 460px; // cap so it never eats into the right side
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 0 0 auto; // do NOT shrink — always full size
+  margin-left: auto; // push to far right
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  h1 {
+    margin: 0;
+    font-family: $mono;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $text;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+
+  p {
+    margin: 0.1rem 0 0;
+    font-size: 0.65rem;
+    color: $muted;
+    white-space: nowrap;
+  }
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  background: #0f172a;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+.topbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+// .assessment-bar {
+//   display: flex;
+
+//   align-items: center;
+
+//   gap: 16px;
+
+//   margin-top: 18px;
+
+//   margin-bottom: 18px;
+
+//   flex-wrap: wrap;
+// }
+
+// ::ng-deep .mat-mdc-form-field-flex {
+//   background: white !important;
+
+//   border-radius: 12px !important;
+// }
+
+// ::ng-deep .mdc-notched-outline__leading,
+// ::ng-deep .mdc-notched-outline__notch,
+// ::ng-deep .mdc-notched-outline__trailing {
+//   border-color: #dbe2ea !important;
+// }
+
+// ::ng-deep .mat-mdc-select-value {
+//   color: #0f172a !important;
+
+//   font-weight: 500;
+// }
+// ── Mat Select Dropdown Panel ─────────────────────────────────────────
+::ng-deep .mat-mdc-select-panel {
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1) !important;
+  padding: 4px !important;
+}
+
+::ng-deep .mat-mdc-option {
+  font-family: $sans !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+  border-radius: 8px !important;
+  margin: 2px 4px !important;
+  min-height: 44px !important;
+}
+
+::ng-deep .mat-mdc-option:hover {
+  background: #f1f5f9 !important;
+}
+
+::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background: #f0f4ff !important;
+  color: #2563eb !important;
+  font-weight: 600 !important;
+}
+
+::ng-deep .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+  color: #2563eb !important;
+}
+.assessment-select {
+  width: 300px; // slightly wider so text doesn't truncate as much
+  flex-shrink: 0;
+
+  // ── Default state border ──────────────────────────────────────────
+  ::ng-deep .mdc-notched-outline__leading,
+  ::ng-deep .mdc-notched-outline__trailing {
+    border-color: #cbd5e1 !important;
+    border-width: 1.5px !important;
+  }
+
+  ::ng-deep .mdc-notched-outline__notch {
+    border-top: 1.5px solid #cbd5e1 !important;
+    border-bottom: 1.5px solid #cbd5e1 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  // ── Focused / open state border — soft blue, not black ────────────
+  ::ng-deep .mdc-text-field--focused .mdc-notched-outline__leading,
+  ::ng-deep .mdc-text-field--focused .mdc-notched-outline__trailing {
+    border-color: #0f172a !important; // light blue — not harsh black
+    border-width: 1.5px !important;
+  }
+
+  ::ng-deep .mdc-text-field--focused .mdc-notched-outline__notch {
+    border-top: 1.5px solid #0f172a !important;
+    border-bottom: 1.5px solid #0f172a !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  // ── Remove the notch gap completely ──────────────────────────────
+  ::ng-deep .mdc-notched-outline--notched .mdc-notched-outline__notch {
+    border-top: 1.5px solid #cbd5e1 !important;
+  }
+
+  ::ng-deep
+    .mdc-text-field--focused.mdc-notched-outline--notched
+    .mdc-notched-outline__notch {
+    border-top: 1.5px solid #0f172a !important;
+  }
+
+  // ── Field background and height ───────────────────────────────────
+  ::ng-deep .mat-mdc-form-field-flex {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    height: 46px !important;
+    align-items: center !important;
+  }
+
+  // ── Text inside select ────────────────────────────────────────────
+  ::ng-deep .mat-mdc-select-value {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    font-family: $sans !important;
+  }
+
+  ::ng-deep .mat-mdc-select-placeholder {
+    color: #94a3b8 !important;
+    font-size: 13px !important;
+    font-family: $sans !important;
+  }
+
+  // ── Arrow icon color ──────────────────────────────────────────────
+  ::ng-deep .mat-mdc-select-arrow {
+    color: #94a3b8 !important;
+  }
+
+  // ── Hide subscript space + floating label ─────────────────────────
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-mdc-floating-label {
+    display: none !important;
+  }
+}
+.progress-pills {
+  display: flex;
+  gap: 0.25rem;
+}
+.pill {
+  width: 30px;
+  height: 22px;
+  border-radius: 5px;
+  background: $surface2;
+  border: 1px solid $border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $mono;
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: $muted;
+  transition: all 0.2s;
+
+  &--partial {
+    border-color: $amber;
+    color: $amber;
+    background: rgba($amber, 0.08);
+  }
+
+  &--done {
+    border-color: $green;
+    color: $green;
+    background: rgba($green, 0.08);
+  }
+}
+
+.meta-count {
+  font-family: $mono;
+  font-size: 0.65rem;
+  color: $muted;
+  white-space: nowrap;
+}
+
+// ── Alert ─────────────────────────────────────────────────────────────
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.875rem 1rem;
+  background: rgba($red, 0.06);
+  border: 1px solid rgba($red, 0.2);
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: $red;
+  font-family: $mono;
+}
+
+// ── Question Card ─────────────────────────────────────────────────────
+.q-card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 1.25rem;
+  transition: border-color 0.2s;
+
+  &--complete {
+    border-color: rgba($green, 0.4);
+  }
+}
+
+.q-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1rem;
+}
+
+.q-index-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #0f172a; // matches portal nav active bg
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $mono;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.q-card-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $muted;
+  flex: 1;
+}
+
+.status-dot {
+  font-family: $mono;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+
+  &--ready {
+    background: rgba($green, 0.1);
+    color: $green;
+    border: 1px solid rgba($green, 0.3);
+  }
+
+  &--pending {
+    background: $surface2;
+    color: $muted;
+    border: 1px solid $border;
+  }
+}
+
+// ── Field ─────────────────────────────────────────────────────────────
+.field {
+  margin-bottom: 1rem;
+}
+
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.topic-input {
+  width: 100%;
+  background: $surface2;
+  border: 1px solid $border2;
+  border-radius: 8px;
+  color: $text;
+  font-family: $mono;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  padding: 0.75rem 1rem;
+  resize: vertical;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &::placeholder {
+    color: $muted;
+    opacity: 0.7;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $accent;
+    box-shadow: 0 0 0 3px rgba($accent, 0.1);
+    background: $surface;
+  }
+}
+
+// ── Tags ──────────────────────────────────────────────────────────────
+.tag {
+  font-family: $mono;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
+
+  &--question {
+    background: rgba($amber, 0.1);
+    color: $amber;
+    border: 1px solid rgba($amber, 0.25);
+  }
+
+  &--solution {
+    background: rgba($green, 0.08);
+    color: $green;
+    border: 1px solid rgba($green, 0.25);
+  }
+
+  &--candidate {
+    background: rgba($accent, 0.08);
+    color: $accent;
+    border: 1px solid rgba($accent, 0.25);
+  }
+}
+
+// ── Files Row ─────────────────────────────────────────────────────────
+.files-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.875rem;
+
+  @media (max-width: 580px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Drop Zone ─────────────────────────────────────────────────────────
+.drop-zone {
+  border: 1.5px dashed $border2;
+  border-radius: 10px;
+  padding: 1rem;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.2s;
+  cursor: default;
+  background: $surface;
+
+  &--hover {
+    border-color: $accent;
+    background: rgba($accent, 0.04);
+  }
+
+  &--filled {
+    border-style: solid;
+    border-color: $border;
+    background: $surface2;
+  }
+}
+
+.zone-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.zone-hint {
+  font-size: 0.7rem;
+  color: $muted;
+}
+
+.zone-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: $muted;
+
+  code {
+    font-family: $mono;
+    background: $surface2;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    color: $accent;
+    font-size: 0.76rem;
+    border: 1px solid $border;
+  }
+}
+
+.zone-icon {
+  font-size: 1.8rem;
+}
+
+// ── File Pill ─────────────────────────────────────────────────────────
+.file-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 0.625rem 0.75rem;
+  flex: 1;
+}
+
+.file-pill-icon {
+  font-size: 1.3rem;
+}
+
+.file-pill-info {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-pill-name {
+  font-family: $mono;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: $text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-pill-size {
+  font-size: 0.68rem;
+  color: $muted;
+  margin-top: 0.1rem;
+}
+
+// ── Buttons ───────────────────────────────────────────────────────────
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 9px;
+  font-family: $mono;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  text-decoration: none;
+
+  &--primary {
+    background: #0f172a; // matches portal primary button
+    color: white;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+    padding: 0.85rem 1.75rem;
+    font-size: 0.875rem;
+
+    &:hover:not(:disabled) {
+      background: #1e293b;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.25);
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    border: 1px solid $border2;
+    color: $muted;
+
+    &:hover {
+      border-color: $accent;
+      color: $accent;
+      background: rgba($accent, 0.04);
+    }
+  }
+
+  &--full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  &--xs {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.72rem;
+    background: $surface2;
+    border: 1px solid $border;
+    color: $muted;
+
+    &:hover {
+      background: $border;
+      color: $text;
+    }
+  }
+}
+
+// ── Icon Buttons ──────────────────────────────────────────────────────
+.icon-btn {
+  background: none;
+  border: none;
+  color: $muted;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+  flex-shrink: 0;
+
+  &:hover {
+    color: $text;
+  }
+
+  &--remove {
+    border: 1px solid $border;
+    padding: 0.3rem;
+    border-radius: 6px;
+
+    &:hover {
+      border-color: $red;
+      color: $red;
+      background: rgba($red, 0.06);
+    }
+  }
+}
+
+// ── Add Question Button ───────────────────────────────────────────────
+.add-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  background: transparent;
+  border: 1.5px dashed $border2;
+  border-radius: 12px;
+  color: $muted;
+  font-family: $mono;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: $accent;
+    color: $accent;
+    background: rgba($accent, 0.04);
+  }
+}
+
+.add-btn-hint {
+  font-size: 0.68rem;
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+// ── Submit Area ───────────────────────────────────────────────────────
+.submit-area {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.submit-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: $mono;
+  font-size: 0.72rem;
+  color: $muted;
+
+  &--ok {
+    color: $green;
+  }
+}
+
+.check-icon {
+  width: 16px;
+  text-align: center;
+  font-weight: 700;
+}
+
+// ── Spinner ───────────────────────────────────────────────────────────
+.spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ── Results ───────────────────────────────────────────────────────────
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.overall {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.75rem;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 14px;
+  gap: 1rem;
+}
+
+.overall-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.overall-eyebrow {
+  font-family: $mono;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: $accent;
+}
+
+.overall-sub {
+  font-size: 0.82rem;
+  color: $muted;
+}
+
+.overall-right {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.big-score {
+  font-family: $mono;
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.big-score-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  span:first-child {
+    font-family: $mono;
+    font-size: 1rem;
+    color: $muted;
+  }
+}
+
+.score-label-tag {
+  font-family: $mono;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.score-bar-track {
+  height: 4px;
+  background: $border;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: -0.75rem;
+}
+
+.score-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ── Question Result Card ──────────────────────────────────────────────
+.q-result-card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.q-result-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.q-num-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: $surface2;
+  border: 1px solid $border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $mono;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: $accent;
+  flex-shrink: 0;
+}
+
+.q-result-topic {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $text;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.q-result-score {
+  font-family: $mono;
+  font-size: 1.4rem;
+  font-weight: 800;
+  flex-shrink: 0;
+
+  small {
+    font-size: 0.7rem;
+    color: $muted;
+    font-weight: 400;
+  }
+}
+
+// ── Chips ─────────────────────────────────────────────────────────────
+.chips-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.72rem;
+  color: $muted;
+
+  code {
+    font-family: $mono;
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: $text;
+  }
+}
+
+// ── Result Sections ───────────────────────────────────────────────────
+.result-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.section-label {
+  font-family: $mono;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: $muted;
+  margin: 0;
+
+  &--warn {
+    color: $amber;
+  }
+  &--danger {
+    color: $red;
+  }
+}
+
+.section-body {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.issue-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.79rem;
+  color: #475569;
+  line-height: 1.85;
+
+  &--danger {
+    color: $red;
+  }
+}
+
+// ── Code Accordion ────────────────────────────────────────────────────
+.code-accordion {
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: $mono;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $green;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    padding: 0.5rem 0;
+
+    &:hover {
+      color: darken($green, 8%);
+    }
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+}
+
+.code-block {
+  background: #f8fafc;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 0.5rem 0 0;
+  overflow-x: auto;
+
+  code {
+    font-family: $mono;
+    font-size: 0.76rem;
+    color: #1e40af;
+    white-space: pre;
+    line-height: 1.6;
+  }
+}
+// .candidate-box {
+//   height: 56px;
+
+//   min-width: 220px;
+
+//   padding: 0 18px;
+
+//   border-radius: 14px;
+
+//   background: white;
+
+//   border: 1px solid #e5e7eb;
+
+//   display: flex;
+
+//   flex-direction: column;
+
+//   justify-content: center;
+// }
+
+// .candidate-label {
+//   font-size: 12px;
+
+//   color: #64748b;
+// }
+
+// .candidate-name {
+//   font-size: 15px;
+
+//   font-weight: 700;
+
+//   color: #0f172a;
+// }
+.candidate-pill {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  max-width: 160px; // prevent it from being too wide
+  overflow: hidden;
+}
+
+.candidate-pill-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: $muted;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.candidate-pill-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: $text;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.question-box {
+  width: 100%;
+
+  min-height: 74px;
+
+  padding: 16px;
+
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  display: flex;
+
+  align-items: center;
+
+  margin-bottom: 18px;
+}
+
+.question-title {
+  font-size: 14px;
+
+  line-height: 1.7;
+
+  color: #0f172a;
+
+  font-weight: 500;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 320px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  background: #fff;
+
+  text-align: center;
+
+  padding: 32px;
+}
+
+.empty-state-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.empty-state p {
+  color: #64748b;
+  margin: 0;
+}

@@ -1,0 +1,74 @@
+@use "@angular/material" as mat;
+@use "sass:color";
+
+@import "tailwindcss";
+@import "ngx-toastr/toastr";
+
+// Angular Material Theme
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+/* Global Reset */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Body */
+
+body {
+  margin: 0;
+  padding: 0;
+
+  color-scheme: light;
+
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Google Font */
+
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap");
+
+/* Snackbar */
+
+.mat-mdc-snack-bar-container {
+  border-radius: 8px !important;
+
+  --mdc-snackbar-supporting-text-color: white;
+  --mat-snack-bar-button-color: white;
+
+  &.success-snackbar {
+    --mat-snack-bar-container-color: #4caf50;
+  }
+
+  &.error-snackbar {
+    --mat-snack-bar-container-color: #f44336;
+  }
+
+  &.warning-snackbar {
+    --mat-snack-bar-container-color: #ff9800;
+  }
+
+  &.info-snackbar {
+    --mat-snack-bar-container-color: #2196f3;
+  }
+}

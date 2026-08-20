@@ -1,0 +1,76 @@
+<div class="layout">
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar" [class.collapsed]="collapsed()">
+    <!-- LOGO -->
+
+    <div class="logo">
+      <div class="logo-icon">
+        <lucide-angular [img]="Bot" size="22"></lucide-angular>
+      </div>
+
+      @if (!collapsed()) {
+      <h2>AIPS Portal</h2>
+      }
+    </div>
+
+    <!-- NAVIGATION -->
+
+    <nav>
+      @for (item of navItems; track item.route) {
+      <a [routerLink]="item.route" routerLinkActive="active">
+        <lucide-angular [img]="item.icon" size="20"></lucide-angular>
+
+        @if (!collapsed()) {
+        <span>
+          {{ item.label }}
+        </span>
+        }
+      </a>
+      }
+    </nav>
+
+    <!-- COLLAPSE BUTTON -->
+
+    <button class="collapse-btn" (click)="toggleSidebar()">
+      <lucide-angular [img]="Menu" size="18"></lucide-angular>
+
+      @if (!collapsed()) {
+      <span> Collapse </span>
+      }
+    </button>
+  </aside>
+
+  <!-- MAIN -->
+
+  <div class="main">
+    <!-- HEADER -->
+
+    <header class="header">
+      <!-- plain button — no mat-button directive, full layout control -->
+      <button class="profile-btn" [matMenuTriggerFor]="profileMenu" type="button">
+        <div class="profile-avatar">
+          <lucide-angular [img]="UserCircle2" size="26"></lucide-angular>
+        </div>
+
+        <span class="profile-name">{{ userName | titlecase }} {{ "(" + ( role | titlecase ) + ")"}}</span>
+      </button>
+
+      <mat-menu #profileMenu="matMenu" xPosition="before">
+        <div class="menu-email" (click)="$event.stopPropagation()">
+          {{ email }}
+        </div>
+
+        <button mat-menu-item (click)="onSignOut()">
+          <lucide-angular [img]="LogOut" size="16" class="menu-icon"></lucide-angular>
+          <span>Sign out</span>
+        </button>
+      </mat-menu>
+    </header>
+    <!-- PAGE CONTENT -->
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

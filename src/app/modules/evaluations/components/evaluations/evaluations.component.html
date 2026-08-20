@@ -1,0 +1,453 @@
+<div class="page">
+  <div class="shell">
+    <!-- ── Top Bar ── -->
+    <header class="topbar">
+      <!-- LEFT: Assessment selector + Candidate pill -->
+      <div class="topbar-left">
+        <mat-form-field appearance="outline" class="assessment-select">
+          <mat-select
+            [value]="selectedCandidateId"
+            (selectionChange)="onCandidateChange($event.value)"
+            placeholder="Select Candidate"
+          >
+            @if (candidates.length === 0) {
+              <mat-option disabled> No candidates available </mat-option>
+            } @else {
+              @for (item of candidates; track item.id) {
+                <mat-option [value]="item.id">
+                  {{ item.candidateName }}
+                </mat-option>
+              }
+            }
+          </mat-select>
+        </mat-form-field>
+
+        @if (assessmentTitle) {
+          <div class="candidate-pill">
+            <span class="candidate-pill-label">Assessment</span>
+            <span class="candidate-pill-name">{{ assessmentTitle }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- RIGHT: Brand + Progress -->
+      <div class="topbar-right">
+        <div class="topbar-brand">
+          <div class="brand-icon">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </div>
+          <div>
+            <h1>Java Evaluator</h1>
+            <p>AI-powered code assessment</p>
+          </div>
+        </div>
+
+        @if (!submissionState().isSuccess) {
+          <div class="topbar-meta">
+            <div class="progress-pills">
+              @for (q of qs; track $index; let i = $index) {
+                <div
+                  class="pill"
+                  [class.pill--done]="q.solutionFile && q.submissionFile"
+                  [class.pill--partial]="q.solutionFile || q.submissionFile"
+                >
+                  Q{{ i + 1 }}
+                </div>
+              }
+            </div>
+            <span class="meta-count"
+              >{{ completedCount() }}/{{ qs.length }} ready</span
+            >
+          </div>
+        }
+      </div>
+    </header>
+
+    <!-- ── Error ── -->
+    @if (submissionState().isError) {
+      <div class="alert">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        {{ submissionState().errorMessage }}
+      </div>
+    }
+
+    <!-- ══════════════════ RESULTS VIEW ══════════════════ -->
+    @if (submissionState().isSuccess && submissionState().result) {
+      <div class="results">
+        <!-- Overall Banner -->
+        <div class="overall">
+          <div class="overall-left">
+            <span class="overall-eyebrow">EVALUATION COMPLETE</span>
+            <span class="overall-sub">
+              {{ submissionState().result!.totalQuestions }} question{{
+                submissionState().result!.totalQuestions > 1 ? "s" : ""
+              }}
+              evaluated in parallel
+            </span>
+          </div>
+          <div class="overall-right">
+            <div
+              class="big-score"
+              [style.color]="scoreColor(submissionState().result!.overallScore)"
+            >
+              {{ submissionState().result!.overallScore }}
+            </div>
+            <div class="big-score-meta">
+              <span>/10</span>
+              <span
+                class="score-label-tag"
+                [style.color]="
+                  scoreColor(submissionState().result!.overallScore)
+                "
+              >
+                {{ scoreLabel(submissionState().result!.overallScore) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score Bar -->
+        <div class="score-bar-track">
+          <div
+            class="score-bar-fill"
+            [style.width.%]="submissionState().result!.overallScore"
+            [style.background]="
+              scoreColor(submissionState().result!.overallScore)
+            "
+          ></div>
+        </div>
+
+        <!-- Per-Question Cards -->
+        @for (
+          qr of submissionState().result!.evaluations;
+          track qr.questionNumber
+        ) {
+          <div class="q-result-card">
+            <div class="q-result-head">
+              <div class="q-num-badge">Q{{ qr.questionNumber }}</div>
+              <div class="q-result-topic">{{ qr.questionTopic }}</div>
+              <div class="q-result-score" [style.color]="scoreColor(qr.score)">
+                {{ qr.score }}<small>/10</small>
+              </div>
+            </div>
+
+            <!-- Complexity chips -->
+            <div class="chips-row">
+              <div class="chip chip--time">
+                <span>Time</span>
+                <code>{{ qr.timeComplexity || "N/A" }}</code>
+              </div>
+              <div class="chip chip--space">
+                <span>Space</span>
+                <code>{{ qr.spaceComplexity || "N/A" }}</code>
+              </div>
+              <div class="chip chip--rating">
+                <span>Rating</span>
+                <code [style.color]="scoreColor(qr.score)">
+                  {{ scoreLabel(qr.score) }}
+                </code>
+              </div>
+            </div>
+
+            <!-- Feedback -->
+            <div class="result-section">
+              <p class="section-label">Feedback</p>
+              <p class="section-body">{{ qr.feedback }}</p>
+            </div>
+
+            <!-- Edge Cases -->
+            @if (qr.missedEdgeCases?.length) {
+              <div class="result-section">
+                <p class="section-label section-label--warn">
+                  ⚠ Missed Edge Cases ({{ qr.missedEdgeCases.length }})
+                </p>
+                <ul class="issue-list">
+                  @for (item of qr.missedEdgeCases; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </div>
+            }
+
+            <!-- Security -->
+            @if (qr.securityIssues?.length) {
+              <div class="result-section">
+                <p class="section-label section-label--danger">
+                  🔴 Security Issues ({{ qr.securityIssues.length }})
+                </p>
+                <ul class="issue-list issue-list--danger">
+                  @for (item of qr.securityIssues; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </div>
+            }
+
+            <!-- Optimized Code -->
+            @if (qr.optimizedCode) {
+              <details class="code-accordion">
+                <summary>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="16 18 22 12 16 6" />
+                    <polyline points="8 6 2 12 8 18" />
+                  </svg>
+                  View Optimized Solution
+                </summary>
+                <pre
+                  class="code-block"
+                ><code>{{ qr.optimizedCode }}</code></pre>
+              </details>
+            }
+          </div>
+        }
+
+        <button class="btn btn--outline btn--full" (click)="reset()">
+          ↩ Start New Evaluation
+        </button>
+      </div>
+    }
+
+    @if (!selectedCandidateId && !submissionState().isSuccess) {
+      <div class="empty-state">
+        <div class="empty-state-icon">👨‍💻</div>
+
+        <p>Select a candidate to view assessment questions</p>
+      </div>
+    }
+    @if (hasNoAssessment && !submissionState().isSuccess) {
+      <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+
+        <p>No assessment has been assigned to this candidate</p>
+      </div>
+    }
+    <!-- ══════════════════ FORM VIEW ══════════════════ -->
+    @if (!submissionState().isSuccess) {
+      <div class="form-area">
+        <!-- Question Cards -->
+        @for (q of qs; track $index; let i = $index) {
+          <div
+            class="q-card mb-2"
+            [class.q-card--complete]="q.solutionFile && q.submissionFile"
+          >
+            <!-- Card Header -->
+            <div class="q-card-head">
+              <div class="q-index-badge">Q{{ i + 1 }}</div>
+              <span class="q-card-label">Question {{ i + 1 }}</span>
+              <div class="q-card-status">
+                @if (q.solutionFile && q.submissionFile) {
+                  <span class="status-dot status-dot--ready">Ready</span>
+                } @else {
+                  <span class="status-dot status-dot--pending">Incomplete</span>
+                }
+              </div>
+            </div>
+
+            <div class="question-box">
+              <div class="question-title">
+                {{ q.questionTopic }}
+              </div>
+            </div>
+
+            <!-- Files Row -->
+            <div class="files-row">
+              <!-- Solution Zone -->
+              <!-- <div
+                class="drop-zone"
+                [class.drop-zone--hover]="isDraggingSol(i)"
+                [class.drop-zone--filled]="q.solutionFile"
+                (dragover)="onDragOver($event, i, 'solution')"
+                (dragleave)="onDragLeave(i, 'solution')"
+                (drop)="onDrop($event, i, 'solution')"
+              >
+                <div class="zone-head">
+                  <span class="tag tag--solution">SOLUTION</span>
+                  <span class="zone-hint">Reference file</span>
+                </div>
+                @if (!q.solutionFile) {
+                  <div class="zone-body">
+                    <div class="zone-icon">📄</div>
+                    <p>Drop <code>.java</code> here</p>
+                    <label class="btn btn--xs">
+                      Browse
+                      <input
+                        type="file"
+                        accept=".java"
+                        hidden
+                        (change)="onFileSelected($event, i, 'solution')"
+                      />
+                    </label>
+                  </div>
+                } @else {
+                  <div class="file-pill">
+                    <span class="file-pill-icon">☕</span>
+                    <div class="file-pill-info">
+                      <span class="file-pill-name">{{
+                        q.solutionFile.name
+                      }}</span>
+                      <span class="file-pill-size">{{
+                        formatSize(q.solutionFile.size)
+                      }}</span>
+                    </div>
+                    <!-- <button class="icon-btn" (click)="clearFile(i, 'solution')">
+                      ✕
+                    </button> -->
+              <!-- </div> -->
+              <!-- } -->
+              <!-- </div> -->
+
+              <div class="drop-zone drop-zone--filled solution-readonly">
+                <div class="zone-head">
+                  <span class="tag tag--solution">SOLUTION</span>
+                  <span class="zone-hint">AI Generated Reference</span>
+                </div>
+
+                <div class="file-pill file-pill--readonly">
+                  <span class="file-pill-icon">☕</span>
+
+                  <div class="file-pill-info">
+                    <span class="file-pill-name">
+                      {{ q.solutionFileName }}
+                    </span>
+
+                    <!-- <span class="file-pill-size">
+                      Reference solution available
+                    </span> -->
+                  </div>
+
+                  <!-- <button type="button" class="preview-btn">View</button> -->
+                </div>
+              </div>
+
+              <!-- Submission Zone -->
+              <div
+                class="drop-zone"
+                [class.drop-zone--hover]="isDraggingSub(i)"
+                [class.drop-zone--filled]="q.submissionFile"
+                (dragover)="onDragOver($event, i, 'submission')"
+                (dragleave)="onDragLeave(i, 'submission')"
+                (drop)="onDrop($event, i, 'submission')"
+              >
+                <div class="zone-head">
+                  <span class="tag tag--candidate">CANDIDATE</span>
+                  <span class="zone-hint">Submitted file</span>
+                </div>
+                @if (!q.submissionFile) {
+                  <div class="zone-body">
+                    <div class="zone-icon">📝</div>
+                    <p>Drop <code>.java</code> here</p>
+                    <label class="btn btn--xs">
+                      Browse
+                      <input
+                        type="file"
+                        accept=".java"
+                        hidden
+                        (change)="onFileSelected($event, i, 'submission')"
+                      />
+                    </label>
+                  </div>
+                } @else {
+                  <div class="file-pill">
+                    <span class="file-pill-icon">☕</span>
+                    <div class="file-pill-info">
+                      <span class="file-pill-name">{{
+                        q.submissionFile.name
+                      }}</span>
+                      <span class="file-pill-size">{{
+                        formatSize(q.submissionFile.size)
+                      }}</span>
+                    </div>
+                    <button
+                      class="icon-btn"
+                      (click)="clearFile(i, 'submission')"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Submit Row -->
+        <div class="submit-area">
+          <button
+            class="btn btn--primary mt-2"
+            [disabled]="!canSubmit()"
+            (click)="onSubmit()"
+          >
+            @if (submissionState().isLoading) {
+              <span class="spinner"></span>
+              Evaluating {{ qs.length }} question{{ qs.length > 1 ? "s" : "" }}
+              in parallel...
+            } @else {
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+              Evaluate Assessment Question{{ qs.length > 1 ? "s" : "" }}
+            }
+          </button>
+
+          <div class="submit-checklist">
+            @for (q of qs; track $index; let i = $index) {
+              <div
+                class="check-row"
+                [class.check-row--ok]="q.solutionFile && q.submissionFile"
+              >
+                <span class="check-icon">
+                  {{ q.solutionFile && q.submissionFile ? "✓" : "○" }}
+                </span>
+                Q{{ i + 1 }}:
+                @if (!q.solutionFile) {
+                  missing solution
+                } @else if (!q.submissionFile) {
+                  missing candidate file
+                } @else {
+                  ready
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

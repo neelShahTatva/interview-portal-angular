@@ -1,0 +1,219 @@
+<div class="question-form-page">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <div class="header-left">
+            <button class="back-btn" (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <div>
+                <h2>{{ isEditMode ? 'Edit Question' : 'Add Question' }}</h2>
+                <p>{{ isEditMode ? 'Update question details' : 'Create a new interview question' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+        <div class="form-layout">
+
+            <!-- ── LEFT COLUMN ── -->
+            <div class="form-main">
+
+                <!-- Basic Info Card -->
+                <div class="form-card">
+                    <div class="card-title">
+                        <mat-icon>info_outline</mat-icon>
+                        Basic Information
+                    </div>
+
+                    <div class="form-field">
+                        <label>Title <span class="required">*</span></label>
+                        <input type="text" formControlName="title" placeholder="e.g. Two Sum"
+                            [class.error]="isInvalid('title')" />
+                        <span class="error-msg" *ngIf="isInvalid('title')">Title is required</span>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Description <span class="required">*</span></label>
+                        <textarea formControlName="description"
+                            placeholder="Describe the problem clearly. Include constraints, examples, and expected output..."
+                            rows="8" [class.error]="isInvalid('description')"></textarea>
+                        <span class="error-msg" *ngIf="isInvalid('description')">Description is required</span>
+                    </div>
+                </div>
+
+                <!-- Solutions Card -->
+                <div class="form-card" [formGroup]="questionForm">
+                    <div class="card-title">
+                        <mat-icon>code</mat-icon>
+                        Solutions
+                        <span class="required">*</span>
+                        <button type="button" class="add-solution-btn" (click)="addSolution()">
+                            <mat-icon>add</mat-icon>
+                            Add Solution
+                        </button>
+                    </div>
+
+                    <div class="solutions-empty" *ngIf="solutions.length === 0">
+                        <mat-icon>code_off</mat-icon>
+                        <p>No solutions added yet. Click "Add Solution" to add one.</p>
+                        <span class="error-msg" *ngIf="submitted && solutions.errors?.['minLengthArray']"
+                            style="color: #dc2626; display: block; margin-top: 8px; font-weight: 500;">
+                            At least one solution is required.
+                        </span>
+                    </div>
+
+                    <div class="solutions-list" *ngIf="solutions.length > 0" formArrayName="solutions">
+
+                        <div class="solution-block" *ngFor="let sol of solutions.controls; let i = index"
+                            [formGroupName]="i"
+                            style="margin-bottom: 24px; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb;">
+
+                            <div class="solution-header"
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+
+                                <div class="simple-select small">
+                                    <select formControlName="language" (change)="onLanguageChange(i)">
+                                        <option value="">Select Language</option>
+                                        <option *ngFor="let lang of availableLanguages" [value]="lang"
+                                            [disabled]="isLanguageDisabled(lang, i)">
+                                            {{ lang }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div style="display: flex; align-items: center; gap: 16px;">
+
+                                    <input type="file" [id]="'file-upload-' + i" (change)="onFileUpload($event, i)"
+                                        style="display: none;" accept=".java,.py,.js,.ts,.cpp,.c,.go,.txt">
+
+                                    <button type="button" (click)="triggerFileInput(i)"
+                                        style="background: none; border: none; color: #4f46e5; cursor: pointer; display: flex; align-items: center; font-size: 14px; font-weight: 500;">
+                                        <mat-icon
+                                            style="margin-right: 4px; font-size: 20px; width: 20px; height: 20px;">upload_file</mat-icon>
+                                        Upload File
+                                    </button>
+
+                                    <button type="button" (click)="removeSolution(i)"
+                                        style="background: none; border: none; color: #dc2626; cursor: pointer; display: flex; align-items: center;">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <textarea class="code-editor" formControlName="solutionCode"
+                                placeholder="// Write your solution code here..." rows="10"
+                                spellcheck="false"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── RIGHT SIDEBAR ── -->
+            <div class="form-sidebar">
+
+                <!-- Metadata Card -->
+                <div class="form-card">
+                    <div class="card-title">
+                        <mat-icon>tune</mat-icon>
+                        Settings
+                    </div>
+
+                    <!-- Difficulty -->
+                    <div class="form-field">
+                        <label>Difficulty <span class="required">*</span></label>
+                        <div class="difficulty-selector">
+                            <button type="button" *ngFor="let level of difficulties" class="diff-btn"
+                                [ngClass]="level.toLowerCase()"
+                                [class.selected]="questionForm.get('difficulty')?.value === level"
+                                (click)="questionForm.get('difficulty')?.setValue(level)">
+                                {{ level | titlecase }}
+                            </button>
+                        </div>
+                        <span class="error-msg" *ngIf="isInvalid('difficulty')">Select a difficulty</span>
+                    </div>
+
+                    <!-- Estimated Time -->
+                    <div class="form-field">
+                        <label>Estimated Time <span class="required">*</span></label>
+                        <div class="time-input-row">
+                            <input type="number" formControlName="estimatedTime" placeholder="30" min="1"
+                                [class.error]="isInvalid('estimatedTime')" />
+                            <span class="time-unit">minutes</span>
+                        </div>
+                        <span class="error-msg" *ngIf="isInvalid('estimatedTime')">Estimated time is required</span>
+                    </div>
+
+                    <!-- Designation -->
+                    <div class="form-card">
+                        <div class="card-title">
+                            <mat-icon>badge</mat-icon>
+                            Designations
+                            <span class="required">*</span>
+                        </div>
+
+                        <div class="categories-grid">
+                            <label class="category-option" *ngFor="let des of designations"
+                                [class.selected]="isDesignationSelected(des)">
+
+                                <input type="checkbox" [checked]="isDesignationSelected(des)"
+                                    (change)="toggleDesignation(des)" hidden />
+
+                                {{ des }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-field">
+                        <label>Status</label>
+                        <div class="toggle-row">
+                            <span class="toggle-label">{{ questionForm.get('isActive')?.value ? 'Active' : 'Inactive'
+                                }}</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" formControlName="isActive" />
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Card -->
+                <div class="form-card">
+                    <div class="card-title">
+                        <mat-icon>label_outline</mat-icon>
+                        Categories
+                        <span class="required">*</span>
+                    </div>
+
+                    <div class="categories-grid">
+                        <label class="category-option" *ngFor="let cat of allCategories"
+                            [class.selected]="isCategorySelected(cat.id)">
+                            <input type="checkbox" [checked]="isCategorySelected(cat.id)" (change)="toggleCategory(cat)"
+                                style="display:none" />
+                            {{ cat.name }}
+                        </label>
+                    </div>
+                    <span class="error-msg"
+                        *ngIf="submitted && questionForm.get('categories')?.errors?.['minLengthArray']">
+                        Select at least one category
+                    </span>
+                </div>
+
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" (click)="goBack()">Cancel</button>
+                    <button type="submit" class="save-btn" [disabled]="questionForm.invalid || questionForm.pending">
+                        <mat-icon>{{ isEditMode ? 'save' : 'add_circle_outline' }}</mat-icon>
+                        {{ isEditMode ? 'Update' : 'Save' }} Question
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+</div>

@@ -1,0 +1,56 @@
+<div class="preview-dialog">
+
+    <!-- HEADER -->
+
+    <div class="preview-header">
+
+        <div>
+
+            <h2>
+                {{ data.questionTitle }}
+            </h2>
+
+            <p>
+                Question Solution Preview
+            </p>
+
+        </div>
+
+        <button
+            mat-dialog-close
+            class="close-btn">
+
+            ✕
+
+        </button>
+
+    </div>
+
+    <!-- INFO -->
+
+    <div class="info-row">
+
+        <div class="badge score">
+
+            AI Score:
+            {{ data.aiScore }}/10
+
+        </div>
+
+        <div class="badge feedback">
+
+            {{ data.aiFeedback }}
+
+        </div>
+
+    </div>
+
+    <!-- CODE -->
+
+    <div class="code-container">
+
+<pre><code>{{ data.solution }}</code></pre>
+
+    </div>
+
+</div>

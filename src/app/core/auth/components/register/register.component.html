@@ -1,0 +1,92 @@
+<div class="min-h-screen flex items-center justify-center bg-[#f5f6f8] p-4">
+  <div
+    class="w-full max-w-[430px] rounded-[18px] border border-[#e5e7eb] bg-white px-8 py-9"
+  >
+    <!-- Logo -->
+
+    <div
+      class="mx-auto mb-5 flex h-[54px] w-[54px] items-center justify-center rounded-2xl bg-[#08132f]"
+    >
+      <lucide-icon [img]="BriefcaseBusiness" class="h-6 w-6 text-white">
+      </lucide-icon>
+    </div>
+
+    <!-- Heading -->
+
+    <h1 class="text-center text-[20px] font-bold text-[#0f172a]">
+      AI Interview System
+    </h1>
+
+    <p class="mt-2 mb-7 text-center text-sm text-[#64748b]">
+      Create your portal account
+    </p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Username -->
+
+      <div>
+        <label class="mb-2 block text-sm font-semibold"> Username </label>
+
+        <input
+          type="text"
+          formControlName="userName"
+          placeholder="Enter username"
+          class="h-[52px] w-full rounded-[10px] border border-[#d1d5db] px-4 outline-none focus:border-[#08132f]"
+        />
+      </div>
+
+      <!-- Email -->
+
+      <div>
+        <label class="mb-2 block text-sm font-semibold"> Email </label>
+
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Enter email"
+          class="h-[52px] w-full rounded-[10px] border border-[#d1d5db] px-4 outline-none focus:border-[#08132f]"
+        />
+      </div>
+
+      <!-- Password -->
+
+      <div>
+        <label class="mb-2 block text-sm font-semibold"> Password </label>
+
+        <div class="relative">
+          <input
+            [type]="hidePassword() ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="Enter password"
+            class="h-[52px] w-full rounded-[10px] border border-[#d1d5db] px-4 pr-12 outline-none focus:border-[#08132f]"
+          />
+
+          <button
+            type="button"
+            (click)="togglePassword()"
+            class="absolute top-1/2 right-4 -translate-y-1/2"
+          >
+            <lucide-icon *ngIf="hidePassword()" [img]="EyeOff" class="h-5 w-5">
+            </lucide-icon>
+
+            <lucide-icon *ngIf="!hidePassword()" [img]="Eye" class="h-5 w-5">
+            </lucide-icon>
+          </button>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="h-[48px] w-full rounded-[10px] bg-[#08132f] font-semibold text-white"
+      >
+        {{ isLoading() ? "Creating..." : "Register" }}
+      </button>
+    </form>
+
+    <div class="mt-5 text-center">
+      <a routerLink="/auth/login" class="text-sm text-[#64748b]">
+        Already have account? Login
+      </a>
+    </div>
+  </div>
+</div>

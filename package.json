@@ -1,0 +1,61 @@
+{
+  "name": "java-evaluator",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "prettier": {
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^20.3.19",
+    "@angular/cdk": "^20.2.14",
+    "@angular/common": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/forms": "^20.0.0",
+    "@angular/material": "^20.2.14",
+    "@angular/platform-browser": "^20.0.0",
+    "@angular/router": "^20.0.0",
+    "@auth0/angular-jwt": "^5.2.0",
+    "@lucide/angular": "^1.16.0",
+    "@tailwindcss/postcss": "^4.3.0",
+    "chart.js": "^4.5.1",
+    "lucide": "^1.16.0",
+    "lucide-angular": "^1.0.0",
+    "lucide-react": "^1.16.0",
+    "ngx-toastr": "^19.1.0",
+    "ngx-ui-loader": "^19.0.0",
+    "postcss": "^8.5.15",
+    "rxjs": "~7.8.0",
+    "sweetalert2": "^11.26.25",
+    "tailwindcss": "^4.3.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.0.4",
+    "@angular/cli": "^20.0.4",
+    "@angular/compiler-cli": "^20.0.0",
+    "@types/jasmine": "~5.1.0",
+    "jasmine-core": "~5.7.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.8.2"
+  }
+}

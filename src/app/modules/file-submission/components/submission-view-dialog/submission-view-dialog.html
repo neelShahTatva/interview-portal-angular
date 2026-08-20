@@ -1,0 +1,72 @@
+<div class="dialog-container">
+  <!-- HEADER -->
+  <div class="dialog-header">
+    <div>
+      <h2>Submission Details</h2>
+
+      <p>Candidate submission and AI evaluation</p>
+    </div>
+  </div>
+
+  <!-- DETAILS -->
+
+  <div class="details-grid">
+    <div class="detail-item">
+      <label>Assessment</label>
+      <span>{{ data.assessmentName }}</span>
+    </div>
+
+    <div class="detail-item">
+      <label>Candidate</label>
+      <span>{{ data.candidateName }}</span>
+    </div>
+
+    <div class="detail-item">
+      <label>Status</label>
+      <span class="status">
+        {{ data.output }}
+      </span>
+    </div>
+
+    <div class="detail-item">
+      <label>AI Score</label>
+      <span class="score"> {{ data.aiScore }}/10 </span>
+    </div>
+
+    <!-- <div class="detail-item full-width">
+            <label>AI Feedback</label>
+
+            <div class="feedback-box">
+                {{ data.aiFeedback }}
+            </div>
+        </div> -->
+
+    <div class="detail-item full-width">
+      <label> Candidate Solutions </label>
+
+      <div class="solution-list">
+        @for (solution of solutions; track solution.id) {
+          <button class="solution-card" (click)="viewSolution(solution)">
+            <div class="solution-icon">
+              <mat-icon> description </mat-icon>
+            </div>
+
+            <div class="solution-content">
+              <div class="solution-title">
+                {{ solution.questionTitle }}
+              </div>
+
+              <div class="solution-meta">Score: {{ solution.aiScore }}/10</div>
+            </div>
+
+            <mat-icon class="arrow"> arrow_forward_ios </mat-icon>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-dialog-close class="close-btn">Close</button>
+  </div>
+</div>

@@ -1,0 +1,162 @@
+.dialog-container {
+  padding: 24px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.dialog-header {
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  p {
+    margin-top: 6px;
+    color: #64748b;
+  }
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  span {
+    font-size: 15px;
+    color: #0f172a;
+  }
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.status {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.score {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.feedback-box {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 14px;
+  line-height: 1.6;
+}
+
+.code-box {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.close-btn {
+  border: none;
+  padding: 10px 24px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: white;
+  cursor: pointer;
+}
+
+.solution-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.solution-card {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 14px 18px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  text-align: left;
+
+  &:hover {
+    border-color: #2563eb;
+    background: #f8fafc;
+    transform: translateY(-1px);
+  }
+}
+
+.solution-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #eff6ff;
+
+  mat-icon {
+    color: #2563eb;
+  }
+}
+
+.solution-content {
+  flex: 1;
+}
+
+.solution-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.solution-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.arrow {
+  color: #94a3b8;
+  font-size: 16px;
+}

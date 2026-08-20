@@ -1,0 +1,37 @@
+export const API_ROUTES = {
+  AUTH: {
+    LOGIN: '/auth/login',
+    REFRESH: '/auth/refresh',
+    REGISTER: '/auth/register',
+    FORGOT_PASSWORD: '/auth/forgot-password',
+    RESET_PASSWORD: '/auth/reset-password',
+    VALIDATE_RESET_TOKEN: '/auth/validate-reset-token',
+  },
+  QUESTIONS: {
+    GET_ALL: '/questions',
+    GET_BY_ID: '/questions/',
+    CREATE: '/questions',
+    UPDATE: '/questions/',
+    DELETE: '/questions/',
+    GET_ALL_CATEGORIES: '/questions/category',
+    RECOMMANDED_QUESTIONS: '/questions/recommend',
+    UPLOAD: '/questions/upload',
+  },
+  DASHBOARD: {
+    STATS: 'dashboard/stats',
+    ASSESSMENT_STATUS: '/dashboard/assessment-status',
+    CANDIDATE_PIPELINE: '/dashboard/candidate-pipeline',
+    RECENT_SUBMISSIONS: '/dashboard/recent-submissions',
+    QUESTIONS_BY_DIFF: '/dashboard/questions-by-difficulty',
+    AI_SCORE_DIST: '/dashboard/ai-score-distribution',
+    RECENT_ACTIVITY: '/dashboard/recent-activity',
+  },
+  ASSESSMENT: {
+    GET_ALL: '/assessments',
+    GET_BY_ID: '/assessments/',
+    CREATE: '/assessments',
+    DELETE: '/assessments/',
+    CHANGE_STATUS: '/assessments/',
+    AVAILABLE_CANDIDATES: '/assessments/available-candidates',
+  },
+};

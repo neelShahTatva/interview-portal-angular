@@ -1,0 +1,181 @@
+<div class="users-page">
+
+    <!-- HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h2>Candidates</h2>
+            <p>Manage candidates</p>
+        </div>
+
+        @if (role === "ADMIN") {
+        <button class="add-btn" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
+            Add Candidate
+        </button>
+        }
+
+    </div>
+
+    <!-- FILTER -->
+    <div class="filters-card">
+
+        <div class="search-box">
+            <mat-icon>search</mat-icon>
+
+            <input
+                type="text"
+                placeholder="Search candidate/email"
+                [(ngModel)]="searchText"
+                (input)="applyFilters()"
+            />
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+
+        <div class="table-wrapper">
+
+            <table mat-table [dataSource]="dataSource">
+
+                <!-- CANDIDATE -->
+                <ng-container matColumnDef="candidate">
+
+                    <th mat-header-cell *matHeaderCellDef>
+                        Candidate
+                    </th>
+
+                    <td mat-cell *matCellDef="let candidate">
+
+                        <div class="user-info">
+
+                            <div class="avatar">
+                                {{ candidate.firstName?.charAt(0) | uppercase }}
+                            </div>
+
+                            <div>
+
+                                <div class="username">
+                                    {{ candidate.firstName }}
+                                    {{ candidate.lastName }}
+                                </div>
+
+                                <div class="email-mobile">
+                                    {{ candidate.email }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                </ng-container>
+
+                <!-- EMAIL -->
+                <ng-container matColumnDef="email">
+
+                    <th mat-header-cell *matHeaderCellDef>
+                        Email
+                    </th>
+
+                    <td mat-cell *matCellDef="let candidate">
+                        {{ candidate.email }}
+                    </td>
+
+                </ng-container>
+
+                <!-- EXPERIENCE -->
+                <ng-container matColumnDef="experience">
+
+                    <th mat-header-cell *matHeaderCellDef>
+                        Experience
+                    </th>
+
+                    <td mat-cell *matCellDef="let candidate">
+                        {{ candidate.experience }} Years
+                    </td>
+
+                </ng-container>
+
+                <!-- DESIGNATION -->
+                <ng-container matColumnDef="designation">
+
+                    <th mat-header-cell *matHeaderCellDef>
+                        Designation
+                    </th>
+
+                    <td mat-cell *matCellDef="let candidate">
+                        {{ candidate.designation }}
+                    </td>
+
+                </ng-container>
+
+                <!-- STATUS -->
+                <ng-container matColumnDef="status">
+
+                    <th mat-header-cell *matHeaderCellDef>
+                        Status
+                    </th>
+
+                    <td mat-cell *matCellDef="let candidate">
+
+                        <span
+                            class="status-badge"
+                            [class.active]="candidate.isActive"
+                        >
+                            {{ candidate.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+
+                    </td>
+
+                </ng-container>
+
+                <!-- ACTIONS -->
+                <ng-container matColumnDef="actions">
+
+                    <th mat-header-cell *matHeaderCellDef>
+                        Actions
+                    </th>
+
+                    <td mat-cell *matCellDef="let candidate">
+
+                        <button
+                            class="action-btn"
+                            style="margin-right: 5px;"
+                            (click)="openEditDialog(candidate)"
+                        >
+                            <mat-icon>edit</mat-icon>
+                        </button>
+
+                        <button
+                            class="action-btn delete"
+                            (click)="deleteCandidate(candidate)"
+                        >
+                            <mat-icon>delete</mat-icon>
+                        </button>
+
+                    </td>
+
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            </table>
+
+            <mat-paginator
+                [pageSize]="5"
+                [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons
+            >
+            </mat-paginator>
+
+        </div>
+
+    </div>
+
+</div>
