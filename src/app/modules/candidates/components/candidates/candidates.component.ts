@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { AuthService } from '../../../../core/auth/services/auth.service';
-import { CandidatesService } from '../../../../core/auth/services/candidates.service';
+import { CandidatesService } from '../../services/candidates.service';
 import { CandidateDialogComponent } from '../candidate-dialog/candidate-dialog';
 
 @Component({
@@ -37,14 +37,13 @@ import { CandidateDialogComponent } from '../candidate-dialog/candidate-dialog';
   ],
 })
 export class CandidatesComponent implements OnInit {
-
   displayedColumns = [
     'candidate',
     'email',
     'experience',
     'designation',
     'status',
-    'actions'
+    'actions',
   ];
 
   candidates: any[] = [];
@@ -61,11 +60,10 @@ export class CandidatesComponent implements OnInit {
     private readonly candidatesService: CandidatesService,
     private readonly dialog: MatDialog,
     private readonly toastr: ToastrService,
-    private readonly authService: AuthService,
-  ) { }
+    private readonly authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-
     this.getCandidates();
 
     const user = this.authService.getUser();
@@ -88,13 +86,10 @@ export class CandidatesComponent implements OnInit {
   }
 
   getCandidates(): void {
-
     this.isLoading = true;
 
     this.candidatesService.getCandidates().subscribe({
-
       next: (response: any) => {
-
         this.isLoading = false;
 
         this.candidates = response.result;
@@ -111,22 +106,18 @@ export class CandidatesComponent implements OnInit {
   }
 
   applyFilters(): void {
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const search = filter;
 
-    this.dataSource.filterPredicate =
-      (data: any, filter: string) => {
+      return (
+        data.firstName?.toLowerCase().includes(search) ||
+        data.lastName?.toLowerCase().includes(search) ||
+        data.email?.toLowerCase().includes(search) ||
+        data.designation?.toLowerCase().includes(search)
+      );
+    };
 
-        const search = filter;
-
-        return (
-          data.firstName?.toLowerCase().includes(search) ||
-          data.lastName?.toLowerCase().includes(search) ||
-          data.email?.toLowerCase().includes(search) ||
-          data.designation?.toLowerCase().includes(search)
-        );
-      };
-
-    this.dataSource.filter =
-      this.searchText.trim().toLowerCase();
+    this.dataSource.filter = this.searchText.trim().toLowerCase();
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -134,150 +125,102 @@ export class CandidatesComponent implements OnInit {
   }
 
   deleteCandidate(candidate: any): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      disableClose: true,
+      data: {
+        title: 'Candidate',
+        name: candidate.firstName + ' ' + candidate.lastName,
+      },
+    });
 
-    const dialogRef = this.dialog.open(
-      ConfirmDialogComponent,
-      {
-        width: '420px',
-        disableClose: true,
-        data: {
-          title:"Candidate",
-          name:
-            candidate.firstName +
-            ' ' +
-            candidate.lastName,
-        },
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
       }
-    );
 
-    dialogRef.afterClosed()
-      .subscribe((confirmed) => {
+      this.candidatesService.deleteCandidate(candidate.id).subscribe({
+        next: () => {
+          this.toastr.success('Candidate deleted successfully');
 
-        if (!confirmed) {
-          return;
-        }
+          this.getCandidates();
+        },
 
-        this.candidatesService
-          .deleteCandidate(candidate.id)
-          .subscribe({
-
-            next: () => {
-
-              this.toastr.success(
-                'Candidate deleted successfully'
-              );
-
-              this.getCandidates();
-            },
-
-            error: () => {
-
-              this.toastr.error(
-                'Failed to delete candidate'
-              );
-            },
-          });
+        error: () => {
+          this.toastr.error('Failed to delete candidate');
+        },
       });
+    });
   }
 
   openAddDialog(): void {
+    const dialogRef = this.dialog.open(CandidateDialogComponent, {
+      width: '520px',
+    });
 
-    const dialogRef = this.dialog.open(
-      CandidateDialogComponent,
-      {
-        width: '520px',
-      }
-    );
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
 
-    dialogRef.afterClosed()
-      .subscribe((result) => {
+      const payload = {
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+        experience: result.experience,
+        designation: result.designation,
+        isActive: result.isActive,
+      };
 
-        if (!result) return;
+      this.candidatesService.createCandidate(payload).subscribe({
+        next: () => {
+          this.getCandidates();
 
-        const payload = {
-          firstName: result.firstName,
-          lastName: result.lastName,
-          email: result.email,
-          experience: result.experience,
-          designation: result.designation,
-          isActive: result.isActive,
-        };
+          this.toastr.success('Candidate created successfully');
+        },
 
-        this.candidatesService
-          .createCandidate(payload)
-          .subscribe({
-
-            next: () => {
-
-              this.getCandidates();
-
-              this.toastr.success(
-                'Candidate created successfully'
-              );
-            },
-
-            error: () => {
-
-              this.toastr.error(
-                'Failed to create candidate'
-              );
-            },
-          });
+        error: () => {
+          this.toastr.error('Failed to create candidate');
+        },
       });
+    });
   }
 
   openEditDialog(candidate: any): void {
+    const dialogRef = this.dialog.open(CandidateDialogComponent, {
+      width: '520px',
+      data: {
+        id: candidate.id,
+        firstName: candidate.firstName,
+        lastName: candidate.lastName,
+        email: candidate.email,
+        experience: candidate.experience,
+        designation: candidate.designation,
+        isActive: candidate.isActive,
+      },
+    });
 
-    const dialogRef = this.dialog.open(
-      CandidateDialogComponent,
-      {
-        width: '520px',
-        data: {
-          id: candidate.id,
-          firstName: candidate.firstName,
-          lastName: candidate.lastName,
-          email: candidate.email,
-          experience: candidate.experience,
-          designation: candidate.designation,
-          isActive: candidate.isActive,
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+
+      const payload = {
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+        experience: result.experience,
+        designation: result.designation,
+        isActive: result.isActive,
+      };
+
+      this.candidatesService.updateCandidate(candidate.id, payload).subscribe({
+        next: () => {
+          this.getCandidates();
+
+          this.toastr.success('Candidate updated successfully');
         },
-      }
-    );
 
-    dialogRef.afterClosed()
-      .subscribe((result) => {
-
-        if (!result) return;
-
-        const payload = {
-          firstName: result.firstName,
-          lastName: result.lastName,
-          email: result.email,
-          experience: result.experience,
-          designation: result.designation,
-          isActive: result.isActive,
-        };
-
-        this.candidatesService
-          .updateCandidate(candidate.id, payload)
-          .subscribe({
-
-            next: () => {
-
-              this.getCandidates();
-
-              this.toastr.success(
-                'Candidate updated successfully'
-              );
-            },
-
-            error: () => {
-
-              this.toastr.error(
-                'Failed to update candidate'
-              );
-            },
-          });
+        error: () => {
+          this.toastr.error('Failed to update candidate');
+        },
       });
+    });
   }
 }

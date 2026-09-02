@@ -1,7 +1,21 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
-import { ActivityItem, AiScoreDistribution, AssessmentStatusBreakdown, CandidatePipeline, DashboardData, DashboardStats, QuestionsByDifficulty, RecentSubmission } from '../../interfaces/dashboard.interface';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ActivityItem,
+  AiScoreDistribution,
+  AssessmentStatusBreakdown,
+  CandidatePipeline,
+  DashboardData,
+  DashboardStats,
+  QuestionsByDifficulty,
+  RecentSubmission,
+} from '../../models/dashboard.model';
 import { Chart, registerables } from 'chart.js';
-import { DashboardService } from '../../services/dashboard-service';
+import { DashboardService } from '../../services/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, of, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +27,7 @@ Chart.register(...registerables);
   selector: 'app-dashboard',
   imports: [CommonModule, MatIconModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
   @ViewChild('statusChartRef') statusChartRef!: ElementRef<HTMLCanvasElement>;
@@ -44,14 +58,13 @@ export class DashboardComponent {
     private readonly dashboardService: DashboardService,
     private readonly toastr: ToastrService,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadDashboard();
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -64,7 +77,9 @@ export class DashboardComponent {
   loadDashboard(): void {
     this.isLoading = true;
 
-    this.dashboardService.loadAll().pipe(takeUntil(this.destroy$))
+    this.dashboardService
+      .loadAll()
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
           this.isLoading = false;
@@ -72,7 +87,7 @@ export class DashboardComponent {
           this.stats = data.stats;
           this.pipeline = data.candidatePipeline;
           this.recentSubmissions = data.recentSubmissions;
-          this.questionsByDifficulty = data.questionsByDifficulty;                                      
+          this.questionsByDifficulty = data.questionsByDifficulty;
           this.recentActivity = data.recentActivity;
 
           this.deriveCounts();
@@ -97,13 +112,20 @@ export class DashboardComponent {
       ).toFixed(1);
     }
 
-    const easy = this.questionsByDifficulty.find(q => q.difficulty === 'EASY');
-    const medium = this.questionsByDifficulty.find(q => q.difficulty === 'MEDIUM');
-    const hard = this.questionsByDifficulty.find(q => q.difficulty === 'HARD');
+    const easy = this.questionsByDifficulty.find(
+      (q) => q.difficulty === 'EASY'
+    );
+    const medium = this.questionsByDifficulty.find(
+      (q) => q.difficulty === 'MEDIUM'
+    );
+    const hard = this.questionsByDifficulty.find(
+      (q) => q.difficulty === 'HARD'
+    );
     this.easyCount = easy?.count ?? 0;
     this.mediumCount = medium?.count ?? 0;
     this.hardCount = hard?.count ?? 0;
-    this.totalQuestionsDiff = this.easyCount + this.mediumCount + this.hardCount;
+    this.totalQuestionsDiff =
+      this.easyCount + this.mediumCount + this.hardCount;
   }
 
   pipelineWidth(value: number): string {
@@ -120,7 +142,7 @@ export class DashboardComponent {
   initials(name: string): string {
     return name
       .split(' ')
-      .map(n => n[0])
+      .map((n) => n[0])
       .join('')
       .toUpperCase()
       .slice(0, 2);
@@ -181,29 +203,48 @@ export class DashboardComponent {
     if (!this.statusChartRef) return;
     this.statusChart?.destroy();
 
-    const ordered: Array<'COMPLETED' | 'IN_PROGRESS' | 'PENDING'> = ['COMPLETED', 'IN_PROGRESS', 'PENDING'];
+    const ordered: Array<'COMPLETED' | 'IN_PROGRESS' | 'PENDING'> = [
+      'COMPLETED',
+      'IN_PROGRESS',
+      'PENDING',
+    ];
     const labels = ['Completed', 'In progress', 'Pending'];
     const colors = ['#185FA5', '#3B6D11', '#888780'];
-    const counts = ordered.map(s => data.find(d => d.status === s)?.count ?? 0);
+    const counts = ordered.map(
+      (s) => data.find((d) => d.status === s)?.count ?? 0
+    );
 
     this.statusChart = new Chart(this.statusChartRef.nativeElement, {
       type: 'bar',
       data: {
         labels,
-        datasets: [{
-          data: counts,
-          backgroundColor: colors,
-          borderRadius: 6,
-          borderSkipped: false,
-        }],
+        datasets: [
+          {
+            data: counts,
+            backgroundColor: colors,
+            borderRadius: 6,
+            borderSkipped: false,
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-          x: { grid: { display: false }, ticks: { color: this.tickColor(), font: { size: 12 } } },
-          y: { grid: { color: this.gridColor() }, ticks: { color: this.tickColor(), font: { size: 11 }, stepSize: 10 }, beginAtZero: true },
+          x: {
+            grid: { display: false },
+            ticks: { color: this.tickColor(), font: { size: 12 } },
+          },
+          y: {
+            grid: { color: this.gridColor() },
+            ticks: {
+              color: this.tickColor(),
+              font: { size: 11 },
+              stepSize: 10,
+            },
+            beginAtZero: true,
+          },
         },
       },
     });
@@ -213,19 +254,27 @@ export class DashboardComponent {
     if (!this.diffChartRef) return;
     this.diffChart?.destroy();
 
-    const ordered: Array<'EASY' | 'MEDIUM' | 'HARD'> = ['EASY', 'MEDIUM', 'HARD'];
-    const counts = ordered.map(d => data.find(q => q.difficulty === d)?.count ?? 0);
+    const ordered: Array<'EASY' | 'MEDIUM' | 'HARD'> = [
+      'EASY',
+      'MEDIUM',
+      'HARD',
+    ];
+    const counts = ordered.map(
+      (d) => data.find((q) => q.difficulty === d)?.count ?? 0
+    );
 
     this.diffChart = new Chart(this.diffChartRef.nativeElement, {
       type: 'doughnut',
       data: {
         labels: ['Easy', 'Medium', 'Hard'],
-        datasets: [{
-          data: counts,
-          backgroundColor: ['#3B6D11', '#854F0B', '#A32D2D'],
-          borderWidth: 3,
-          hoverOffset: 4,
-        }],
+        datasets: [
+          {
+            data: counts,
+            backgroundColor: ['#3B6D11', '#854F0B', '#A32D2D'],
+            borderWidth: 3,
+            hoverOffset: 4,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -241,22 +290,26 @@ export class DashboardComponent {
     this.scoreChart?.destroy();
 
     const labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-    const counts = labels.map(l => data.find(d => d.score === Number(l))?.count ?? 0);
+    const counts = labels.map(
+      (l) => data.find((d) => d.score === Number(l))?.count ?? 0
+    );
 
     this.scoreChart = new Chart(this.scoreChartRef.nativeElement, {
       type: 'bar',
       data: {
         labels,
-        datasets: [{
-          data: counts,
-          backgroundColor: counts.map((_, i) => {
-            if (i <= 2) return '#A32D2D';
-            if (i <= 5) return '#854F0B';
-            return '#185FA5';
-          }),
-          borderRadius: 4,
-          borderSkipped: false,
-        }],
+        datasets: [
+          {
+            data: counts,
+            backgroundColor: counts.map((_, i) => {
+              if (i <= 2) return '#A32D2D';
+              if (i <= 5) return '#854F0B';
+              return '#185FA5';
+            }),
+            borderRadius: 4,
+            borderSkipped: false,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -266,7 +319,12 @@ export class DashboardComponent {
           x: {
             grid: { display: false },
             ticks: { color: this.tickColor(), font: { size: 12 } },
-            title: { display: true, text: 'AI score (1–10)', color: this.tickColor(), font: { size: 11 } },
+            title: {
+              display: true,
+              text: 'AI score (1–10)',
+              color: this.tickColor(),
+              font: { size: 11 },
+            },
           },
           y: {
             grid: { color: this.gridColor() },

@@ -9,8 +9,8 @@ import {
   EyeOff,
   LucideAngularModule,
 } from 'lucide-angular';
-import { ApiResponse } from '../../../../shared/interfaces/api-response.interface';
-import { LoginResponse } from '../../interfaces/login-response.interface';
+import { ApiResponse } from '../../../../shared/models/api-response.model';
+import { LoginResponse } from '../../models/login-response.model';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -50,8 +50,8 @@ export class Login {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private toastr: ToastrService,
-  ) { }
+    private toastr: ToastrService
+  ) {}
 
   togglePassword() {
     this.hidePassword.update((v) => !v);
@@ -96,7 +96,7 @@ export class Login {
             this.router.navigate(['/dashboard']);
           } else {
             this.toastr.error(
-              response.errorMessages?.join(',') ?? 'Login failed',
+              response.errorMessages?.join(',') ?? 'Login failed'
             );
           }
         },

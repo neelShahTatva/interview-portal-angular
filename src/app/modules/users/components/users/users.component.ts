@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { UsersService } from '../../../../core/auth/services/users.service';
+import { UsersService } from '../../services/users.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -38,7 +38,6 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
   ],
 })
 export class UsersComponent implements OnInit {
-
   displayedColumns = ['username', 'email', 'role', 'status', 'actions'];
   users: any[] = [];
   dataSource = new MatTableDataSource<any>();
@@ -54,21 +53,18 @@ export class UsersComponent implements OnInit {
     private readonly usersService: UsersService,
     private readonly dialog: MatDialog,
     private readonly toastr: ToastrService,
-    private readonly authService: AuthService,
-  ) { }
+    private readonly authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.getUsers();
 
     const user = this.authService.getUser();
-    if (user) { this.role = user.roleName; }
+    if (user) {
+      this.role = user.roleName;
+    }
 
-    this.displayedColumns = [
-      'username',
-      'email',
-      'role',
-      'status',
-    ];
+    this.displayedColumns = ['username', 'email', 'role', 'status'];
 
     if (this.role === 'ADMIN') {
       this.displayedColumns.push('actions');
@@ -93,36 +89,27 @@ export class UsersComponent implements OnInit {
   }
 
   applyFilters(): void {
-    this.dataSource.filterPredicate =
-      (data: any, filter: string) => {
-        const parsedFilter = JSON.parse(filter);
-        const search = parsedFilter.search;
-        const role = parsedFilter.role;
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const parsedFilter = JSON.parse(filter);
+      const search = parsedFilter.search;
+      const role = parsedFilter.role;
 
-        // SEARCH
-        const matchesSearch =
-          !search ||
-          data.username
-            ?.toLowerCase()
-            .includes(search) ||
-          data.email
-            ?.toLowerCase()
-            .includes(search);
+      // SEARCH
+      const matchesSearch =
+        !search ||
+        data.username?.toLowerCase().includes(search) ||
+        data.email?.toLowerCase().includes(search);
 
-        // ROLE
-        const matchesRole = !role || data.roleId === Number(role);
+      // ROLE
+      const matchesRole = !role || data.roleId === Number(role);
 
-        return matchesSearch && matchesRole;
-      };
+      return matchesSearch && matchesRole;
+    };
 
     this.dataSource.filter = JSON.stringify({
-      search:
-        this.searchText
-          .trim()
-          .toLowerCase(),
+      search: this.searchText.trim().toLowerCase(),
 
-      role:
-        this.roleFilter,
+      role: this.roleFilter,
     });
 
     if (this.paginator) {
@@ -131,127 +118,96 @@ export class UsersComponent implements OnInit {
   }
 
   deleteUser(user: any): void {
-    const dialogRef = this.dialog.open(
-      ConfirmDialogComponent,
-      {
-        width: '420px',
-        disableClose: true,
-        data: {
-          title:"User",
-          name: user.username,
-        },
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      disableClose: true,
+      data: {
+        title: 'User',
+        name: user.username,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
       }
-    );
 
-    dialogRef.afterClosed()
-      .subscribe((confirmed) => {
-        if (!confirmed) {
-          return;
-        }
+      this.usersService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.toastr.success('User deleted successfully');
 
-        this.usersService
-          .deleteUser(user.id)
-          .subscribe({
-            next: () => {
-              this.toastr.success(
-                'User deleted successfully'
-              );
+          this.getUsers();
+        },
 
-              this.getUsers();
-            },
-
-            error: () => {
-              this.toastr.error(
-                'Failed to delete user'
-              );
-            },
-          });
+        error: () => {
+          this.toastr.error('Failed to delete user');
+        },
       });
+    });
   }
 
   openAddDialog(): void {
-    const dialogRef = this.dialog.open(
-      UserDialogComponent,
-      {
-        width: '520px',
-      }
-    );
+    const dialogRef = this.dialog.open(UserDialogComponent, {
+      width: '520px',
+    });
 
-    dialogRef.afterClosed()
-      .subscribe((result) => {
-        if (!result) return;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
 
-        const payload = {
-          username: result.username,
-          email: result.email,
-          password: result.password,
-          roleId: result.roleId,
-          isActive: result.isActive,
-        };
+      const payload = {
+        username: result.username,
+        email: result.email,
+        password: result.password,
+        roleId: result.roleId,
+        isActive: result.isActive,
+      };
 
-        this.usersService
-          .createUser(payload)
-          .subscribe({
-            next: () => {
-              this.getUsers();
-              this.toastr.success(
-                'User created successfully'
-              );
-            },
+      this.usersService.createUser(payload).subscribe({
+        next: () => {
+          this.getUsers();
+          this.toastr.success('User created successfully');
+        },
 
-            error: () => {
-              this.toastr.error(
-                'Failed to create user'
-              );
-            },
-          });
+        error: () => {
+          this.toastr.error('Failed to create user');
+        },
       });
+    });
   }
 
   openEditDialog(user: any): void {
-    const dialogRef = this.dialog.open(
-      UserDialogComponent,
-      {
-        width: '520px',
-        data: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          roleId: user.roleId,
-          isActive: user.isActive,
+    const dialogRef = this.dialog.open(UserDialogComponent, {
+      width: '520px',
+      data: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        roleId: user.roleId,
+        isActive: user.isActive,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+
+      const payload = {
+        username: result.username,
+        email: result.email,
+        password: result.password,
+        roleId: result.roleId,
+        isActive: result.isActive,
+      };
+
+      this.usersService.updateUser(user.id, payload).subscribe({
+        next: () => {
+          this.getUsers();
+          this.toastr.success('User updated successfully');
         },
-      }
-    );
 
-    dialogRef.afterClosed()
-      .subscribe((result) => {
-
-        if (!result) return;
-
-        const payload = {
-          username: result.username,
-          email: result.email,
-          password: result.password,
-          roleId: result.roleId,
-          isActive: result.isActive,
-        };
-
-        this.usersService
-          .updateUser(user.id, payload)
-          .subscribe({
-            next: () => {
-              this.getUsers();
-              this.toastr.success(
-                'User updated successfully'
-              );
-            },
-
-            error: () => {
-              this.toastr.error(
-                'Failed to update user'
-              );
-            },
-          });
+        error: () => {
+          this.toastr.error('Failed to update user');
+        },
       });
+    });
   }
 }

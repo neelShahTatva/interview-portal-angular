@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { APIInterfaceService } from '../../../shared/services/api-interface.service';
-import { Assessment, AssessmentRequest } from '../interfaces/assessment';
-import { API_ROUTES } from '../../../shared/common/api-routes';
-import { Question } from '../../question-bank/interfaces/question.interfase';
+import { Assessment, AssessmentRequest } from '../models/assessment.model';
+import { API_ROUTES } from '../../../shared/constant/api-routes';
+import { Question } from '../../question-bank/models/question.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +29,7 @@ export class AssessmentService {
   updateStatus(id: number, status: string) {
     return this.api.post(
       `${API_ROUTES.ASSESSMENT.CHANGE_STATUS}${id}/status?status=${status}`,
-      {},
+      {}
     );
   }
 
@@ -39,7 +39,7 @@ export class AssessmentService {
 
   recommendQuestions(candidateId: number, maxMinutes = 90) {
     return this.api.get<Question[]>(
-      `${API_ROUTES.QUESTIONS.RECOMMANDED_QUESTIONS}?candidateId=${candidateId}&maxMinutes=${maxMinutes}`,
+      `${API_ROUTES.QUESTIONS.RECOMMANDED_QUESTIONS}?candidateId=${candidateId}&maxMinutes=${maxMinutes}`
     );
   }
 }
