@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { LoginRequest } from '../interfaces/login-request.interface';
+import { LoginRequest } from '../models/login-request.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs';
-import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
-import { LoginResponse } from '../interfaces/login-response.interface';
+import { ApiResponse } from '../../../shared/models/api-response.model';
+import { LoginResponse } from '../models/login-response.model';
 import { APIInterfaceService } from '../../../shared/services/api-interface.service';
-import { API_ROUTES } from '../../../shared/common/api-routes';
+import { API_ROUTES } from '../../../shared/constant/api-routes';
 import { Router } from '@angular/router';
-import { TokenClaims } from '../interfaces/token-claims.interface';
-import { RegisterRequest } from '../interfaces/register-request.interface';
-import { ResetPasswordRequest } from '../interfaces/reset-password-request.interface';
-import { ForgotRequest } from '../interfaces/forgot-request.interface';
+import { TokenClaims } from '../models/token-claims.model';
+import { RegisterRequest } from '../models/register-request.model';
+import { ResetPasswordRequest } from '../models/reset-password-request.model';
+import { ForgotRequest } from '../models/forgot-request.model';
 import { HttpParams } from '@angular/common/http';
 
 @Injectable({
@@ -19,13 +19,13 @@ import { HttpParams } from '@angular/common/http';
 export class AuthService {
   constructor(
     private apiInterface: APIInterfaceService,
-    private router: Router,
+    private router: Router
   ) {}
 
   login(formDetails: LoginRequest): Observable<ApiResponse<LoginResponse>> {
     return this.apiInterface.post<LoginResponse>(
       API_ROUTES.AUTH.LOGIN,
-      formDetails,
+      formDetails
     );
   }
 
@@ -55,7 +55,7 @@ export class AuthService {
 
   validateResetToken(token: string) {
     return this.apiInterface.get(
-      API_ROUTES.AUTH.VALIDATE_RESET_TOKEN + '/' + token,
+      API_ROUTES.AUTH.VALIDATE_RESET_TOKEN + '/' + token
     );
   }
 
@@ -79,7 +79,6 @@ export class AuthService {
   getToken(): string {
     return localStorage.getItem('accessToken') ?? '';
   }
-
 
   getClaims(): TokenClaims {
     const jwtHelper = new JwtHelperService();

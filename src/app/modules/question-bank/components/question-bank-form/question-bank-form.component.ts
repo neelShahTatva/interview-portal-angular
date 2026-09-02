@@ -10,7 +10,7 @@ import {
   Category,
   Question,
   QuestionSolution,
-} from '../../interfaces/question.interfase';
+} from '../../models/question.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { QuestionService } from '../../services/question-service';
+import { QuestionService } from '../../services/question.service';
 import { ToastrService } from 'ngx-toastr';
 import { CustomValidators } from '../../../../shared/validators/custom-validators';
 
@@ -71,8 +71,8 @@ export class QuestionBankFormComponent {
     private router: Router,
     private route: ActivatedRoute,
     private readonly questionService: QuestionService,
-    private readonly toastr: ToastrService,
-  ) { }
+    private readonly toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -142,7 +142,7 @@ export class QuestionBankFormComponent {
               this.fb.group({
                 language: [sol.language, Validators.required],
                 solutionCode: [sol.solutionCode, Validators.required],
-              }),
+              })
             );
           });
 
@@ -190,7 +190,7 @@ export class QuestionBankFormComponent {
     this.solutions.removeAt(index);
     this.activeSolutionIndex = Math.max(
       0,
-      Math.min(this.activeSolutionIndex, this.solutions.length - 1),
+      Math.min(this.activeSolutionIndex, this.solutions.length - 1)
     );
   }
 
@@ -252,13 +252,13 @@ export class QuestionBankFormComponent {
 
     return allSolutions.some(
       (sol: any, index: number) =>
-        sol.language === languageToCheck && index !== currentIndex,
+        sol.language === languageToCheck && index !== currentIndex
     );
   }
 
   triggerFileInput(index: number): void {
     const fileInput = document.getElementById(
-      `file-upload-${index}`,
+      `file-upload-${index}`
     ) as HTMLInputElement;
     if (fileInput) {
       fileInput.click();
@@ -299,7 +299,7 @@ export class QuestionBankFormComponent {
   private autoDetectLanguage(
     filename: string,
     group: any,
-    index: number,
+    index: number
   ): void {
     const ext = filename.split('.').pop()?.toLowerCase();
     let detectedLang = '';

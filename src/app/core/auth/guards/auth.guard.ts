@@ -5,13 +5,13 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { TokenClaims } from './interfaces/token-claims.interface';
-import { AuthService } from './services/auth.service';
+import { AuthService } from '../services/auth.service';
+import { TokenClaims } from '../models/token-claims.model';
 
 export function AuthGuard(role?: Number[]): CanActivateFn {
   return async (
     routeSnapshot: ActivatedRouteSnapshot,
-    stateSnapshot: RouterStateSnapshot,
+    stateSnapshot: RouterStateSnapshot
   ) => {
     const authService: AuthService = inject(AuthService);
     const router: Router = inject(Router);
