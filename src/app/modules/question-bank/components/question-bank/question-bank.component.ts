@@ -16,8 +16,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { QuestionService } from '../../services/question-service';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { ApiResponse } from '../../../../shared/interfaces/api-response.interface';
+import { API_ROUTES } from '../../../../shared/common/api-routes';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-question-bank',
@@ -167,6 +170,11 @@ export class QuestionBankComponent {
     });
   }
 
+  downloadTemplate(): void {
+    const url = `${environment.baseUrl}${API_ROUTES.QUESTIONS.DOWNLOAD_TEMPLATE}`;
+    window.open(url, '_blank');
+  }
+
   uploadExcel(event: any): void {
     const file = event.target.files[0];
 
@@ -180,8 +188,42 @@ export class QuestionBankComponent {
         this.getQuestions();
         event.target.value = '';
       },
-      error: () => {
-        this.toastr.error('Upload failed');
+      error: (err: HttpErrorResponse) => {
+        let message = 'Upload failed';
+
+        const rawError = err?.error;
+
+        if (typeof rawError === 'string') {
+          try {
+            const parsed = JSON.parse(rawError);
+            if (parsed?.errorMessages?.length) {
+              message = parsed.errorMessages.join('\n');
+            } else if (parsed?.message) {
+              message = parsed.message;
+            } else {
+              message = rawError;
+            }
+          } catch {
+            message = rawError || err?.message || 'Upload failed';
+          }
+        } else if (rawError) {
+          if (Array.isArray(rawError.errorMessages) && rawError.errorMessages.length) {
+            message = rawError.errorMessages.join('\n');
+          } else if (Array.isArray(rawError.errors) && rawError.errors.length) {
+            message = rawError.errors.join('\n');
+          } else if (Array.isArray(rawError.result) && rawError.result.length) {
+            message = rawError.result.join('\n');
+          } else if (rawError.message) {
+            message = rawError.message;
+          }
+        }
+
+        if (!message || message === 'Upload failed') {
+          message = err?.message || 'Upload failed';
+        }
+
+        this.toastr.error(message, 'Upload failed');
+        event.target.value = '';
       }
     });
 
