@@ -29,6 +29,18 @@ export class APIInterfaceService {
     );
   }
 
+  postText<T>(
+    url: string,
+    data: any,
+    params?: HttpParams,
+  ): Observable<string> {
+    return this.http.request<string>('POST', `${environment.baseUrl}${url}`, {
+      body: data,
+      params,
+      responseType: 'text' as any,
+    });
+  }
+
   put<T>(
     url: string,
     data: any,

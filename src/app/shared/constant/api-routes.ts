@@ -16,6 +16,7 @@ export const API_ROUTES = {
     GET_ALL_CATEGORIES: '/questions/category',
     RECOMMANDED_QUESTIONS: '/questions/recommend',
     UPLOAD: '/questions/upload',
+    DOWNLOAD_TEMPLATE: '/questions/download-template',
   },
   DASHBOARD: {
     STATS: 'dashboard/stats',

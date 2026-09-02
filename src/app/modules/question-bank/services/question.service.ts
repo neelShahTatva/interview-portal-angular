@@ -44,14 +44,54 @@ export class QuestionService {
     );
   }
 
-  uploadQuestions(file: File) {
+  uploadQuestions(file: File): Observable<ApiResponse<Question[]>> {
     const formData = new FormData();
-
     formData.append('file', file);
 
-    return this.apiInterface.post<ApiResponse<Question[]>>(
-      API_ROUTES.QUESTIONS.UPLOAD,
-      formData
-    );
+    return new Observable((observer) => {
+      this.apiInterface
+        .postText<string>(API_ROUTES.QUESTIONS.UPLOAD, formData)
+        .subscribe({
+          next: (response) => {
+            try {
+              const parsed = response ? JSON.parse(response) : null;
+              observer.next(
+                parsed ??
+                  ({
+                    statusCode: 200,
+                    success: true,
+                    errorMessages: [],
+                    result: [],
+                  } as ApiResponse<Question[]>)
+              );
+            } catch {
+              observer.next({
+                statusCode: 200,
+                success: true,
+                errorMessages: [],
+                result: [],
+              } as ApiResponse<Question[]>);
+            }
+          },
+          error: (error) => {
+            const rawError = error?.error;
+
+            try {
+              const parsed =
+                typeof rawError === 'string' ? JSON.parse(rawError) : rawError;
+              observer.error({
+                ...error,
+                error: parsed ?? rawError ?? error.message ?? 'Upload failed',
+              });
+            } catch {
+              observer.error({
+                ...error,
+                error: rawError ?? error.message ?? 'Upload failed',
+              });
+            }
+          },
+          complete: () => observer.complete(),
+        });
+    });
   }
 }
