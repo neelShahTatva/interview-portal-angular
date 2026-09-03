@@ -26,7 +26,22 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
       <!-- Email -->
 
-      <div>
+      <app-input-field
+        [label]="'Email'"
+        [type]="'email'"
+        [placeholder]="'Enter email'"
+        [control]="loginForm.controls.email"
+        [submitted]="submitted"
+      ></app-input-field>
+
+      <app-input-field
+        [label]="'Password'"
+        [type]="'password'"
+        [placeholder]="'Enter password'"
+        [control]="loginForm.controls.password"
+        [submitted]="submitted"
+      ></app-input-field>
+      <!-- <div>
         <label class="mb-2 block text-sm font-semibold text-[#111827]">
           Email
         </label>
@@ -50,11 +65,11 @@
             Enter valid email
           </span>
         </div>
-      </div>
+      </div> -->
 
       <!-- Password -->
 
-      <div>
+      <!-- <div>
         <label class="mb-2 block text-sm font-semibold text-[#111827]">
           Password
         </label>
@@ -92,7 +107,7 @@
             Minimum 6 characters
           </span>
         </div>
-      </div>
+      </div> -->
 
       <button
         type="submit"
