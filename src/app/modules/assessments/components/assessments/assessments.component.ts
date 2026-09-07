@@ -6,11 +6,11 @@ import { forkJoin } from 'rxjs';
 import { AssessmentService } from '../../services/assessment.service';
 import { Assessment, AssessmentRequest } from '../../interfaces/assessment';
 import { Question } from '../../../question-bank/interfaces/question.interfase';
-import { CandidatesService } from '../../../../core/auth/services/candidates.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { CandidatesService } from '../../../../core/auth/services/candidates.service';
 import {
   LucideAngularModule,
   Plus,
@@ -223,9 +223,25 @@ export class AssessmentsComponent implements OnInit {
       error: (err: any) => {
         this.isCreatingAssessment = false;
 
-        const errorMessage = Array.isArray(err?.error?.errorMessages)
-          ? err.error.errorMessages.join(', ')
-          : err?.error?.errorMessages || 'Failed to create assessment';
+        const apiCode = err?.error?.errorCode;
+
+        let errorMessage = '';
+
+        switch (apiCode) {
+          case 'ASSESSMENT_IN_PROGRESS':
+            errorMessage = 'Assessment already in progress for this candidate.';
+            break;
+          case 'ASSESSMENT_PENDING':
+            errorMessage = 'Assessment pending for this candidate.';
+            break;
+          case 'ASSESSMENT_RECENTLY_COMPLETED':
+            errorMessage = 'Candidate completed an assessment recently; try after 6 months.';
+            break;
+          default:
+            errorMessage = Array.isArray(err?.error?.errorMessages)
+              ? err.error.errorMessages.join(', ')
+              : err?.error?.errorMessages || err?.error?.message || 'Failed to create assessment';
+        }
 
         this.toastr.error(errorMessage);
       },
