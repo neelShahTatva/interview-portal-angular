@@ -96,7 +96,7 @@ export class Login {
 
         error: (error) => {
           this.isLoading.set(false);
-          this.toastr.error(error?.error?.errorMessages[0] || 'Login failed');
+          this.toastr.error(error?.error?.errorMessages?.[0] || 'Login failed');
         },
       });
   }
