@@ -7,31 +7,38 @@ import {
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
-import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from 'rxjs';
-
+import {
+  BehaviorSubject,
+  catchError,
+  filter,
+  switchMap,
+  take,
+  throwError,
+} from 'rxjs';
 
 let isRefreshing = false;
 let refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-
   const router = inject(Router);
   const authService = inject(AuthService);
   const token = localStorage.getItem('accessToken');
 
   const authReq = addTokenHeader(req, token);
-  
+
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
+      const isAuthEndpoint =
+        req.url.includes('/auth/login') || req.url.includes('/auth/refresh');
+      const hasRefreshToken = !!localStorage.getItem('refreshToken');
 
-      if (error.status === 401) {
+      if (error.status === 401 && !isAuthEndpoint && hasRefreshToken) {
         return handle401Error(authReq, next, authService, router);
       }
 
       return throwError(() => error);
     })
   );
-
 };
 
 const addTokenHeader = (request: HttpRequest<any>, token: string | null) => {
@@ -53,12 +60,11 @@ const handle401Error = (
     // Lock the refresh process so subsequent 401s don't trigger it again
     isRefreshing = true;
     refreshTokenSubject.next(null); // Reset the queue
-    
-    // Call your backend to refresh the token 
+
+    // Call your backend to refresh the token
     // (Assuming authService.getRefreshToken() uses the refresh token from localStorage)
     return authService.getRefreshToken().pipe(
       switchMap((response: any) => {
-        
         isRefreshing = false;
 
         // Extract the new tokens (Adjust these property names based on your .NET API response)
@@ -76,7 +82,6 @@ const handle401Error = (
         return next(addTokenHeader(request, newAccessToken));
       }),
       catchError((err) => {
-        
         // If the refresh token itself is expired, the backend will reject the refresh call.
         // We must log the user out entirely.
         isRefreshing = false;
@@ -85,19 +90,17 @@ const handle401Error = (
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
 
-        // Redirect to the login page        
+        // Redirect to the login page
         router.navigate(['/auth/login']);
 
         return throwError(() => err);
       })
     );
   } else {
-    
-
     // If a refresh is already in progress, queue this request until the new token arrives
     return refreshTokenSubject.pipe(
       filter((token) => token !== null), // Wait until the token is not null
-      take(1),                           // Take it exactly once and complete the subscription
+      take(1), // Take it exactly once and complete the subscription
       switchMap((token) => {
         // Retry the queued request with the newly fetched token
         return next(addTokenHeader(request, token));

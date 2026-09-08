@@ -3,16 +3,12 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import {
-  BriefcaseBusiness,
-  Eye,
-  EyeOff,
-  LucideAngularModule,
-} from 'lucide-angular';
+import { BriefcaseBusiness, LucideAngularModule } from 'lucide-angular';
 import { ApiResponse } from '../../../../shared/models/api-response.model';
 import { LoginResponse } from '../../models/login-response.model';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
 
 @Component({
   selector: 'app-login',
@@ -22,16 +18,13 @@ import { ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     RouterModule,
     LucideAngularModule,
+    InputFieldComponent,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
-  Eye = Eye;
-  EyeOff = EyeOff;
   BriefcaseBusiness = BriefcaseBusiness;
-
-  hidePassword = signal(true);
 
   isLoading = signal(false);
 
@@ -42,9 +35,12 @@ export class Login {
   private destroyRef = inject(DestroyRef);
 
   loginForm = this.formBuilder.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: [
+      '',
+      [Validators.required, Validators.email, Validators.maxLength(255)],
+    ],
 
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required]],
   });
 
   constructor(
@@ -53,9 +49,6 @@ export class Login {
     private toastr: ToastrService
   ) {}
 
-  togglePassword() {
-    this.hidePassword.update((v) => !v);
-  }
   onSubmit() {
     this.submitted = true;
 
@@ -103,7 +96,7 @@ export class Login {
 
         error: (error) => {
           this.isLoading.set(false);
-          this.toastr.error(error?.error?.errorMessages[0] || 'Login failed');
+          this.toastr.error(error?.error?.errorMessages?.[0] || 'Login failed');
         },
       });
   }

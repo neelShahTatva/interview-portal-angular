@@ -1,0 +1,34 @@
+<div class="mb-3">
+  <label class="mb-2 block text-sm font-semibold text-[#111827]">
+    {{ label() }}</label
+  >
+  <div class="relative">
+    <input
+      [type]="type() === 'password' && !hidePassword() ? 'text' : type()"
+      [formControl]="control()"
+      [placeholder]="placeholder()"
+      [attr.aria-invalid]="showError"
+      class="h-[52px] w-full rounded-[10px] border bg-white px-4 text-sm outline-none transition focus:border-[#08132f]"
+      [class.border-red-500]="showError"
+      [class.border-[#d1d5db]]="!showError"
+      [class.pr-12]="type() === 'password'"
+    />
+    @if (type() === 'password') {
+    <button
+      type="button"
+      (click)="togglePassword()"
+      class="absolute top-1/2 right-4 -translate-y-1/2 text-[#64748b]"
+      [attr.aria-label]="hidePassword() ? 'Show password' : 'Hide password'"
+    >
+      @if (hidePassword()) {
+      <lucide-icon [img]="EyeOff" class="h-5 w-5"></lucide-icon>
+      } @else {
+      <lucide-icon [img]="Eye" class="h-5 w-5"></lucide-icon>
+      }
+    </button>
+    }
+  </div>
+  @if (showError) {
+  <p class="mt-1 text-xs text-red-500">{{ errorMessage }}</p>
+  }
+</div>
