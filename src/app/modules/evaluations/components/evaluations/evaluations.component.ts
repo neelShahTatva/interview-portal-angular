@@ -280,17 +280,17 @@ export class EvaluationsComponent implements OnInit {
   }
 
   scoreColor(score: number): string {
-    if (score >= 75) return '#16a34a';
+    if (score >= 7.5) return '#16a34a';
 
-    if (score >= 50) return '#d97706';
+    if (score >= 5) return '#d97706';
 
     return '#dc2626';
   }
 
   scoreLabel(score: number): string {
-    if (score >= 75) return 'Strong';
+    if (score >= 7.5) return 'Strong';
 
-    if (score >= 50) return 'Average';
+    if (score >= 5) return 'Average';
 
     return 'Weak';
   }
