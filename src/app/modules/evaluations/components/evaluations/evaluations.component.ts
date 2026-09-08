@@ -9,7 +9,7 @@ import {
   CandidateListItem,
   QuestionItem,
   SubmissionState,
-} from '../../interfaces/evaluation.mode';
+} from '../../models/evaluation.model';
 import { EvalutionService } from '../../services/evalution.service';
 
 @Component({
@@ -117,7 +117,7 @@ export class EvaluationsComponent implements OnInit {
   onFileSelected(
     event: Event,
     index: number,
-    type: 'solution' | 'submission',
+    type: 'solution' | 'submission'
   ): void {
     const input = event.target as HTMLInputElement;
 
@@ -159,7 +159,7 @@ export class EvaluationsComponent implements OnInit {
   onDragOver(
     event: DragEvent,
     index: number,
-    type: 'solution' | 'submission',
+    type: 'solution' | 'submission'
   ): void {
     event.preventDefault();
 
@@ -173,7 +173,7 @@ export class EvaluationsComponent implements OnInit {
   onDrop(
     event: DragEvent,
     index: number,
-    type: 'solution' | 'submission',
+    type: 'solution' | 'submission'
   ): void {
     event.preventDefault();
 
@@ -195,7 +195,7 @@ export class EvaluationsComponent implements OnInit {
   private setDrag(
     index: number,
     type: 'solution' | 'submission',
-    val: boolean,
+    val: boolean
   ): void {
     if (type === 'solution') {
       this.draggingSolution.update((d) => ({

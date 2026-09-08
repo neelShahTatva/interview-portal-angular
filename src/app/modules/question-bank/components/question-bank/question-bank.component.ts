@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Category, Question } from '../../interfaces/question.interfase';
+import { Category, Question } from '../../models/question.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,18 +13,19 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { QuestionService } from '../../services/question-service';
+import { QuestionService } from '../../services/question.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
-import { ApiResponse } from '../../../../shared/interfaces/api-response.interface';
-import { API_ROUTES } from '../../../../shared/common/api-routes';
+import { ApiResponse } from '../../../../shared/models/api-response.model';
 import { environment } from '../../../../../environments/environment';
+import { API_ROUTES } from '../../../../shared/constant/api-routes';
 
 @Component({
   selector: 'app-question-bank',
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     FormsModule,
     MatTableModule,
     MatButtonModule,
@@ -32,14 +33,20 @@ import { environment } from '../../../../../environments/environment';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatPaginatorModule
+    MatPaginatorModule,
   ],
   templateUrl: './question-bank.component.html',
-  styleUrl: './question-bank.component.scss'
+  styleUrl: './question-bank.component.scss',
 })
 export class QuestionBankComponent {
-
-  displayedColumns: string[] = ['title', 'difficulty', 'categories', 'designations', 'status', 'actions'];
+  displayedColumns: string[] = [
+    'title',
+    'difficulty',
+    'categories',
+    'designations',
+    'status',
+    'actions',
+  ];
 
   dataSource = new MatTableDataSource<Question>([]);
 
@@ -61,7 +68,7 @@ export class QuestionBankComponent {
     private readonly toastr: ToastrService,
     private readonly router: Router,
     private activateRoute: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getCategories();
@@ -106,22 +113,21 @@ export class QuestionBankComponent {
       const parsed = JSON.parse(filter);
 
       const matchesSearch =
-        !parsed.search ||
-        data.title?.toLowerCase().includes(parsed.search);
+        !parsed.search || data.title?.toLowerCase().includes(parsed.search);
 
       const matchesDifficulty =
-        !parsed.difficulty ||
-        data.difficulty === parsed.difficulty;
+        !parsed.difficulty || data.difficulty === parsed.difficulty;
 
       const matchesCategory =
         !parsed.category ||
         data.categories?.some((c) => c.id === Number(parsed.category));
 
       const matchesStatus =
-        parsed.status === '' ||
-        data.isActive === (parsed.status === 'true');
+        parsed.status === '' || data.isActive === (parsed.status === 'true');
 
-      return matchesSearch && matchesDifficulty && matchesCategory && matchesStatus;
+      return (
+        matchesSearch && matchesDifficulty && matchesCategory && matchesStatus
+      );
     };
 
     this.dataSource.filter = JSON.stringify({
@@ -152,7 +158,7 @@ export class QuestionBankComponent {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '420px',
       disableClose: true,
-      data: { title: "Question", name: question.title },
+      data: { title: 'Question', name: question.title },
     });
 
     dialogRef.afterClosed().subscribe((confirmed) => {
@@ -207,7 +213,10 @@ export class QuestionBankComponent {
             message = rawError || err?.message || 'Upload failed';
           }
         } else if (rawError) {
-          if (Array.isArray(rawError.errorMessages) && rawError.errorMessages.length) {
+          if (
+            Array.isArray(rawError.errorMessages) &&
+            rawError.errorMessages.length
+          ) {
             message = rawError.errorMessages.join('\n');
           } else if (Array.isArray(rawError.errors) && rawError.errors.length) {
             message = rawError.errors.join('\n');
@@ -224,8 +233,7 @@ export class QuestionBankComponent {
 
         this.toastr.error(message, 'Upload failed');
         event.target.value = '';
-      }
+      },
     });
-
   }
 }

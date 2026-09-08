@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { ApiResponse } from '../interfaces/api-response.interface';
+import { ApiResponse } from '../models/api-response.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -20,12 +20,12 @@ export class APIInterfaceService {
   post<T>(
     url: string,
     data: any,
-    params?: HttpParams,
+    params?: HttpParams
   ): Observable<ApiResponse<T>> {
     return this.http.post<ApiResponse<T>>(
       `${environment.baseUrl}${url}`,
       data,
-      { params },
+      { params }
     );
   }
 
@@ -44,7 +44,7 @@ export class APIInterfaceService {
   put<T>(
     url: string,
     data: any,
-    headers?: HttpHeaders,
+    headers?: HttpHeaders
   ): Observable<ApiResponse<T>> {
     return this.http.put<ApiResponse<T>>(`${environment.baseUrl}${url}`, data, {
       headers,
@@ -55,12 +55,12 @@ export class APIInterfaceService {
     url: string,
     data: any,
     headers?: HttpHeaders,
-    params?: HttpParams,
+    params?: HttpParams
   ): Observable<ApiResponse<T>> {
     return this.http.patch<ApiResponse<T>>(
       `${environment.baseUrl}${url}`,
       data,
-      { headers, params },
+      { headers, params }
     );
   }
 

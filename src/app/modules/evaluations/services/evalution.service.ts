@@ -6,7 +6,7 @@ import {
   EvaluationResult,
   FileSubmissionRequest,
   MultiQuestionEvaluationResult,
-} from '../interfaces/evaluation.mode';
+} from '../models/evaluation.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class EvalutionService {
   submitSingle(
     solutionFile: File,
     submissionFile: File,
-    questionTopic: string,
+    questionTopic: string
   ): Observable<EvaluationResult> {
     const fd = new FormData();
     fd.append('solution', solutionFile, solutionFile.name);
@@ -32,7 +32,7 @@ export class EvalutionService {
 
   /** Multiple questions (1–4) */
   submitMultiple(
-    questions: FileSubmissionRequest[],
+    questions: FileSubmissionRequest[]
   ): Observable<MultiQuestionEvaluationResult> {
     const fd = new FormData();
     fd.append('totalQuestions', questions.length.toString());
@@ -59,7 +59,7 @@ export class EvalutionService {
   evaluateAssessment(formData: FormData): Observable<any> {
     return this.http.post(
       `${this.baseUrl}/api/mock-interview/evaluate-multi`,
-      formData,
+      formData
     );
   }
 

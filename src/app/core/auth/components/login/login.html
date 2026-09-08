@@ -26,73 +26,21 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
       <!-- Email -->
 
-      <div>
-        <label class="mb-2 block text-sm font-semibold text-[#111827]">
-          Email
-        </label>
+      <app-input-field
+        [label]="'Email'"
+        [type]="'email'"
+        [placeholder]="'Enter email'"
+        [control]="loginForm.controls.email"
+        [submitted]="submitted"
+      ></app-input-field>
 
-        <input
-          type="email"
-          formControlName="email"
-          placeholder="Enter email"
-          class="h-[52px] w-full rounded-[10px] border border-[#d1d5db] bg-white px-4 text-sm outline-none transition focus:border-[#08132f]"
-        />
-
-        <div
-          *ngIf="submitted && loginForm.controls.email.errors"
-          class="mt-1 text-xs text-red-500"
-        >
-          <span *ngIf="loginForm.controls.email.errors['required']">
-            Email is required
-          </span>
-
-          <span *ngIf="loginForm.controls.email.errors['email']">
-            Enter valid email
-          </span>
-        </div>
-      </div>
-
-      <!-- Password -->
-
-      <div>
-        <label class="mb-2 block text-sm font-semibold text-[#111827]">
-          Password
-        </label>
-
-        <div class="relative">
-          <input
-            [type]="hidePassword() ? 'password' : 'text'"
-            formControlName="password"
-            placeholder="Enter password"
-            class="h-[52px] w-full rounded-[10px] border border-[#d1d5db] bg-white px-4 pr-12 text-sm outline-none transition focus:border-[#08132f]"
-          />
-
-          <button
-            type="button"
-            (click)="togglePassword()"
-            class="absolute top-1/2 right-4 -translate-y-1/2 text-[#64748b]"
-          >
-            <lucide-icon *ngIf="hidePassword()" [img]="EyeOff" class="h-5 w-5">
-            </lucide-icon>
-
-            <lucide-icon *ngIf="!hidePassword()" [img]="Eye" class="h-5 w-5">
-            </lucide-icon>
-          </button>
-        </div>
-
-        <div
-          *ngIf="submitted && loginForm.controls.password.errors"
-          class="mt-1 text-xs text-red-500"
-        >
-          <span *ngIf="loginForm.controls.password.errors['required']">
-            Password is required
-          </span>
-
-          <span *ngIf="loginForm.controls.password.errors['minlength']">
-            Minimum 6 characters
-          </span>
-        </div>
-      </div>
+      <app-input-field
+        [label]="'Password'"
+        [type]="'password'"
+        [placeholder]="'Enter password'"
+        [control]="loginForm.controls.password"
+        [submitted]="submitted"
+      ></app-input-field>
 
       <button
         type="submit"

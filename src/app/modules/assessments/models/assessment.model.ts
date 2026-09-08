@@ -1,4 +1,4 @@
-import { Question } from '../../question-bank/interfaces/question.interfase';
+import { Question } from '../../question-bank/models/question.model';
 
 export interface Assessment {
   id: number;

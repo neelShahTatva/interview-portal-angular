@@ -8,7 +8,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { SubmissionService } from '../../../../core/auth/services/submission.service';
+import { SubmissionService } from '../../services/submission.service';
 import { SubmissionViewDialogComponent } from '../submission-view-dialog/submission-view-dialog';
 
 @Component({
@@ -26,20 +26,18 @@ import { SubmissionViewDialogComponent } from '../submission-view-dialog/submiss
   ],
 })
 export class FileSubmissionsComponent implements OnInit {
-
   displayedColumns = [
     // 'assessmentId',
     'candidateFileId',
     'status',
     'score',
     'evaluatedAt',
-    'actions'
+    'actions',
   ];
 
   submissions: any[] = [];
 
-  dataSource =
-    new MatTableDataSource<any>();
+  dataSource = new MatTableDataSource<any>();
 
   searchText = '';
 
@@ -50,63 +48,49 @@ export class FileSubmissionsComponent implements OnInit {
 
   constructor(
     private readonly submissionService: SubmissionService,
-    private readonly dialog: MatDialog,
-  ) { }
+    private readonly dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.getSubmissions();
   }
 
   getSubmissions(): void {
-
     this.isLoading = true;
 
-    this.submissionService
-      .getSubmissions()
-      .subscribe({
+    this.submissionService.getSubmissions().subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
 
-        next: (response: any) => {
+        this.submissions = response.result;
 
-          this.isLoading = false;
+        this.dataSource.data = response.result;
 
-          this.submissions =
-            response.result;
+        this.dataSource.paginator = this.paginator;
+      },
 
-          this.dataSource.data =
-            response.result;
-
-          this.dataSource.paginator =
-            this.paginator;
-        },
-
-        error: () => {
-          this.isLoading = false;
-        }
-      });
+      error: () => {
+        this.isLoading = false;
+      },
+    });
   }
 
   applyFilters(): void {
-
-    this.dataSource.filterPredicate =
-      (data: any, filter: string) => {
-
-        const searchText = [
-          data.assessmentName,
-          data.candidateName,
-          data.output,
-          data.aiScore,
-          data.aiFeedback
-        ]
-          .join(' ')
-          .toLowerCase();
-
-        return searchText.includes(filter);
-      };
-
-    this.dataSource.filter =
-      this.searchText
-        .trim()
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const searchText = [
+        data.assessmentName,
+        data.candidateName,
+        data.output,
+        data.aiScore,
+        data.aiFeedback,
+      ]
+        .join(' ')
         .toLowerCase();
+
+      return searchText.includes(filter);
+    };
+
+    this.dataSource.filter = this.searchText.trim().toLowerCase();
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -114,14 +98,10 @@ export class FileSubmissionsComponent implements OnInit {
   }
 
   viewSubmission(submission: any): void {
-
-    this.dialog.open(
-      SubmissionViewDialogComponent,
-      {
-        width: '900px',
-        maxWidth: '95vw',
-        data: submission,
-      }
-    );
+    this.dialog.open(SubmissionViewDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      data: submission,
+    });
   }
 }

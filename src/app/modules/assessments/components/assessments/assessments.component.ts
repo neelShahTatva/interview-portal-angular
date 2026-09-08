@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
 import { AssessmentService } from '../../services/assessment.service';
-import { Assessment, AssessmentRequest } from '../../interfaces/assessment';
-import { Question } from '../../../question-bank/interfaces/question.interfase';
+import { Assessment, AssessmentRequest } from '../../models/assessment.model';
+import { Question } from '../../../question-bank/models/question.model';
+import { CandidatesService } from '../../../candidates/services/candidates.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CandidatesService } from '../../../../core/auth/services/candidates.service';
 import {
   LucideAngularModule,
   Plus,
@@ -65,7 +65,7 @@ export class AssessmentsComponent implements OnInit {
   constructor(
     private readonly assessmentService: AssessmentService,
     private readonly toastr: ToastrService,
-    private readonly candidatesService: CandidatesService,
+    private readonly candidatesService: CandidatesService
   ) {}
 
   ngOnInit(): void {

@@ -1,0 +1,97 @@
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ApiResponse } from '../../../shared/models/api-response.model';
+import { Category, Question } from '../models/question.model';
+import { APIInterfaceService } from '../../../shared/services/api-interface.service';
+import { API_ROUTES } from '../../../shared/constant/api-routes';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class QuestionService {
+  constructor(private apiInterface: APIInterfaceService) {}
+
+  getQuestions(): Observable<ApiResponse<Question[]>> {
+    return this.apiInterface.get<Question[]>(API_ROUTES.QUESTIONS.GET_ALL);
+  }
+
+  getQuestionbyId(id: number): Observable<ApiResponse<Question>> {
+    return this.apiInterface.get<Question>(
+      `${API_ROUTES.QUESTIONS.GET_BY_ID}${id}`
+    );
+  }
+
+  createQuestion(payload: any): Observable<ApiResponse<string>> {
+    return this.apiInterface.post<string>(API_ROUTES.QUESTIONS.CREATE, payload);
+  }
+
+  updateQuestion(id: number, payload: any): Observable<ApiResponse<string>> {
+    return this.apiInterface.put<string>(
+      `${API_ROUTES.QUESTIONS.UPDATE}${id}`,
+      payload
+    );
+  }
+
+  deleteQuestion(id: number): Observable<ApiResponse<string>> {
+    return this.apiInterface.delete<string>(
+      `${API_ROUTES.QUESTIONS.DELETE}${id}`
+    );
+  }
+
+  getCategories(): Observable<ApiResponse<Category[]>> {
+    return this.apiInterface.get<Category[]>(
+      API_ROUTES.QUESTIONS.GET_ALL_CATEGORIES
+    );
+  }
+
+  uploadQuestions(file: File): Observable<ApiResponse<Question[]>> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return new Observable((observer) => {
+      this.apiInterface
+        .postText<string>(API_ROUTES.QUESTIONS.UPLOAD, formData)
+        .subscribe({
+          next: (response) => {
+            try {
+              const parsed = response ? JSON.parse(response) : null;
+              observer.next(
+                parsed ??
+                  ({
+                    statusCode: 200,
+                    success: true,
+                    errorMessages: [],
+                    result: [],
+                  } as ApiResponse<Question[]>)
+              );
+            } catch {
+              observer.next({
+                statusCode: 200,
+                success: true,
+                errorMessages: [],
+                result: [],
+              } as ApiResponse<Question[]>);
+            }
+          },
+          error: (error) => {
+            const rawError = error?.error;
+
+            try {
+              const parsed =
+                typeof rawError === 'string' ? JSON.parse(rawError) : rawError;
+              observer.error({
+                ...error,
+                error: parsed ?? rawError ?? error.message ?? 'Upload failed',
+              });
+            } catch {
+              observer.error({
+                ...error,
+                error: rawError ?? error.message ?? 'Upload failed',
+              });
+            }
+          },
+          complete: () => observer.complete(),
+        });
+    });
+  }
+}
