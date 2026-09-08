@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
 import { ToastrService } from 'ngx-toastr';
+import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
 
 @Component({
   selector: 'app-forgot-password',
@@ -14,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     RouterModule,
     LucideAngularModule,
+    InputFieldComponent,
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
@@ -26,13 +28,16 @@ export class ForgotPassword {
   private fb = inject(FormBuilder);
 
   forgotForm = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: [
+      '',
+      [Validators.required, Validators.email, Validators.maxLength(255)],
+    ],
   });
 
   constructor(
     private authService: AuthService,
-    private toastr: ToastrService,
-  ) { }
+    private toastr: ToastrService
+  ) {}
 
   onSubmit() {
     this.submitted = true;
@@ -55,7 +60,7 @@ export class ForgotPassword {
           this.toastr.success('Reset link sent to your email');
         } else {
           this.toastr.error(
-            response.errorMessages?.join(',') ?? 'Failed to send reset link',
+            response.errorMessages?.join(',') ?? 'Failed to send reset link'
           );
         }
       },
