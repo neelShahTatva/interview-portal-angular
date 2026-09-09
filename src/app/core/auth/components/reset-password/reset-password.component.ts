@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
 import { passwordMatchValidator } from '../../../../shared/validators/password-validator';
 import { ErrorMessage } from '../../../../shared/components/input-field/models/input';
-import { SystemConstant } from '../../../../shared/constant/system.constants';
+import { SYSTEM_CONSTANTS } from '../../../../shared/constant/system.constants';
 import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constants';
 
 @Component({
@@ -40,7 +40,7 @@ export class ResetPassword {
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(20),
-        Validators.pattern(SystemConstant.PASSWORD_REGEX),
+        Validators.pattern(SYSTEM_CONSTANTS.PASSWORD_REGEX),
       ],
     ],
 
