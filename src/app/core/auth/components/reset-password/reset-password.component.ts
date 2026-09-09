@@ -4,11 +4,21 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
+import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
+import { passwordMatchValidator } from '../../../../shared/validators/password-validator';
+import { ErrorMessage } from '../../../../shared/components/input-field/models/input';
+import { SystemConstant } from '../../../../shared/constant/system.constants';
+import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constants';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    InputFieldComponent,
+  ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
 })
@@ -24,38 +34,59 @@ export class ResetPassword {
   private fb = inject(FormBuilder);
 
   resetForm = this.fb.nonNullable.group({
-    newPassword: ['', [Validators.required, Validators.minLength(6)]],
+    newPassword: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(20),
+        Validators.pattern(SystemConstant.PASSWORD_REGEX),
+      ],
+    ],
 
-    confirmPassword: ['', [Validators.required]],
+    confirmPassword: [
+      '',
+      [Validators.required, passwordMatchValidator('newPassword')],
+    ],
   });
   constructor(
     private router: Router,
     private authService: AuthService,
-    private toastr: ToastrService,
-  ) { }
+    private toastr: ToastrService
+  ) {}
 
- ngOnInit() {
-  this.token = this.route.snapshot.paramMap.get('token') || '';
+  passwordInvalid: ErrorMessage[] = [
+    {
+      key: 'pattern',
+      error: ERROR_MESSAGE.PASSWORD_INVALID,
+    },
+  ];
+  passwordMismatchError: ErrorMessage[] = [
+    {
+      key: 'passwordMismatch',
+      error: ERROR_MESSAGE.PASSWORD_MISMATCH,
+    },
+  ];
 
+  ngOnInit() {
+    this.token = this.route.snapshot.paramMap.get('token') || '';
 
-  this.authService.validateResetToken(this.token).subscribe({
-    next: (response: any) => {
+    this.authService.validateResetToken(this.token).subscribe({
+      next: (response: any) => {
+        if (!response.success) {
+          this.toastr.error('Invalid or expired reset link');
 
-      if (!response.success) {
+          this.router.navigate(['/auth/login']);
+        }
+      },
+
+      error: (error) => {
         this.toastr.error('Invalid or expired reset link');
 
         this.router.navigate(['/auth/login']);
-      }
-    },
-
-    error: (error) => {
-
-      this.toastr.error('Invalid or expired reset link');
-
-      this.router.navigate(['/auth/login']);
-    },
-  });
-}
+      },
+    });
+  }
   onSubmit() {
     if (this.resetForm.invalid) {
       this.resetForm.markAllAsTouched();
@@ -80,10 +111,10 @@ export class ResetPassword {
 
           setTimeout(() => {
             this.router.navigate(['/auth/login']);
-          }, 1500);
+          }, 500);
         } else {
           this.toastr.error(
-            response.errorMessages?.join(',') ?? 'Reset password failed',
+            response.errorMessages?.join(',') ?? 'Reset password failed'
           );
         }
       },
