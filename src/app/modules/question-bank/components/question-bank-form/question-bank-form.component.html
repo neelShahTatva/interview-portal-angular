@@ -3,9 +3,9 @@
     <!-- HEADER -->
     <div class="page-header">
         <div class="header-left">
-            <button class="back-btn" (click)="goBack()">
+            <app-button variant="ghost" size="icon-sm" (btnClick)="goBack()">
                 <mat-icon>arrow_back</mat-icon>
-            </button>
+            </app-button>
             <div>
                 <h2>{{ isEditMode ? 'Edit Question' : 'Add Question' }}</h2>
                 <p>{{ isEditMode ? 'Update question details' : 'Create a new interview question' }}</p>
@@ -48,10 +48,10 @@
                         <mat-icon>code</mat-icon>
                         Solutions
                         <span class="required">*</span>
-                        <button type="button" class="add-solution-btn" (click)="addSolution()">
+                        <app-button variant="outline" size="sm" type="button" (btnClick)="addSolution()">
                             <mat-icon>add</mat-icon>
                             Add Solution
-                        </button>
+                        </app-button>
                     </div>
 
                     <div class="solutions-empty" *ngIf="solutions.length === 0">
@@ -87,17 +87,24 @@
                                     <input type="file" [id]="'file-upload-' + i" (change)="onFileUpload($event, i)"
                                         style="display: none;" accept=".java,.py,.js,.ts,.cpp,.c,.go,.txt">
 
-                                    <button type="button" (click)="triggerFileInput(i)"
-                                        style="background: none; border: none; color: #4f46e5; cursor: pointer; display: flex; align-items: center; font-size: 14px; font-weight: 500;">
-                                        <mat-icon
-                                            style="margin-right: 4px; font-size: 20px; width: 20px; height: 20px;">upload_file</mat-icon>
+                                    <app-button
+                                        variant="ghost"
+                                        size="sm"
+                                        type="button"
+                                        customClass="text-indigo-600 hover:text-indigo-700"
+                                        (btnClick)="triggerFileInput(i)">
+                                        <mat-icon>upload_file</mat-icon>
                                         Upload File
-                                    </button>
+                                    </app-button>
 
-                                    <button type="button" (click)="removeSolution(i)"
-                                        style="background: none; border: none; color: #dc2626; cursor: pointer; display: flex; align-items: center;">
+                                    <app-button
+                                        variant="ghost"
+                                        size="icon-sm"
+                                        type="button"
+                                        customClass="text-red-600 hover:text-red-700"
+                                        (btnClick)="removeSolution(i)">
                                         <mat-icon>delete</mat-icon>
-                                    </button>
+                                    </app-button>
                                 </div>
                             </div>
 
@@ -204,12 +211,12 @@
 
 
                 <!-- Actions -->
-                <div class="form-actions">
-                    <button type="button" class="cancel-btn" (click)="goBack()">Cancel</button>
-                    <button type="submit" class="save-btn" [disabled]="questionForm.invalid || questionForm.pending">
+                <div class="form-actions flex items-center justify-end gap-3">
+                    <app-button variant="secondary" type="button" (btnClick)="goBack()">Cancel</app-button>
+                    <app-button type="submit" [disabled]="questionForm.invalid || questionForm.pending">
                         <mat-icon>{{ isEditMode ? 'save' : 'add_circle_outline' }}</mat-icon>
                         {{ isEditMode ? 'Update' : 'Save' }} Question
-                    </button>
+                    </app-button>
                 </div>
 
             </div>

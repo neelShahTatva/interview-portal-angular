@@ -8,26 +8,22 @@
         </div>
         <div class="header-actions">
 
-            <button class="template-btn" type="button" (click)="downloadTemplate()">
+            <app-button variant="outline" (btnClick)="downloadTemplate()">
                 <mat-icon>download</mat-icon>
                 Download Template
-            </button>
+            </app-button>
 
-            <button class="upload-btn" (click)="fileInput.click()">
-
+            <app-button variant="secondary" (btnClick)="fileInput.click()">
                 <mat-icon>upload_file</mat-icon>
                 Bulk Upload
-
-            </button>
+            </app-button>
 
             <input #fileInput hidden type="file" accept=".xlsx,.xls" (change)="uploadExcel($event)">
 
-            <button class="add-btn" (click)="openAddPage()">
-
+            <app-button (btnClick)="openAddPage()">
                 <mat-icon>add</mat-icon>
                 Add Question
-
-            </button>
+            </app-button>
 
         </div>
     </div>
@@ -146,12 +142,22 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>Actions</th>
                     <td mat-cell *matCellDef="let q">
-                        <button class="action-btn" style="margin-right: 5px;" (click)="openEditPage(q)">
+                        <app-button
+                            variant="ghost"
+                            size="icon-sm"
+                            customClass="mr-1 text-slate-600 hover:text-slate-900"
+                            (btnClick)="openEditPage(q)"
+                        >
                             <mat-icon>edit</mat-icon>
-                        </button>
-                        <button class="action-btn delete" (click)="deleteQuestion(q)">
+                        </app-button>
+                        <app-button
+                            variant="ghost"
+                            size="icon-sm"
+                            customClass="text-red-600 hover:text-red-700"
+                            (btnClick)="deleteQuestion(q)"
+                        >
                             <mat-icon>delete</mat-icon>
-                        </button>
+                        </app-button>
                     </td>
                 </ng-container>
 

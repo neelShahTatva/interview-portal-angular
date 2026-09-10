@@ -19,6 +19,7 @@ import {
   AlignLeft,
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-assessments',
@@ -31,6 +32,7 @@ import Swal from 'sweetalert2';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    ButtonComponent,
   ],
   templateUrl: './assessments.component.html',
   styleUrls: ['./assessments.component.scss'],

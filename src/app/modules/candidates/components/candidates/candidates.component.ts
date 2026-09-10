@@ -18,6 +18,7 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 import { AuthService } from '../../../../core/auth/services/auth.service';
 import { CandidatesService } from '../../services/candidates.service';
 import { CandidateDialogComponent } from '../candidate-dialog/candidate-dialog';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-candidates',
@@ -34,6 +35,7 @@ import { CandidateDialogComponent } from '../candidate-dialog/candidate-dialog';
     MatInputModule,
     MatFormFieldModule,
     MatPaginatorModule,
+    ButtonComponent,
   ],
 })
 export class CandidatesComponent implements OnInit {

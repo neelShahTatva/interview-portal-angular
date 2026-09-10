@@ -3,6 +3,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialogModule
 } from '@angular/material/dialog';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-solution-preview-dialog',
@@ -10,7 +11,8 @@ import {
   templateUrl: './solution-preview-dialog.html',
   styleUrl: './solution-preview-dialog.scss',
   imports: [
-    MatDialogModule
+    MatDialogModule,
+    ButtonComponent,
   ]
 })
 export class SolutionPreviewDialogComponent {

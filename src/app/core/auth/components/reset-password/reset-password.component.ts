@@ -9,6 +9,7 @@ import { passwordMatchValidator } from '../../../../shared/validators/password-v
 import { ErrorMessage } from '../../../../shared/components/input-field/models/input';
 import { SYSTEM_CONSTANTS } from '../../../../shared/constant/system.constants';
 import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constants';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-reset-password',
@@ -18,6 +19,7 @@ import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constan
     ReactiveFormsModule,
     RouterModule,
     InputFieldComponent,
+    ButtonComponent,
   ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',

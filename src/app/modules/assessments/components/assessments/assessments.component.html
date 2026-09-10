@@ -5,11 +5,10 @@
       <p class="header__subtitle">Create and manage candidate assessments</p>
     </div>
 
-    <button class="btn btn-primary flex flex-row gap-2" (click)="openModal()">
-      <lucide-angular [img]="Plus" class="btn-icon"> </lucide-angular>
-
+    <app-button (btnClick)="openModal()">
+      <lucide-angular [img]="Plus" class="w-4 h-4"> </lucide-angular>
       Create Assessment
-    </button>
+    </app-button>
   </div>
 
   <div class="empty-state" *ngIf="isLoading">
@@ -69,12 +68,14 @@
           <option value="COMPLETED">Completed</option>
         </select>
 
-        <button
-          class="delete-btn inline-flex items-center justify-center w-11 h-11 rounded-2xl border border-red-200 bg-white text-red-500 hover:bg-red-50 transition-colors duration-200 cursor-pointer"
-          (click)="deleteAssessment(assessment.id)">
+        <app-button
+          variant="outline"
+          size="icon"
+          customClass="border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-2xl w-11 h-11"
+          (btnClick)="deleteAssessment(assessment.id)">
           <lucide-angular [img]="Trash2" class="w-[18px] h-[18px]">
           </lucide-angular>
-        </button>
+        </app-button>
       </div>
     </div>
   </div>
@@ -88,7 +89,7 @@
           <p>Step {{ step }} of 2</p>
         </div>
 
-        <button class="close-btn" (click)="closeModal()">✕</button>
+        <app-button variant="ghost" size="icon-sm" (btnClick)="closeModal()">✕</app-button>
       </div>
 
       <div class="step-indicator">
@@ -192,23 +193,28 @@
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button class="btn btn-secondary" *ngIf="step === 2" (click)="prevStep()">
+      <div class="modal-footer flex items-center justify-end gap-3">
+        <app-button variant="secondary" *ngIf="step === 2" (btnClick)="prevStep()">
           Back
-        </button>
+        </app-button>
 
-        <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        <app-button variant="secondary" (btnClick)="closeModal()">Cancel</app-button>
 
-        <button class="btn btn-primary" *ngIf="step === 1"
-          [disabled]="isGeneratingQuestions || !this.draft.candidateId || !this.draft.title.trim()"
-          (click)="nextStep()">
-          {{ isGeneratingQuestions ? "Generating..." : "Generate Questions" }}
-        </button>
+        <app-button *ngIf="step === 1"
+          [disabled]="!this.draft.candidateId || !this.draft.title.trim()"
+          [loading]="isGeneratingQuestions"
+          loadingText="Generating..."
+          (btnClick)="nextStep()">
+          Generate Questions
+        </app-button>
 
-        <button class="btn btn-primary" *ngIf="step === 2" [disabled]="isCreatingAssessment"
-          (click)="createAssessment()">
-          {{ isCreatingAssessment ? "Creating..." : "Create Assessment" }}
-        </button>
+        <app-button *ngIf="step === 2"
+          [disabled]="isCreatingAssessment"
+          [loading]="isCreatingAssessment"
+          loadingText="Creating..."
+          (btnClick)="createAssessment()">
+          Create Assessment
+        </app-button>
       </div>
     </div>
   </div>
