@@ -1,82 +1,70 @@
 <div class="dialog-container">
-    <div class="dialog-header">
-
-        <div>
-            <h2>
-                {{ isEditMode ? 'Edit User' : 'Add User' }}
-            </h2>
-            <p>
-                Manage user details and permissions
-            </p>
-        </div>
+  <div class="dialog-header">
+    <div>
+      <h2>
+        {{ isEditMode ? "Edit User" : "Add User" }}
+      </h2>
+      <p>Manage user details and permissions</p>
     </div>
+  </div>
 
-    <!-- FORM -->
-    <form [formGroup]="form" class="dialog-form">
-        <div class="form-group">
-            <label>
-                Username
-                <span class="required">*</span>
-            </label>
-            <input type="text" formControlName="username" placeholder="Enter username" />
-        </div>
+  <!-- FORM -->
+  <form [formGroup]="form" class="dialog-form">
+    <app-input-field
+      [label]="'Username'"
+      [type]="'text'"
+      [placeholder]="'Enter username'"
+      [control]="form.controls.username"
+      [customErrorMessage]="usernameInvalid"
+    ></app-input-field>
 
-        <div class="form-group">
-            <label>
-                Email
-                <span class="required">*</span>
-            </label>
-            <input type="email" formControlName="email" placeholder="Enter email" />
-        </div>
+    <app-input-field
+      [label]="'Email'"
+      [type]="'email'"
+      [placeholder]="'Enter email'"
+      [control]="form.controls.email"
+    ></app-input-field>
 
-        @if (!isEditMode) {
+    @if (!isEditMode) {
+    <app-input-field
+      [label]="'Password'"
+      [type]="'password'"
+      [placeholder]="'Enter password'"
+      [control]="form.controls.password"
+      [customErrorMessage]="passwordInvalid"
+    ></app-input-field>
+    }
 
-        <div class="form-group">
-            <label>
-                Password
-                <span class="required">*</span>
-            </label>
-            <input type="password" formControlName="password" placeholder="Enter password" />
-        </div>
-        }
+    <div class="row">
+      <div class="form-group flex-1">
+        <label> Role </label>
 
-        <div class="row">
-            <div class="form-group flex-1">
-                <label>
-                    Role
-                </label>
+        <select formControlName="roleId">
+          <option [value]="null" disabled selected>Select role</option>
+          @for (item of roles; track $index) {
+          <option [value]="item.id">
+            {{ item.roleName | titlecase }}
+          </option>
+          }
+        </select>
+      </div>
 
-                <select formControlName="roleId">
-                    <option [value]="1">
-                        Admin
-                    </option>
-                    <option [value]="2">
-                        Interviewer
-                    </option>
-                </select>
-            </div>
-
-            <div class="status-section">
-                <label>
-                    Status
-                </label>
-                <label class="switch">
-                    <input type="checkbox" formControlName="isActive" />
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-    </form>
-
-    <!-- ACTIONS -->
-    <div class="dialog-actions">
-        <button class="cancel-btn" mat-dialog-close>
-            Cancel
-        </button>
-
-        <button [disabled]="form.invalid || form.pending" class="submit-btn" (click)="submit()">
-            {{ isEditMode ? 'Update User' : 'Create User' }}
-        </button>
+      <div class="status-section">
+        <label> Status </label>
+        <label class="switch">
+          <input type="checkbox" formControlName="isActive" />
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
+  </form>
 
+  <!-- ACTIONS -->
+  <div class="dialog-actions">
+    <button class="cancel-btn" mat-dialog-close>Cancel</button>
+
+    <button [disabled]="form.invalid" class="submit-btn" (click)="submit()">
+      {{ isEditMode ? "Update User" : "Create User" }}
+    </button>
+  </div>
 </div>

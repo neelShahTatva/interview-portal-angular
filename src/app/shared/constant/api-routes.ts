@@ -35,4 +35,7 @@ export const API_ROUTES = {
     CHANGE_STATUS: '/assessments/',
     AVAILABLE_CANDIDATES: '/assessments/available-candidates',
   },
+  ROLES: {
+    GET_ALL: '/roles',
+  },
 };
