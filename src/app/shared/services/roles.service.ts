@@ -15,7 +15,7 @@ export class Roles {
 
   getRoles(): Observable<RoleModel[]> {
     return this.http.get<RoleModel[]>(
-      `${this.baseUrl}${API_ROUTES.ROLES.GET_ALL}`
+      `${this.baseUrl}${API_ROUTES.COMMON.GET_ALL_ROLES}`
     );
   }
 }
