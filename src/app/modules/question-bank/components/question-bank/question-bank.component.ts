@@ -21,6 +21,7 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 import { ApiResponse } from '../../../../shared/models/api-response.model';
 import { environment } from '../../../../../environments/environment';
 import { API_ROUTES } from '../../../../shared/constant/api-routes';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-question-bank',
@@ -34,6 +35,7 @@ import { API_ROUTES } from '../../../../shared/constant/api-routes';
     MatFormFieldModule,
     MatSelectModule,
     MatPaginatorModule,
+    ButtonComponent,
   ],
   templateUrl: './question-bank.component.html',
   styleUrl: './question-bank.component.scss',

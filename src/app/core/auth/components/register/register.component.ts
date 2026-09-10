@@ -11,6 +11,7 @@ import {
 } from 'lucide-angular';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-register',
@@ -20,6 +21,7 @@ import { ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     RouterModule,
     LucideAngularModule,
+    ButtonComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',

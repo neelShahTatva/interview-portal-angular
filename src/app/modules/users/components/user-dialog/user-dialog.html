@@ -59,12 +59,15 @@
     </div>
   </form>
 
-  <!-- ACTIONS -->
-  <div class="dialog-actions">
-    <button class="cancel-btn" mat-dialog-close>Cancel</button>
+    <!-- ACTIONS -->
+    <div class="dialog-actions">
+        <app-button variant="secondary" mat-dialog-close>
+            Cancel
+        </app-button>
 
-    <button [disabled]="form.invalid" class="submit-btn" (click)="submit()">
-      {{ isEditMode ? "Update User" : "Create User" }}
-    </button>
-  </div>
+        <app-button [disabled]="form.invalid || form.pending" (btnClick)="submit()">
+            {{ isEditMode ? 'Update User' : 'Create User' }}
+        </app-button>
+    </div>
+
 </div>

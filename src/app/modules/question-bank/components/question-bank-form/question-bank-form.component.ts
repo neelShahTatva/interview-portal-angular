@@ -23,6 +23,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { QuestionService } from '../../services/question.service';
 import { ToastrService } from 'ngx-toastr';
 import { CustomValidators } from '../../../../shared/validators/custom-validators';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-question-bank-form',
@@ -36,6 +37,7 @@ import { CustomValidators } from '../../../../shared/validators/custom-validator
     MatSelectModule,
     MatPaginatorModule,
     ReactiveFormsModule,
+    ButtonComponent,
   ],
   templateUrl: './question-bank-form.component.html',
   styleUrl: './question-bank-form.component.scss',

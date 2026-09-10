@@ -20,6 +20,7 @@ import { RoleModel } from '../../../../shared/models/roles.models';
 import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
 import { ErrorMessage } from '../../../../shared/components/input-field/models/input';
 import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constants';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-user-dialog',
@@ -36,6 +37,7 @@ import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constan
     MatSlideToggleModule,
     MatFormFieldModule,
     InputFieldComponent,
+    ButtonComponent,
   ],
 })
 export class UserDialogComponent implements OnInit {

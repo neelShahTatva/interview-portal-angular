@@ -18,6 +18,7 @@ import { UserDialogComponent } from '../user-dialog/user-dialog';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { AuthService } from '../../../../core/auth/services/auth.service';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-users',
@@ -35,6 +36,7 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
     MatFormFieldModule,
     MatSelectModule,
     MatPaginatorModule,
+    ButtonComponent,
   ],
 })
 export class UsersComponent implements OnInit {

@@ -75,12 +75,16 @@
         </div>
       </div>
 
-      <button
+      <app-button
         type="submit"
-        class="h-[48px] w-full rounded-[10px] bg-[#08132f] font-semibold text-white"
+        [fullWidth]="true"
+        size="lg"
+        [disabled]="registerForm.invalid"
+        [loading]="isLoading()"
+        loadingText="Creating..."
       >
-        {{ isLoading() ? "Creating..." : "Register" }}
-      </button>
+        Register
+      </app-button>
     </form>
 
     <div class="mt-5 text-center">

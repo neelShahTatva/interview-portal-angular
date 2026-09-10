@@ -20,12 +20,13 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject, of, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, ButtonComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
