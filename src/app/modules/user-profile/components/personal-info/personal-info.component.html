@@ -1,0 +1,52 @@
+<div class="card personal-info-card">
+  <div class="card-header">
+    <div class="card-title-group">
+      <h3 class="card-title">Account Information</h3>
+      <p class="card-subtitle">User credentials and role details retrieved from system</p>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-tile">
+      <div class="tile-icon">
+        <mat-icon>email</mat-icon>
+      </div>
+      <div class="tile-content">
+        <span class="tile-label">Email Address</span>
+        <span class="tile-value">{{ user.email }}</span>
+      </div>
+    </div>
+
+    @if (user.id) {
+      <div class="info-tile">
+        <div class="tile-icon">
+          <mat-icon>fingerprint</mat-icon>
+        </div>
+        <div class="tile-content">
+          <span class="tile-label">User ID</span>
+          <span class="tile-value">{{ user.id }}</span>
+        </div>
+      </div>
+    }
+
+    <div class="info-tile">
+      <div class="tile-icon">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="tile-content">
+        <span class="tile-label">Account Status</span>
+        <span class="tile-value">{{ user.isActive ? 'Active' : 'Inactive' }}</span>
+      </div>
+    </div>
+
+    <div class="info-tile">
+      <div class="tile-icon">
+        <mat-icon>badge</mat-icon>
+      </div>
+      <div class="tile-content">
+        <span class="tile-label">Portal Role</span>
+        <span class="tile-value">{{ user.roleName === 'ADMIN' ? 'Admin' : 'Interviewer' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

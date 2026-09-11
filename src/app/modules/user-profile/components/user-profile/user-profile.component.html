@@ -1,0 +1,25 @@
+<div class="profile-page">
+
+  <div class="page-header">
+    <div>
+      <h2>My Profile</h2>
+      <p>Manage your account settings and personal credentials</p>
+    </div>
+
+    @if (user) {
+      <button class="add-btn" type="button" (click)="openEditDialog()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit Profile</span>
+      </button>
+    }
+  </div>
+
+  @if (user) {
+    <div class="profile-content">
+      <app-profile-header [user]="user" (pictureUploaded)="onPictureUploaded($event)" />
+
+      <app-personal-info [user]="user" />
+    </div>
+  }
+
+</div>

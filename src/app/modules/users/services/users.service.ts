@@ -24,4 +24,18 @@ export class UsersService {
   deleteUser(id: number) {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  getProfile() {
+    return this.http.get<any>(`${this.apiUrl}/profile`);
+  }
+
+  uploadProfilePicture(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<any>(`${this.apiUrl}/profile/picture`, formData);
+  }
+
+  updateProfile(payload: any) {
+    return this.http.put<any>(`${this.apiUrl}/profile`, payload);
+  }
 }

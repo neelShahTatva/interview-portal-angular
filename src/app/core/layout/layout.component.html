@@ -50,7 +50,11 @@
       <!-- plain button — no mat-button directive, full layout control -->
       <button class="profile-btn" [matMenuTriggerFor]="profileMenu" type="button">
         <div class="profile-avatar">
-          <lucide-angular [img]="UserCircle2" size="26"></lucide-angular>
+          @if (headerAvatarUrl) {
+            <img [src]="headerAvatarUrl" [alt]="userName" class="header-avatar-img" (error)="profilePictureUrl = null" />
+          } @else {
+            <lucide-angular [img]="UserCircle2" size="26"></lucide-angular>
+          }
         </div>
 
         <span class="profile-name">{{ userName | titlecase }} {{ "(" + ( role | titlecase ) + ")"}}</span>
