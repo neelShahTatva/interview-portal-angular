@@ -11,15 +11,12 @@
   gap: 20px;
 }
 
-/* ── User Identity Group ── */
 .user-identity-group {
   display: flex;
   align-items: center;
   gap: 20px;
   flex: 1;
 }
-
-/* ── Avatar ── */
 .avatar-wrapper {
   position: relative;
   width: 88px;
@@ -69,8 +66,6 @@
   height: 100%;
   display: block;
 }
-
-/* ── Avatar Overlay & Loading Spinner ── */
 .avatar-overlay {
   position: absolute;
   inset: 0;
@@ -120,7 +115,6 @@
   }
 }
 
-/* ── User Details ── */
 .user-details {
   display: flex;
   flex-direction: column;
@@ -141,7 +135,6 @@
   color: #0f172a;
 }
 
-/* ── Badges (matching portal standard) ── */
 .badges {
   display: flex;
   gap: 8px;

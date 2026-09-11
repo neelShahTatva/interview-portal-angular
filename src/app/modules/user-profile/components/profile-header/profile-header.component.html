@@ -1,6 +1,5 @@
 <div class="card profile-header-card">
   <div class="header-main-row">
-    <!-- Left: Avatar + Identity -->
     <div class="user-identity-group">
       <div
         class="avatar-wrapper"
@@ -23,7 +22,6 @@
           </div>
         }
 
-        <!-- Uploading / Hover Overlay -->
         <div class="avatar-overlay" [class.is-uploading]="isUploading">
           @if (isUploading) {
             <mat-icon class="overlay-icon spin">sync</mat-icon>
@@ -35,7 +33,6 @@
         </div>
       </div>
 
-      <!-- Hidden file input -->
       <input
         #fileInput
         type="file"

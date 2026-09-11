@@ -57,26 +57,26 @@ export class ProfileHeaderComponent {
     const file = input.files[0];
     input.value = '';
 
-    // Validation 1: Check for empty file
+    // Check for empty file
     if (file.size === 0) {
       this.toastr.error('Selected file is empty. Please select a valid image.');
       return;
     }
 
-    // Validation 2: Check max file size (5MB)
+    //  Check max file size (5MB)
     if (file.size > this.maxFileSize) {
       const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
       this.toastr.error(`Image size (${sizeMb} MB) exceeds the maximum limit of 5 MB.`);
       return;
     }
 
-    // Validation 3: Check MIME type
+    // Check MIME type
     if (!this.allowedTypes.includes(file.type.toLowerCase())) {
       this.toastr.error('Invalid image type. Only JPEG, PNG, and WEBP images are allowed.');
       return;
     }
 
-    // Validation 4: Check file extension
+    // Check file extension
     const fileName = file.name.toLowerCase();
     const hasValidExtension = this.allowedExtensions.some((ext) => fileName.endsWith(ext));
     if (!hasValidExtension) {

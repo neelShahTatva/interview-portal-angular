@@ -117,7 +117,6 @@ export class UserDialogComponent implements OnInit {
         ...data,
         roleId: data.roleId !== undefined && data.roleId !== null ? Number(data.roleId) : null,
       });
-      // Password is only required on create, not on edit
       this.form.get('password')?.clearValidators();
       this.form.get('password')?.updateValueAndValidity();
     }

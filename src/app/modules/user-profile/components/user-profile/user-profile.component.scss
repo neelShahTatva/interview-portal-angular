@@ -3,8 +3,6 @@
   flex-direction: column;
   gap: 24px;
 }
-
-/* ── Page Header (matching portal standard) ── */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -51,7 +49,6 @@
   }
 }
 
-/* ── Content Layout ── */
 .profile-content {
   display: flex;
   flex-direction: column;
