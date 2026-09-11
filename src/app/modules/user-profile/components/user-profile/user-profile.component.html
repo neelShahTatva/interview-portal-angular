@@ -1,0 +1,28 @@
+<div class="profile-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h2>My Profile</h2>
+      <p>Manage your account settings and personal credentials</p>
+    </div>
+
+    @if (user) {
+      <button class="add-btn" type="button" (click)="openEditDialog()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit Profile</span>
+      </button>
+    }
+  </div>
+
+  @if (user) {
+    <div class="profile-content">
+      <!-- Profile Header Card showing avatar & DB identity -->
+      <app-profile-header [user]="user" (pictureUploaded)="onPictureUploaded($event)" />
+
+      <!-- Personal Info Card showing only DB fields -->
+      <app-personal-info [user]="user" />
+    </div>
+  }
+
+</div>

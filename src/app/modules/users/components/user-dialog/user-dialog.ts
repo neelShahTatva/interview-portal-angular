@@ -43,8 +43,14 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 export class UserDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   private rolesService = inject(Roles);
-  public roles: RoleModel[] = [];
+  public roles: RoleModel[] = [
+    { id: 1, roleName: 'Admin' },
+    { id: 2, roleName: 'Interviewer' },
+  ];
   isEditMode = false;
+  isSelfProfile = false;
+  submitted = false;
+
   form = this.fb.group({
     username: [
       '',
@@ -57,7 +63,12 @@ export class UserDialogComponent implements OnInit {
     ],
     email: [
       '',
-      [Validators.required, Validators.email, Validators.maxLength(255)],
+      [
+        Validators.required,
+        Validators.email,
+        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'),
+        Validators.maxLength(255),
+      ],
     ],
     password: [
       '',
@@ -86,6 +97,13 @@ export class UserDialogComponent implements OnInit {
     },
   ];
 
+  emailInvalid: ErrorMessage[] = [
+    {
+      key: 'pattern',
+      error: 'Enter a valid email address',
+    },
+  ];
+
   constructor(
     private dialogRef: MatDialogRef<UserDialogComponent>,
 
@@ -94,19 +112,33 @@ export class UserDialogComponent implements OnInit {
   ) {
     if (data) {
       this.isEditMode = true;
-      this.form.patchValue(data);
+      this.isSelfProfile = !!data.isSelfProfile;
+      this.form.patchValue({
+        ...data,
+        roleId: data.roleId !== undefined && data.roleId !== null ? Number(data.roleId) : null,
+      });
+      // Password is only required on create, not on edit
       this.form.get('password')?.clearValidators();
       this.form.get('password')?.updateValueAndValidity();
     }
   }
 
   ngOnInit() {
-    this.rolesService.getRoles().subscribe((roles: RoleModel[]) => {
-      this.roles = roles;
+    this.rolesService.getRoles().subscribe({
+      next: (roles: RoleModel[]) => {
+        if (Array.isArray(roles) && roles.length > 0) {
+          this.roles = roles;
+        }
+      },
+      error: () => {
+        // Fallback default roles are already set
+      },
     });
   }
 
   submit(): void {
+    this.submitted = true;
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

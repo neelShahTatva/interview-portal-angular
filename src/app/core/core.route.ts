@@ -64,6 +64,14 @@ export const coreRoutes: Routes = [
       },
 
       {
+        path: 'profile',
+        loadComponent: () =>
+          import(
+            '../modules/user-profile/components/user-profile/user-profile.component'
+          ).then((m) => m.UserProfileComponent),
+      },
+
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',

@@ -20,11 +20,13 @@ import {
   LogOut,
   ChevronDown,
   UserCircle2,
+  UserCircle,
   LucideAngularModule,
 } from 'lucide-angular';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth/services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-layout',
@@ -48,8 +50,25 @@ export class Layout {
   userName = '';
   email = '';
   role = 'ADMIN';
+  profilePictureUrl: string | null = null;
+
+  get headerAvatarUrl(): string | null {
+    if (!this.profilePictureUrl) return null;
+    if (
+      this.profilePictureUrl.startsWith('http://') ||
+      this.profilePictureUrl.startsWith('https://') ||
+      this.profilePictureUrl.startsWith('data:')
+    ) {
+      return this.profilePictureUrl;
+    }
+    if (this.profilePictureUrl.startsWith('/')) {
+      return `${environment.baseUrl}${this.profilePictureUrl}`;
+    }
+    return `${environment.baseUrl}/uploads/profile-pictures/${this.profilePictureUrl}`;
+  }
 
   UserCircle2 = UserCircle2;
+  UserCircle = UserCircle;
   Menu = Menu;
   LogOut = LogOut;
   Bot = Bot;
@@ -98,6 +117,12 @@ export class Layout {
       route: '/submissions',
       icon: FileCheck,
     },
+
+    {
+      label: 'My Profile',
+      route: '/profile',
+      icon: UserCircle,
+    },
   ];
 
   toggleSidebar() {
@@ -105,12 +130,14 @@ export class Layout {
   }
 
   ngOnInit(): void {
-    const user = this.authService.getUser();
-    if (user) {
-      this.userName = user.userName;
-      this.email = user.email;
-      this.role = user.roleName;
-    }
+    this.authService.user$.subscribe((user) => {
+      if (user) {
+        this.userName = user.userName;
+        this.email = user.email;
+        this.role = user.roleName;
+        this.profilePictureUrl = user.profilePictureUrl || user.profilePicture || null;
+      }
+    });
   }
 
   onSignOut(): void {

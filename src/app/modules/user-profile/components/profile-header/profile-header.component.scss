@@ -1,0 +1,189 @@
+.profile-header-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.header-main-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ── User Identity Group ── */
+.user-identity-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+/* ── Avatar ── */
+.avatar-wrapper {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  padding: 3px;
+  background: #ffffff;
+  border: 2.5px solid #e2e8f0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 6px 14px rgba(59, 130, 246, 0.2);
+
+    .avatar-overlay {
+      opacity: 1;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-icon-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Avatar Overlay & Loading Spinner ── */
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.65);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+
+  &.is-uploading {
+    opacity: 1;
+    background: rgba(15, 23, 42, 0.75);
+    cursor: wait;
+  }
+}
+
+.overlay-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  color: #ffffff;
+
+  &.spin {
+    animation: spin 1s linear infinite;
+  }
+}
+
+.overlay-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── User Details ── */
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.name-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.profile-name {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* ── Badges (matching portal standard) ── */
+.badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  &.admin {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  &.interviewer {
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #fee2e2;
+  color: #991b1b;
+
+  &.active {
+    background: #dcfce7;
+    color: #166534;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-main-row,
+  .user-identity-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

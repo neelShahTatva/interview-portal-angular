@@ -1,0 +1,62 @@
+<div class="card profile-header-card">
+  <div class="header-main-row">
+    <!-- Left: Avatar + Identity -->
+    <div class="user-identity-group">
+      <div
+        class="avatar-wrapper"
+        (click)="fileInput.click()"
+        role="button"
+        tabindex="0"
+        title="Click to change profile picture"
+        (keydown.enter)="fileInput.click()"
+        (keydown.space)="fileInput.click()"
+      >
+        @if (displayAvatarUrl) {
+          <img [src]="displayAvatarUrl" [alt]="user.username" class="avatar-img" (error)="onImageError()" />
+        } @else {
+          <div class="avatar-icon-box">
+            <svg viewBox="0 0 100 100" class="avatar-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="50" fill="#0f172a"/>
+              <circle cx="50" cy="36" r="16" fill="#e2e8f0"/>
+              <path d="M22 82C22 66 34 56 50 56C66 56 78 66 78 82" fill="#e2e8f0"/>
+            </svg>
+          </div>
+        }
+
+        <!-- Uploading / Hover Overlay -->
+        <div class="avatar-overlay" [class.is-uploading]="isUploading">
+          @if (isUploading) {
+            <mat-icon class="overlay-icon spin">sync</mat-icon>
+            <span class="overlay-label">Uploading...</span>
+          } @else {
+            <mat-icon class="overlay-icon">photo_camera</mat-icon>
+            <span class="overlay-label">Change</span>
+          }
+        </div>
+      </div>
+
+      <!-- Hidden file input -->
+      <input
+        #fileInput
+        type="file"
+        (change)="onFileSelected($event)"
+        accept="image/jpeg,image/png,image/webp"
+        style="display: none;"
+      />
+
+      <div class="user-details">
+        <div class="name-badge-row">
+          <h2 class="profile-name">{{ user.username | titlecase }}</h2>
+          <div class="badges">
+            <span class="role-badge" [class.admin]="user.roleName === 'ADMIN'" [class.interviewer]="user.roleName === 'INTERVIEWER'">
+              {{ user.roleName }}
+            </span>
+            <span class="status-badge" [class.active]="user.isActive">
+              {{ user.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
