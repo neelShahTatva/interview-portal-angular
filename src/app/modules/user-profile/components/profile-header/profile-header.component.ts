@@ -15,7 +15,6 @@ import { environment } from '../../../../../environments/environment';
 })
 export class ProfileHeaderComponent {
   @Input() user!: UserProfile;
-  @Output() editProfile = new EventEmitter<void>();
   @Output() pictureUploaded = new EventEmitter<string>();
 
   isUploading = false;
@@ -109,9 +108,5 @@ export class ProfileHeaderComponent {
         this.toastr.error(msg);
       },
     });
-  }
-
-  onEdit(): void {
-    this.editProfile.emit();
   }
 }

@@ -69,7 +69,7 @@ export class UserProfileComponent implements OnInit {
             username: p.username,
             email: p.email,
             roleId: p.roleId,
-            roleName: (p.roleName || (p.roleId === 1 ? 'ADMIN' : 'INTERVIEWER')).toUpperCase(),
+            roleName: (p.roleName || roleName).toUpperCase(),
             isActive: p.isActive ?? true,
             profilePictureUrl: p.profilePictureUrl,
           };
@@ -79,27 +79,7 @@ export class UserProfileComponent implements OnInit {
         }
       },
       error: () => {
-        // Fallback to getUsers if needed
-        this.usersService.getUsers().subscribe({
-          next: (response: any) => {
-            const usersList: any[] = response?.result || response || [];
-            const found = usersList.find(
-              (u: any) => u.id === userId || (email && u.email?.toLowerCase() === email.toLowerCase())
-            );
-
-            if (found) {
-              this.user = {
-                id: found.id,
-                username: found.username,
-                email: found.email,
-                roleId: found.roleId,
-                roleName: found.roleId === 1 ? 'ADMIN' : 'INTERVIEWER',
-                isActive: found.isActive ?? true,
-                profilePictureUrl: found.profilePicture || found.profilePictureUrl,
-              };
-            }
-          },
-        });
+        // Keep initial data loaded from authService — no fallback API call needed
       },
     });
   }
