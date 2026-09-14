@@ -17,6 +17,18 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
+    "baseUrl": "src",
+    "paths": {
+      "@modules/assessments": ["app/modules/assessments/*"],
+      "@modules/candidates": ["app/modules/candidates/*"],
+      "@modules/dashboard": ["app/modules/dashboard/*"],
+      "@modules/evaluations": ["app/modules/evaluations/*"],
+      "@modules/file-submission": ["app/modules/file-submission/*"],
+      "@modules/question-bank": ["app/modules/question-bank/*"],
+      "@modules/users": ["app/modules/users/*"],
+      "@core/*": ["app/core/*"],
+      "@shared/*": ["app/shared/*"],
+    },
     "lib": [
       "ES2022",
       "dom"

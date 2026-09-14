@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
 import { AssessmentService } from '../../services/assessment.service';
 import { Assessment, AssessmentRequest } from '../../models/assessment.model';
 import { Question } from '../../../question-bank/models/question.model';
 import { CandidatesService } from '../../../candidates/services/candidates.service';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import {
   LucideAngularModule,
   Plus,
@@ -19,6 +20,10 @@ import {
   AlignLeft,
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
+import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
+import { ErrorMessage } from '../../../../shared/components/input-field/models/input';
+import { SYSTEM_CONSTANTS } from '../../../../shared/constant/system.constants';
+import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constants';
 
 @Component({
   selector: 'app-assessments',
@@ -26,16 +31,16 @@ import Swal from 'sweetalert2';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     LucideAngularModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
+    InputFieldComponent,
   ],
   templateUrl: './assessments.component.html',
   styleUrls: ['./assessments.component.scss'],
 })
 export class AssessmentsComponent implements OnInit {
+  private readonly formBuilder = inject(FormBuilder);
+
   assessments: Assessment[] = [];
 
   candidates: any[] = [];
@@ -55,10 +60,34 @@ export class AssessmentsComponent implements OnInit {
   readonly Trash2 = Trash2;
   readonly FileText = FileText;
   readonly AlignLeft = AlignLeft;
+  readonly assessmentTimeLimitMin = SYSTEM_CONSTANTS.ASSESSMENT_TIME_LIMIT_MIN;
+  readonly assessmentTimeLimitMax = SYSTEM_CONSTANTS.ASSESSMENT_TIME_LIMIT_MAX;
+
+  readonly assessmentForm = this.formBuilder.nonNullable.group({
+    title: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        Validators.pattern(SYSTEM_CONSTANTS.ASSESSMENT_TITLE_REGEX),
+      ],
+    ],
+    timeLimitMinutes: [
+      90,
+      [
+        Validators.required,
+        Validators.min(SYSTEM_CONSTANTS.ASSESSMENT_TIME_LIMIT_MIN),
+        Validators.max(SYSTEM_CONSTANTS.ASSESSMENT_TIME_LIMIT_MAX),
+      ],
+    ],
+  });
+
+  readonly assessmentTitleErrors: ErrorMessage[] = [
+    { key: 'pattern', error: ERROR_MESSAGE.ASSESSMENT_TITLE_INVALID },
+  ];
   draft = {
     candidateId: null as number | null,
-    title: '',
-    timeLimitMinutes: 90,
     questionIds: [] as number[],
   };
 
@@ -112,10 +141,10 @@ export class AssessmentsComponent implements OnInit {
 
     this.recommendedQuestions = [];
 
+    this.assessmentForm.reset({ title: '', timeLimitMinutes: 90 });
+
     this.draft = {
       candidateId: null,
-      title: '',
-      timeLimitMinutes: 90,
       questionIds: [],
     };
   }
@@ -153,8 +182,8 @@ export class AssessmentsComponent implements OnInit {
       return false;
     }
 
-    if (!this.draft.title.trim()) {
-      this.toastr.warning('Assessment title is required');
+    if (this.assessmentForm.invalid) {
+      this.assessmentForm.markAllAsTouched();
 
       return false;
     }
@@ -170,7 +199,10 @@ export class AssessmentsComponent implements OnInit {
     this.isGeneratingQuestions = true;
 
     this.assessmentService
-      .recommendQuestions(this.draft.candidateId, this.draft.timeLimitMinutes)
+      .recommendQuestions(
+        this.draft.candidateId,
+        this.assessmentForm.controls.timeLimitMinutes.value
+      )
       .subscribe({
         next: (response: any) => {
           this.recommendedQuestions = response.result ?? [];
@@ -200,9 +232,9 @@ export class AssessmentsComponent implements OnInit {
     const payload: AssessmentRequest = {
       candidateId: this.draft.candidateId,
 
-      title: this.draft.title,
+      title: this.assessmentForm.controls.title.value.trim(),
 
-      timeLimitMinutes: this.draft.timeLimitMinutes,
+      timeLimitMinutes: this.assessmentForm.controls.timeLimitMinutes.value,
 
       questionIds: this.draft.questionIds,
     };
@@ -235,12 +267,15 @@ export class AssessmentsComponent implements OnInit {
             errorMessage = 'Assessment pending for this candidate.';
             break;
           case 'ASSESSMENT_RECENTLY_COMPLETED':
-            errorMessage = 'Candidate completed an assessment recently; try after 6 months.';
+            errorMessage =
+              'Candidate completed an assessment recently; try after 6 months.';
             break;
           default:
             errorMessage = Array.isArray(err?.error?.errorMessages)
               ? err.error.errorMessages.join(', ')
-              : err?.error?.errorMessages || err?.error?.message || 'Failed to create assessment';
+              : err?.error?.errorMessages ||
+                err?.error?.message ||
+                'Failed to create assessment';
         }
 
         this.toastr.error(errorMessage);

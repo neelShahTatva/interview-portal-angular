@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { API_ROUTES } from '../constant/api-routes';
 import { Observable } from 'rxjs';
-import { RoleModel } from '../models/roles.models';
+import { environment } from 'environments/environment';
+import { API_ROUTES } from '@shared/constant';
+import { RoleModel } from '@shared/models/';
 
 @Injectable({
   providedIn: 'root',
