@@ -18,6 +18,7 @@ import { AuthService } from '@core/auth/services';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog';
 import { UsersService } from '@modules/users/services';
 import { UserDialogComponent } from '@modules/users/components';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-users',
@@ -35,6 +36,7 @@ import { UserDialogComponent } from '@modules/users/components';
     MatFormFieldModule,
     MatSelectModule,
     MatPaginatorModule,
+    ButtonComponent,
   ],
 })
 export class UsersComponent implements OnInit {

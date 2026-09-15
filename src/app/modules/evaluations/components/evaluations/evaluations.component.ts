@@ -9,11 +9,18 @@ import {
   SubmissionState,
 } from '@modules/evaluations/models';
 import { EvaluationService } from '@modules/evaluations/services';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-file-submission',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSelectModule, MatFormFieldModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    ButtonComponent,
+  ],
   templateUrl: './evaluations.component.html',
   styleUrl: './evaluations.component.scss',
 })

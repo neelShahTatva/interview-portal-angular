@@ -20,6 +20,7 @@ import { ApiResponse } from '@shared/models';
 import { environment } from 'environments/environment';
 import { API_ROUTES } from '@shared/constant';
 import { Category, Question } from '@modules/question-bank/models';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-question-bank',
@@ -33,6 +34,7 @@ import { Category, Question } from '@modules/question-bank/models';
     MatFormFieldModule,
     MatSelectModule,
     MatPaginatorModule,
+    ButtonComponent,
   ],
   templateUrl: './question-bank.component.html',
   styleUrl: './question-bank.component.scss',

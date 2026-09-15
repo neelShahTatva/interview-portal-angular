@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { SubmissionService } from '@modules/file-submission/services';
 import { SubmissionViewDialogComponent } from '@modules/file-submission/components';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-submissions',
@@ -23,6 +24,7 @@ import { SubmissionViewDialogComponent } from '@modules/file-submission/componen
     MatTableModule,
     MatPaginatorModule,
     MatIconModule,
+    ButtonComponent,
   ],
 })
 export class FileSubmissionsComponent implements OnInit {

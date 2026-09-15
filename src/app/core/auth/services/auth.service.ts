@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LoginRequest } from '../models/login-request.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiResponse } from '../../../shared/models/api-response.model';
 import { LoginResponse } from '../models/login-response.model';
 import { APIInterfaceService } from '../../../shared/services/api-interface.service';
@@ -94,6 +94,9 @@ export class AuthService {
     };
   }
 
+  private userSubject = new BehaviorSubject<any>(this.getUser());
+  public user$: Observable<any> = this.userSubject.asObservable();
+
   setToken(accessToken: string, refreshToken: string, user?: any) {
     localStorage.setItem('accessToken', accessToken);
 
@@ -101,6 +104,7 @@ export class AuthService {
 
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
+      this.userSubject.next(user);
     }
   }
 
@@ -110,11 +114,18 @@ export class AuthService {
     return user ? JSON.parse(user) : null;
   }
 
+  updateUser(user: any): void {
+    localStorage.setItem('user', JSON.stringify(user));
+    this.userSubject.next(user);
+  }
+
   logout() {
     localStorage.removeItem('accessToken');
 
     localStorage.removeItem('refreshToken');
 
     localStorage.removeItem('user');
+
+    this.userSubject.next(null);
   }
 }

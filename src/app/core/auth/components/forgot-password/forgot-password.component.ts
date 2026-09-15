@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
 import { ToastrService } from 'ngx-toastr';
 import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-forgot-password',
@@ -16,6 +17,7 @@ import { InputFieldComponent } from '../../../../shared/components/input-field/i
     RouterModule,
     LucideAngularModule,
     InputFieldComponent,
+    ButtonComponent,
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',

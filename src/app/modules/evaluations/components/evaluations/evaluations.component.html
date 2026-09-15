@@ -230,9 +230,9 @@
           </div>
         }
 
-        <button class="btn btn--outline btn--full" (click)="reset()">
+        <app-button variant="outline" [fullWidth]="true" (btnClick)="reset()">
           ↩ Start New Evaluation
-        </button>
+        </app-button>
       </div>
     }
 
@@ -386,12 +386,14 @@
                         formatSize(q.submissionFile.size)
                       }}</span>
                     </div>
-                    <button
-                      class="icon-btn"
-                      (click)="clearFile(i, 'submission')"
+                    <app-button
+                      variant="ghost"
+                      size="icon-sm"
+                      customClass="text-slate-400 hover:text-red-600"
+                      (btnClick)="clearFile(i, 'submission')"
                     >
                       ✕
-                    </button>
+                    </app-button>
                   </div>
                 }
               </div>
@@ -401,30 +403,26 @@
 
         <!-- Submit Row -->
         <div class="submit-area">
-          <button
-            class="btn btn--primary mt-2"
+          <app-button
+            customClass="mt-2"
             [disabled]="!canSubmit()"
-            (click)="onSubmit()"
+            [loading]="submissionState().isLoading"
+            [loadingText]="'Evaluating ' + qs.length + ' question' + (qs.length > 1 ? 's' : '') + ' in parallel...'"
+            (btnClick)="onSubmit()"
           >
-            @if (submissionState().isLoading) {
-              <span class="spinner"></span>
-              Evaluating {{ qs.length }} question{{ qs.length > 1 ? "s" : "" }}
-              in parallel...
-            } @else {
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-              >
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-              </svg>
-              Evaluate Assessment Question{{ qs.length > 1 ? "s" : "" }}
-            }
-          </button>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+            Evaluate Assessment Question{{ qs.length > 1 ? "s" : "" }}
+          </app-button>
 
           <div class="submit-checklist">
             @for (q of qs; track $index; let i = $index) {

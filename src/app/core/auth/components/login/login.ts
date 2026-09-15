@@ -9,6 +9,7 @@ import { LoginResponse } from '../../models/login-response.model';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ import { InputFieldComponent } from '../../../../shared/components/input-field/i
     RouterModule,
     LucideAngularModule,
     InputFieldComponent,
+    ButtonComponent,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',

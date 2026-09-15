@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 import { API_ROUTES } from '@shared/constant';
 import { RoleModel } from '@shared/models/';
@@ -14,8 +14,8 @@ export class Roles {
   private http = inject(HttpClient);
 
   getRoles(): Observable<RoleModel[]> {
-    return this.http.get<RoleModel[]>(
-      `${this.baseUrl}${API_ROUTES.COMMON.GET_ALL_ROLES}`
-    );
+    return this.http
+      .get<any>(`${this.baseUrl}${API_ROUTES.COMMON.GET_ALL_ROLES}`)
+      .pipe(map((res: any) => res?.result || res || []));
   }
 }

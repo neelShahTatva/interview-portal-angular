@@ -127,20 +127,19 @@
     <!-- ACTIONS -->
     <div class="dialog-actions">
 
-        <button
-            class="cancel-btn"
+        <app-button
+            variant="secondary"
             mat-dialog-close
         >
             Cancel
-        </button>
+        </app-button>
 
-        <button
-            class="submit-btn"
-            (click)="submit()"
+        <app-button
             [disabled]="form.invalid || form.pending"
+            (btnClick)="submit()"
         >
             {{ isEditMode ? 'Update Candidate' : 'Create Candidate' }}
-        </button>
+        </app-button>
 
     </div>
 

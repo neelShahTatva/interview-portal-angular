@@ -19,6 +19,7 @@ import {
   AlignLeft,
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputFieldComponent } from '@shared/components/input-field';
 import { ErrorMessage } from '@shared/components/input-field/models';
 import { AssessmentService } from '@modules/assessments/services';
@@ -33,6 +34,7 @@ import { ERROR_MESSAGE, SYSTEM_CONSTANTS } from '@shared/constant';
     ReactiveFormsModule,
     LucideAngularModule,
     InputFieldComponent,
+    ButtonComponent,
   ],
   templateUrl: './assessments.component.html',
   styleUrls: ['./assessments.component.scss'],

@@ -8,18 +8,18 @@
 
   <!-- ACTIONS -->
   <div class="actions">
-    <button
-      class="cancel-btn"
-      (click)="cancel()"
+    <app-button
+      variant="secondary"
+      (btnClick)="cancel()"
     >
       Cancel
-    </button>
+    </app-button>
 
-    <button
-      class="delete-btn"
-      (click)="confirm()"
+    <app-button
+      variant="danger"
+      (btnClick)="confirm()"
     >
       Delete
-    </button>
+    </app-button>
   </div>
 </div>

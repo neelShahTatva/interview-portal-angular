@@ -9,10 +9,10 @@
         </div>
 
         @if (role === "ADMIN") {
-        <button class="add-btn" (click)="openAddDialog()">
+        <app-button (btnClick)="openAddDialog()">
             <mat-icon>add</mat-icon>
             Add Candidate
-        </button>
+        </app-button>
         }
 
     </div>
@@ -141,22 +141,23 @@
                     </th>
 
                     <td mat-cell *matCellDef="let candidate">
-
-                        <button
-                            class="action-btn"
-                            style="margin-right: 5px;"
-                            (click)="openEditDialog(candidate)"
+                        <app-button
+                            variant="ghost"
+                            size="icon-sm"
+                            customClass="mr-1 text-slate-600 hover:text-slate-900"
+                            (btnClick)="openEditDialog(candidate)"
                         >
                             <mat-icon>edit</mat-icon>
-                        </button>
+                        </app-button>
 
-                        <button
-                            class="action-btn delete"
-                            (click)="deleteCandidate(candidate)"
+                        <app-button
+                            variant="ghost"
+                            size="icon-sm"
+                            customClass="text-red-600 hover:text-red-700"
+                            (btnClick)="deleteCandidate(candidate)"
                         >
                             <mat-icon>delete</mat-icon>
-                        </button>
-
+                        </app-button>
                     </td>
 
                 </ng-container>

@@ -86,9 +86,13 @@
           <th mat-header-cell *matHeaderCellDef>Actions</th>
 
           <td mat-cell *matCellDef="let row">
-            <button class="action-btn" (click)="viewSubmission(row)">
+            <app-button
+              variant="ghost"
+              size="icon-sm"
+              customClass="text-slate-600 hover:text-slate-900"
+              (btnClick)="viewSubmission(row)">
               <mat-icon> visibility </mat-icon>
-            </button>
+            </app-button>
           </td>
         </ng-container>
 
