@@ -236,7 +236,10 @@
 
         <app-button
           *ngIf="step === 1"
-          [disabled]="!this.draft.candidateId || !this.draft.title.trim()"
+          [disabled]="
+            !this.draft.candidateId ||
+            !this.assessmentForm.controls.title.value.trim()
+          "
           [loading]="isGeneratingQuestions"
           loadingText="Generating..."
           (btnClick)="nextStep()"
