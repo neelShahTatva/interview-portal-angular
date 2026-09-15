@@ -6,12 +6,12 @@ import {
   EvaluationResult,
   FileSubmissionRequest,
   MultiQuestionEvaluationResult,
-} from '../models/evaluation.model';
+} from '@modules/evaluations/models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EvalutionService {
+export class EvaluationService {
   private readonly http = inject(HttpClient);
   private readonly base = 'http://localhost:8080/api/mock-interview';
   private readonly baseUrl = 'http://localhost:8080';

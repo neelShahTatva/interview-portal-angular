@@ -1,16 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
-  AssessmentListItem,
   CandidateListItem,
   QuestionItem,
   SubmissionState,
-} from '../../models/evaluation.model';
-import { EvalutionService } from '../../services/evalution.service';
+} from '@modules/evaluations/models';
+import { EvaluationService } from '@modules/evaluations/services';
 
 @Component({
   selector: 'app-file-submission',
@@ -20,7 +18,7 @@ import { EvalutionService } from '../../services/evalution.service';
   styleUrl: './evaluations.component.scss',
 })
 export class EvaluationsComponent implements OnInit {
-  private readonly evaluationService = inject(EvalutionService);
+  private readonly evaluationService = inject(EvaluationService);
 
   candidates: CandidateListItem[] = [];
 

@@ -9,8 +9,8 @@ import {
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { SolutionPreviewDialogComponent } from '../solution-preview-dialog/solution-preview-dialog';
-import { CandidateSolutionService } from '../../services/candidateSolution.service';
+import { SolutionPreviewDialogComponent } from '@modules/file-submission/components';
+import { CandidateSolutionService } from '@modules/file-submission/services';
 
 @Component({
   selector: 'app-submission-view-dialog',

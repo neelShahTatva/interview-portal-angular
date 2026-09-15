@@ -1,4 +1,4 @@
-import { Question } from '../../question-bank/models/question.model';
+import { Question } from '@modules/question-bank/models';
 
 export interface Assessment {
   id: number;

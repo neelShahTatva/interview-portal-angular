@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -14,10 +14,10 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
-import { AuthService } from '../../../../core/auth/services/auth.service';
-import { CandidatesService } from '../../services/candidates.service';
-import { CandidateDialogComponent } from '../candidate-dialog/candidate-dialog';
+import { CandidateDialogComponent } from '@modules/candidates/components/candidate-dialog/candidate-dialog';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog';
+import { AuthService } from '@core/auth/services/auth.service';
+import { CandidatesService } from '@modules/candidates/services';
 
 @Component({
   selector: 'app-candidates',

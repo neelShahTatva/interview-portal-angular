@@ -14,12 +14,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { SYSTEM_CONSTANTS } from '../../../../shared/constant/system.constants';
-import { Roles } from '../../../../shared/services/roles.service';
-import { RoleModel } from '../../../../shared/models/roles.models';
-import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
-import { ErrorMessage } from '../../../../shared/components/input-field/models/input';
-import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constants';
+import { ERROR_MESSAGE, SYSTEM_CONSTANTS } from '@shared/constant';
+import { Roles } from '@shared/services';
+import { RoleModel } from '@shared/models';
+import { InputFieldComponent } from '@shared/components/input-field';
+import { ErrorMessage } from '@shared/components/input-field/models';
 
 @Component({
   selector: 'app-user-dialog',

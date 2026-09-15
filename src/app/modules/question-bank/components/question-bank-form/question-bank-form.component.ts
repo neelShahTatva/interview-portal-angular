@@ -20,9 +20,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { QuestionService } from '../../services/question.service';
 import { ToastrService } from 'ngx-toastr';
-import { CustomValidators } from '../../../../shared/validators/custom-validators';
+import { QuestionService } from '@modules/question-bank/services';
+import { CustomValidators } from '@shared/validators';
 
 @Component({
   selector: 'app-question-bank-form',

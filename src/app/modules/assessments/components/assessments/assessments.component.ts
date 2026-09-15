@@ -8,10 +8,9 @@ import {
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
-import { AssessmentService } from '../../services/assessment.service';
-import { Assessment, AssessmentRequest } from '../../models/assessment.model';
-import { Question } from '../../../question-bank/models/question.model';
-import { CandidatesService } from '../../../candidates/services/candidates.service';
+import { Assessment, AssessmentRequest } from '@modules/assessments/models';
+import { Question } from '@modules/question-bank/models';
+import { CandidatesService } from '@modules/candidates/services';
 import {
   LucideAngularModule,
   Plus,
@@ -20,10 +19,10 @@ import {
   AlignLeft,
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
-import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
-import { ErrorMessage } from '../../../../shared/components/input-field/models/input';
-import { SYSTEM_CONSTANTS } from '../../../../shared/constant/system.constants';
-import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constants';
+import { InputFieldComponent } from '@shared/components/input-field';
+import { ErrorMessage } from '@shared/components/input-field/models';
+import { AssessmentService } from '@modules/assessments/services';
+import { ERROR_MESSAGE, SYSTEM_CONSTANTS } from '@shared/constant';
 
 @Component({
   selector: 'app-assessments',

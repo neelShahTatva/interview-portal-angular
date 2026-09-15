@@ -10,8 +10,8 @@ import {
   DashboardStats,
   QuestionsByDifficulty,
   RecentSubmission,
-} from '../models/dashboard.model';
-import { ApiResponse } from '../../../shared/models/api-response.model';
+} from '@modules/dashboard/models';
+import { ApiResponse } from '@shared/models';
 
 @Injectable({
   providedIn: 'root',

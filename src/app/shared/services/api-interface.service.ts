@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { ApiResponse } from '../models/api-response.model';
-import { environment } from '../../../environments/environment';
+import { environment } from 'environments/environment';
+import { ApiResponse } from '@shared/models';
 
 @Injectable({
   providedIn: 'root',
@@ -29,11 +29,7 @@ export class APIInterfaceService {
     );
   }
 
-  postText<T>(
-    url: string,
-    data: any,
-    params?: HttpParams,
-  ): Observable<string> {
+  postText<T>(url: string, data: any, params?: HttpParams): Observable<string> {
     return this.http.request<string>('POST', `${environment.baseUrl}${url}`, {
       body: data,
       params,
