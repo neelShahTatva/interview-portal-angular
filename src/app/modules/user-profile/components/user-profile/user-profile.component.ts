@@ -79,7 +79,7 @@ export class UserProfileComponent implements OnInit {
         }
       },
       error: () => {
-        // Keep initial data loaded from authService — no fallback API call needed
+      
       },
     });
   }
