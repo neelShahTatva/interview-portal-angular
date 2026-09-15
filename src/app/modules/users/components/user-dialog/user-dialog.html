@@ -2,9 +2,9 @@
   <div class="dialog-header">
     <div>
       <h2>
-        {{ isEditMode ? "Edit User" : "Add User" }}
+        {{ isSelfProfile ? "Edit Profile" : (isEditMode ? "Edit User" : "Add User") }}
       </h2>
-      <p>Manage user details and permissions</p>
+      <p>{{ isSelfProfile ? "Manage your account credentials" : "Manage user details and permissions" }}</p>
     </div>
   </div>
 
@@ -15,6 +15,7 @@
       [type]="'text'"
       [placeholder]="'Enter username'"
       [control]="form.controls.username"
+      [submitted]="submitted"
       [customErrorMessage]="usernameInvalid"
     ></app-input-field>
 
@@ -23,6 +24,8 @@
       [type]="'email'"
       [placeholder]="'Enter email'"
       [control]="form.controls.email"
+      [submitted]="submitted"
+      [customErrorMessage]="emailInvalid"
     ></app-input-field>
 
     @if (!isEditMode) {
@@ -31,6 +34,7 @@
       [type]="'password'"
       [placeholder]="'Enter password'"
       [control]="form.controls.password"
+      [submitted]="submitted"
       [customErrorMessage]="passwordInvalid"
     ></app-input-field>
     }
@@ -40,9 +44,9 @@
         <label> Role </label>
 
         <select formControlName="roleId">
-          <option [value]="null" disabled selected>Select role</option>
-          @for (item of roles; track $index) {
-          <option [value]="item.id">
+          <option [ngValue]="null" disabled>Select role</option>
+          @for (item of roles; track item.id) {
+          <option [ngValue]="item.id">
             {{ item.roleName | titlecase }}
           </option>
           }
@@ -66,7 +70,7 @@
         </app-button>
 
         <app-button [disabled]="form.invalid || form.pending" (btnClick)="submit()">
-            {{ isEditMode ? 'Update User' : 'Create User' }}
+            {{ isSelfProfile ? 'Update Profile' : (isEditMode ? 'Update User' : 'Create User') }}
         </app-button>
     </div>
 
