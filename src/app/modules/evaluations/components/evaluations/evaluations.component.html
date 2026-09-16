@@ -132,7 +132,7 @@
         <div class="score-bar-track">
           <div
             class="score-bar-fill"
-            [style.width.%]="submissionState().result!.overallScore"
+            [style.width.%]="scorePercentage(submissionState().result!.overallScore)"
             [style.background]="
               scoreColor(submissionState().result!.overallScore)
             "
