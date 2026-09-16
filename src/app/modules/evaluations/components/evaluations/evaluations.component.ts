@@ -45,6 +45,8 @@ export class EvaluationsComponent implements OnInit {
   draggingSolution = signal<Record<number, boolean>>({});
   draggingSubmission = signal<Record<number, boolean>>({});
 
+  readonly maxScore = 10;
+
   ngOnInit(): void {
     this.loadCandidates();
   }
@@ -298,5 +300,9 @@ export class EvaluationsComponent implements OnInit {
 
   formatSize(bytes: number): string {
     return bytes < 1024 ? `${bytes} B` : `${(bytes / 1024).toFixed(1)} KB`;
+  }
+
+  scorePercentage(score: number): number {
+    return (score / this.maxScore) * 100;
   }
 }

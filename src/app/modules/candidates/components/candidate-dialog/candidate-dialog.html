@@ -1,4 +1,4 @@
-<div class="dialog-container">
+﻿<div class="dialog-container">
 
     <!-- HEADER -->
     <div class="dialog-header">
@@ -30,7 +30,20 @@
                 type="text"
                 formControlName="firstName"
                 placeholder="Enter first name"
+                [class.input-error]="isFieldInvalid('firstName')"
             />
+
+            <div class="error-messages" *ngIf="isFieldInvalid('firstName')">
+                <p class="error" *ngIf="form.get('firstName')?.errors?.['required']">
+                    First name is required.
+                </p>
+                <p class="error" *ngIf="form.get('firstName')?.errors?.['minlength']">
+                    First name must be at least 2 characters.
+                </p>
+                <p class="error" *ngIf="form.get('firstName')?.errors?.['maxlength']">
+                    First name cannot exceed 50 characters.
+                </p>
+            </div>
 
         </div>
 
@@ -46,7 +59,20 @@
                 type="text"
                 formControlName="lastName"
                 placeholder="Enter last name"
+                [class.input-error]="isFieldInvalid('lastName')"
             />
+
+            <div class="error-messages" *ngIf="isFieldInvalid('lastName')">
+                <p class="error" *ngIf="form.get('lastName')?.errors?.['required']">
+                    Last name is required.
+                </p>
+                <p class="error" *ngIf="form.get('lastName')?.errors?.['minlength']">
+                    Last name must be at least 2 characters.
+                </p>
+                <p class="error" *ngIf="form.get('lastName')?.errors?.['maxlength']">
+                    Last name cannot exceed 50 characters.
+                </p>
+            </div>
 
         </div>
 
@@ -62,7 +88,20 @@
                 type="email"
                 formControlName="email"
                 placeholder="Enter email"
+                [class.input-error]="isFieldInvalid('email')"
             />
+
+            <div class="error-messages" *ngIf="isFieldInvalid('email')">
+                <p class="error" *ngIf="form.get('email')?.errors?.['required']">
+                    Email is required.
+                </p>
+                <p class="error" *ngIf="form.get('email')?.errors?.['email']">
+                    Please enter a valid email address.
+                </p>
+                <p class="error" *ngIf="form.get('email')?.errors?.['maxlength']">
+                    Email cannot exceed 100 characters.
+                </p>
+            </div>
 
         </div>
 
@@ -80,7 +119,20 @@
                     type="number"
                     formControlName="experience"
                     placeholder="Years"
+                    [class.input-error]="isFieldInvalid('experience')"
                 />
+
+                <div class="error-messages" *ngIf="isFieldInvalid('experience')">
+                    <p class="error" *ngIf="form.get('experience')?.errors?.['required']">
+                        Experience is required.
+                    </p>
+                    <p class="error" *ngIf="form.get('experience')?.errors?.['min']">
+                        Experience cannot be negative.
+                    </p>
+                    <p class="error" *ngIf="form.get('experience')?.errors?.['max']">
+                        Experience cannot exceed 50 years.
+                    </p>
+                </div>
 
             </div>
 
@@ -92,11 +144,19 @@
                     <span class="required">*</span>
                 </label>
 
-                <input
-                    type="text"
+                <select
                     formControlName="designation"
-                    placeholder="Enter designation"
-                />
+                    [class.input-error]="isFieldInvalid('designation')"
+                >
+                    <option value="" disabled>Select designation</option>
+                    <option *ngFor="let d of designations" [value]="d">{{ d }}</option>
+                </select>
+
+                <div class="error-messages" *ngIf="isFieldInvalid('designation')">
+                    <p class="error" *ngIf="form.get('designation')?.errors?.['required']">
+                        Please select a designation.
+                    </p>
+                </div>
 
             </div>
 
