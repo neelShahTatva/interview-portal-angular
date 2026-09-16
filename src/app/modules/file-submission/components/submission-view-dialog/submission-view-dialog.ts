@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { SolutionPreviewDialogComponent } from '@modules/file-submission/components';
 import { CandidateSolutionService } from '@modules/file-submission/services';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-submission-view-dialog',

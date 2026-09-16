@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '@core/auth/services';
+import { ButtonComponent, InputFieldComponent } from '@shared/components';
 import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
 import { ToastrService } from 'ngx-toastr';
-import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-forgot-password',

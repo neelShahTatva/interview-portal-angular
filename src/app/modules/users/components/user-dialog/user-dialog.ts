@@ -17,9 +17,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ERROR_MESSAGE, SYSTEM_CONSTANTS } from '@shared/constant';
 import { Roles } from '@shared/services';
 import { RoleModel } from '@shared/models';
-import { InputFieldComponent } from '@shared/components/input-field';
+import { InputFieldComponent, ButtonComponent } from '@shared/components';
 import { ErrorMessage } from '@shared/components/input-field/models';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-user-dialog',

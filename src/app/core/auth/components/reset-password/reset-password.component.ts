@@ -2,14 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AuthService } from '@core/auth/services';
+import { ButtonComponent, InputFieldComponent } from '@shared/components';
+import { ErrorMessage } from '@shared/components/input-field';
+import { ERROR_MESSAGE, SYSTEM_CONSTANTS } from '@shared/constant';
+import { passwordMatchValidator } from '@shared/validators';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from '../../services/auth.service';
-import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
-import { passwordMatchValidator } from '../../../../shared/validators/password-validator';
-import { ErrorMessage } from '../../../../shared/components/input-field/models/input';
-import { SYSTEM_CONSTANTS } from '../../../../shared/constant/system.constants';
-import { ERROR_MESSAGE } from '../../../../shared/constant/error-message.constants';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-reset-password',

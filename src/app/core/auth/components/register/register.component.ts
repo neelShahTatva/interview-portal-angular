@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '@core/auth/services';
+import { ButtonComponent } from '@shared/components';
 import {
   LucideAngularModule,
   Eye,
@@ -9,9 +11,7 @@ import {
   User,
   BriefcaseBusiness,
 } from 'lucide-angular';
-import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-register',
@@ -52,7 +52,7 @@ export class Register {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private toastr: ToastrService,
+    private toastr: ToastrService
   ) {}
 
   togglePassword() {
@@ -82,7 +82,7 @@ export class Register {
           this.router.navigate(['/auth/login']);
         } else {
           this.toastr.error(
-            response.errorMessages?.join(',') ?? 'Registration failed',
+            response.errorMessages?.join(',') ?? 'Registration failed'
           );
         }
       },

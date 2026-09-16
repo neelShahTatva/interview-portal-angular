@@ -1,15 +1,7 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  Inject,
-  inject,
-} from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 
-import {
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import {
   MAT_DIALOG_DATA,
@@ -21,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-candidate-dialog',
@@ -40,54 +32,31 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
   ],
 })
 export class CandidateDialogComponent {
-
   private fb = inject(FormBuilder);
 
   isEditMode = false;
 
   form = this.fb.group({
+    firstName: ['', Validators.required],
 
-    firstName: [
-      '',
-      Validators.required,
-    ],
+    lastName: ['', Validators.required],
 
-    lastName: [
-      '',
-      Validators.required,
-    ],
+    email: ['', [Validators.required, Validators.email]],
 
-    email: [
-      '',
-      [
-        Validators.required,
-        Validators.email,
-      ],
-    ],
+    experience: [0, Validators.required],
 
-    experience: [
-      0,
-      Validators.required,
-    ],
-
-    designation: [
-      '',
-      Validators.required,
-    ],
+    designation: ['', Validators.required],
 
     isActive: [true],
   });
 
   constructor(
-    private dialogRef:
-      MatDialogRef<CandidateDialogComponent>,
+    private dialogRef: MatDialogRef<CandidateDialogComponent>,
 
     @Inject(MAT_DIALOG_DATA)
-    public data: any,
+    public data: any
   ) {
-
     if (data) {
-
       this.isEditMode = true;
 
       this.form.patchValue({
@@ -102,16 +71,12 @@ export class CandidateDialogComponent {
   }
 
   submit(): void {
-
     if (this.form.invalid) {
-
       this.form.markAllAsTouched();
 
       return;
     }
 
-    this.dialogRef.close(
-      this.form.getRawValue()
-    );
+    this.dialogRef.close(this.form.getRawValue());
   }
 }

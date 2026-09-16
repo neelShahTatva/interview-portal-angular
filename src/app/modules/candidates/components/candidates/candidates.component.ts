@@ -18,7 +18,7 @@ import { CandidateDialogComponent } from '@modules/candidates/components/candida
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog';
 import { AuthService } from '@core/auth/services/auth.service';
 import { CandidatesService } from '@modules/candidates/services';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-candidates',

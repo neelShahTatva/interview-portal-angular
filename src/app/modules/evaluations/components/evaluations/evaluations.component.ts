@@ -9,7 +9,7 @@ import {
   SubmissionState,
 } from '@modules/evaluations/models';
 import { EvaluationService } from '@modules/evaluations/services';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-file-submission',

@@ -25,8 +25,8 @@ import {
 } from 'lucide-angular';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { AuthService } from '../auth/services/auth.service';
-import { environment } from '../../../environments/environment';
+import { AuthService } from '@core/auth/services';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-layout',
@@ -73,7 +73,7 @@ export class Layout {
   LogOut = LogOut;
   Bot = Bot;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
   navItems = [
     {
@@ -135,7 +135,8 @@ export class Layout {
         this.userName = user.userName;
         this.email = user.email;
         this.role = user.roleName;
-        this.profilePictureUrl = user.profilePictureUrl || user.profilePicture || null;
+        this.profilePictureUrl =
+          user.profilePictureUrl || user.profilePicture || null;
       }
     });
   }
