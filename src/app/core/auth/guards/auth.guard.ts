@@ -5,8 +5,8 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { TokenClaims } from '../models/token-claims.model';
+import { AuthService } from '@core/auth/services';
+import { TokenClaims } from '@core/auth/models';
 
 export function AuthGuard(role?: Number[]): CanActivateFn {
   return async (

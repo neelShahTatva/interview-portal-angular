@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
-import { LoginRequest } from '../models/login-request.model';
+import { LoginRequest } from '@core/auth/models';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ApiResponse } from '../../../shared/models/api-response.model';
-import { LoginResponse } from '../models/login-response.model';
-import { APIInterfaceService } from '../../../shared/services/api-interface.service';
-import { API_ROUTES } from '../../../shared/constant/api-routes';
+import {
+  LoginResponse,
+  TokenClaims,
+  RegisterRequest,
+  ResetPasswordRequest,
+  ForgotRequest,
+} from '@core/auth/models';
 import { Router } from '@angular/router';
-import { TokenClaims } from '../models/token-claims.model';
-import { RegisterRequest } from '../models/register-request.model';
-import { ResetPasswordRequest } from '../models/reset-password-request.model';
-import { ForgotRequest } from '../models/forgot-request.model';
 import { HttpParams } from '@angular/common/http';
+import { APIInterfaceService } from '@shared/services';
+import { ApiResponse } from '@shared/models';
+import { API_ROUTES } from '@shared/constant';
 
 @Injectable({
   providedIn: 'root',

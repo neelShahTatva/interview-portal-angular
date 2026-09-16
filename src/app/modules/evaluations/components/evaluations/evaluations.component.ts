@@ -1,27 +1,31 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
-  AssessmentListItem,
   CandidateListItem,
   QuestionItem,
   SubmissionState,
-} from '../../models/evaluation.model';
-import { EvalutionService } from '../../services/evalution.service';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+} from '@modules/evaluations/models';
+import { EvaluationService } from '@modules/evaluations/services';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-file-submission',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSelectModule, MatFormFieldModule, ButtonComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    ButtonComponent,
+  ],
   templateUrl: './evaluations.component.html',
   styleUrl: './evaluations.component.scss',
 })
 export class EvaluationsComponent implements OnInit {
-  private readonly evaluationService = inject(EvalutionService);
+  private readonly evaluationService = inject(EvaluationService);
 
   candidates: CandidateListItem[] = [];
 

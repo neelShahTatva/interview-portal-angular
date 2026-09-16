@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
+import { Component, computed, input, output } from '@angular/core';
 import {
-  Component,
-  computed,
-  input,
-  output,
-} from '@angular/core';
-import { ButtonSize, ButtonType, ButtonVariant } from './models/button.model';
+  ButtonSize,
+  ButtonType,
+  ButtonVariant,
+} from '@shared/components/button/models';
 
 @Component({
   selector: 'app-button',
@@ -81,10 +80,12 @@ export class ButtonComponent {
         sizeClass = 'h-[48px] px-6 text-sm rounded-[10px] gap-2.5';
         break;
       case 'icon':
-        sizeClass = 'w-10 h-10 p-0 rounded-xl flex items-center justify-center shrink-0';
+        sizeClass =
+          'w-10 h-10 p-0 rounded-xl flex items-center justify-center shrink-0';
         break;
       case 'icon-sm':
-        sizeClass = 'w-8 h-8 p-0 rounded-lg flex items-center justify-center shrink-0';
+        sizeClass =
+          'w-8 h-8 p-0 rounded-lg flex items-center justify-center shrink-0';
         break;
     }
 

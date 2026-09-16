@@ -8,9 +8,9 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { SubmissionService } from '../../services/submission.service';
-import { SubmissionViewDialogComponent } from '../submission-view-dialog/submission-view-dialog';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { SubmissionService } from '@modules/file-submission/services';
+import { SubmissionViewDialogComponent } from '@modules/file-submission/components';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-submissions',

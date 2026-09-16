@@ -6,7 +6,6 @@ import {
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './services/auth.service';
 import {
   BehaviorSubject,
   catchError,
@@ -15,6 +14,7 @@ import {
   take,
   throwError,
 } from 'rxjs';
+import { AuthService } from '@core/auth/services';
 
 let isRefreshing = false;
 let refreshTokenSubject = new BehaviorSubject<string | null>(null);

@@ -6,11 +6,11 @@ import {
 
 import { inject } from '@angular/core';
 import { finalize } from 'rxjs/operators';
-import { LoaderService } from '../services/loader.service';
+import { LoaderService } from '@shared/services';
 
 export const loadingInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn,
+  next: HttpHandlerFn
 ) => {
   const loader = inject(LoaderService);
 
@@ -19,6 +19,6 @@ export const loadingInterceptor: HttpInterceptorFn = (
   return next(req).pipe(
     finalize(() => {
       loader.hide();
-    }),
+    })
   );
 };

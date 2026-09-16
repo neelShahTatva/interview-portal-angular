@@ -8,17 +8,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { UsersService } from '../../services/users.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { UserDialogComponent } from '../user-dialog/user-dialog';
 import { ToastrService } from 'ngx-toastr';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
-import { AuthService } from '../../../../core/auth/services/auth.service';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { AuthService } from '@core/auth/services';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog';
+import { UsersService } from '@modules/users/services';
+import { UserDialogComponent } from '@modules/users/components';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-users',

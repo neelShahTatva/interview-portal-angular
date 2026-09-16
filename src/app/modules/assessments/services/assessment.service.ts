@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { APIInterfaceService } from '../../../shared/services/api-interface.service';
-import { Assessment, AssessmentRequest } from '../models/assessment.model';
-import { API_ROUTES } from '../../../shared/constant/api-routes';
-import { Question } from '../../question-bank/models/question.model';
+import { Assessment, AssessmentRequest } from '@modules/assessments/models';
+import { Question } from '@modules/question-bank/models';
+import { API_ROUTES } from '@shared/constant';
+import { APIInterfaceService } from '@shared/services';
 
 @Injectable({
   providedIn: 'root',

@@ -13,8 +13,11 @@ import { ErrorMessage } from './models/input';
 export class InputFieldComponent {
   readonly control = input.required<FormControl>();
   readonly label = input.required<string>();
+  readonly labelSuffix = input('');
   readonly type = input('text');
   readonly placeholder = input('');
+  readonly min = input<number | null>(null);
+  readonly max = input<number | null>(null);
   readonly submitted = input(false);
   readonly customErrorMessage = input<ErrorMessage[]>([]);
 
@@ -46,6 +49,10 @@ export class InputFieldComponent {
         errors['maxlength'].requiredLength
       } characters`;
     if (errors['pattern']) return `${this.label()} format is invalid`;
+    if (errors['min'])
+      return `${this.label()} must be at least ${errors['min'].min}`;
+    if (errors['max'])
+      return `${this.label()} cannot exceed ${errors['max'].max}`;
     return `${this.label()} is invalid`;
   }
 

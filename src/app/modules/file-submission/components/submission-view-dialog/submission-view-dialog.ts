@@ -9,16 +9,22 @@ import {
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { SolutionPreviewDialogComponent } from '../solution-preview-dialog/solution-preview-dialog';
-import { CandidateSolutionService } from '../../services/candidateSolution.service';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { SolutionPreviewDialogComponent } from '@modules/file-submission/components';
+import { CandidateSolutionService } from '@modules/file-submission/services';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-submission-view-dialog',
   standalone: true,
   templateUrl: './submission-view-dialog.html',
   styleUrl: './submission-view-dialog.scss',
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIcon, ButtonComponent],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIcon,
+    ButtonComponent,
+  ],
 })
 export class SubmissionViewDialogComponent {
   solutions: any[] = [];

@@ -1,15 +1,7 @@
-﻿import { CommonModule } from '@angular/common';
-import {
-  Component,
-  Inject,
-  inject,
-} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Inject, inject } from '@angular/core';
 
-import {
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import {
   MAT_DIALOG_DATA,
@@ -21,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-candidate-dialog',
@@ -40,72 +32,56 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
   ],
 })
 export class CandidateDialogComponent {
-
   private fb = inject(FormBuilder);
 
   isEditMode = false;
   submitted = false;
 
   readonly designations: string[] = [
-    'TSE', 'ASE', 'SE', 'SSE', 'TL', 'STL', 'APM', 'PM', 'PPM',
+    'TSE',
+    'ASE',
+    'SE',
+    'SSE',
+    'TL',
+    'STL',
+    'APM',
+    'PM',
+    'PPM',
   ];
 
   form = this.fb.group({
-
     firstName: [
       '',
-      [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-      ],
+      [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
     ],
 
     lastName: [
       '',
-      [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-      ],
+      [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
     ],
 
     email: [
       '',
-      [
-        Validators.required,
-        Validators.email,
-        Validators.maxLength(100),
-      ],
+      [Validators.required, Validators.email, Validators.maxLength(100)],
     ],
 
     experience: [
       null as number | null,
-      [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(50),
-      ],
+      [Validators.required, Validators.min(0), Validators.max(50)],
     ],
 
-    designation: [
-      '',
-      Validators.required,
-    ],
+    designation: ['', Validators.required],
 
     isActive: [true],
   });
 
   constructor(
-    private dialogRef:
-      MatDialogRef<CandidateDialogComponent>,
+    private dialogRef: MatDialogRef<CandidateDialogComponent>,
 
     @Inject(MAT_DIALOG_DATA)
-    public data: any,
+    public data: any
   ) {
-
     if (data) {
-
       this.isEditMode = true;
 
       this.form.patchValue({
@@ -125,11 +101,9 @@ export class CandidateDialogComponent {
   }
 
   submit(): void {
-
     this.submitted = true;
 
     if (this.form.invalid) {
-
       this.form.markAllAsTouched();
 
       return;
@@ -137,8 +111,8 @@ export class CandidateDialogComponent {
 
     this.submitted = false;
 
-    this.dialogRef.close(
-      this.form.getRawValue()
-    );
+    this.submitted = false;
+
+    this.dialogRef.close(this.form.getRawValue());
   }
 }

@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { Category, Question } from '../../models/question.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,17 +10,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { QuestionService } from '../../services/question.service';
+import { QuestionService } from '@modules/question-bank/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
-import { ApiResponse } from '../../../../shared/models/api-response.model';
-import { environment } from '../../../../../environments/environment';
-import { API_ROUTES } from '../../../../shared/constant/api-routes';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog';
+import { ApiResponse } from '@shared/models';
+import { environment } from 'environments/environment';
+import { API_ROUTES } from '@shared/constant';
+import { Category, Question } from '@modules/question-bank/models';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-question-bank',

@@ -9,18 +9,17 @@ import {
   AiScoreDistribution,
   AssessmentStatusBreakdown,
   CandidatePipeline,
-  DashboardData,
   DashboardStats,
   QuestionsByDifficulty,
   RecentSubmission,
-} from '../../models/dashboard.model';
+} from '@modules/dashboard/models';
 import { Chart, registerables } from 'chart.js';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '@modules/dashboard/services';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, of, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ButtonComponent } from '@shared/components';
 
 Chart.register(...registerables);
 

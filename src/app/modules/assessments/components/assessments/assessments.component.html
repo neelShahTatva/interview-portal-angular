@@ -24,7 +24,10 @@
   </div>
 
   <div class="assessment-list" *ngIf="!isLoading && assessments.length > 0">
-    <div class="assessment-card" *ngFor="let assessment of assessments; trackBy: trackByAssessment">
+    <div
+      class="assessment-card"
+      *ngFor="let assessment of assessments; trackBy: trackByAssessment"
+    >
       <div class="assessment-info">
         <div class="assessment-header">
           <h3>
@@ -32,7 +35,10 @@
           </h3>
 
           <div class="status-wrapper">
-            <span class="status-badge" [ngClass]="assessment.status?.toLowerCase()">
+            <span
+              class="status-badge"
+              [ngClass]="assessment.status.toLowerCase()"
+            >
               {{ assessment.status.replace("_", " ") }}
             </span>
           </div>
@@ -60,7 +66,10 @@
       </div>
 
       <div class="assessment-actions">
-        <select [ngModel]="assessment.status" (ngModelChange)="changeStatus(assessment, $event)">
+        <select
+          [ngModel]="assessment.status"
+          (ngModelChange)="changeStatus(assessment, $event)"
+        >
           <option value="PENDING">Pending</option>
 
           <option value="IN_PROGRESS">In Progress</option>
@@ -72,7 +81,8 @@
           variant="outline"
           size="icon"
           customClass="border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-2xl w-11 h-11"
-          (btnClick)="deleteAssessment(assessment.id)">
+          (btnClick)="deleteAssessment(assessment.id)"
+        >
           <lucide-angular [img]="Trash2" class="w-[18px] h-[18px]">
           </lucide-angular>
         </app-button>
@@ -89,7 +99,9 @@
           <p>Step {{ step }} of 2</p>
         </div>
 
-        <app-button variant="ghost" size="icon-sm" (btnClick)="closeModal()">✕</app-button>
+        <app-button variant="ghost" size="icon-sm" (btnClick)="closeModal()"
+          >✕</app-button
+        >
       </div>
 
       <div class="step-indicator">
@@ -100,29 +112,36 @@
 
       <div class="modal-body" *ngIf="step === 1">
         <div class="form-group">
-          <label> Assessment Title <span class="required">*</span></label>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <input matInput [(ngModel)]="draft.title" placeholder="Enter assessment title" />
-          </mat-form-field>
+          <app-input-field
+            [label]="'Assessment Title'"
+            [placeholder]="'Enter assessment title'"
+            [control]="assessmentForm.controls.title"
+            [customErrorMessage]="assessmentTitleErrors"
+          ></app-input-field>
         </div>
 
         <div class="form-group">
-          <label> Time Limit (Minutes) <span class="required">*</span></label>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <input matInput type="number" [value]="90" [(ngModel)]="draft.timeLimitMinutes" />
-
-            <span matTextSuffix>mins</span>
-          </mat-form-field>
+          <app-input-field
+            [label]="'Time Limit'"
+            [labelSuffix]="'(Minutes)'"
+            [type]="'number'"
+            [placeholder]="'Enter time limit in minutes'"
+            [min]="assessmentTimeLimitMin"
+            [max]="assessmentTimeLimitMax"
+            [control]="assessmentForm.controls.timeLimitMinutes"
+          ></app-input-field>
         </div>
 
         <div class="form-group">
           <label> Select Candidate <span class="required">*</span></label>
 
           <div class="candidate-list">
-            <div class="candidate-item" *ngFor="let candidate of candidates; trackBy: trackByCandidate"
-              [class.selected]="isCandidateSelected(candidate.id)" (click)="selectCandidate(candidate.id)">
+            <div
+              class="candidate-item"
+              *ngFor="let candidate of candidates; trackBy: trackByCandidate"
+              [class.selected]="isCandidateSelected(candidate.id)"
+              (click)="selectCandidate(candidate.id)"
+            >
               <div class="candidate-avatar">
                 {{ candidate.firstName?.charAt(0) }}
                 {{ candidate.lastName?.charAt(0) }}
@@ -139,7 +158,10 @@
                 </div>
               </div>
 
-              <div class="selection-indicator" *ngIf="isCandidateSelected(candidate.id)">
+              <div
+                class="selection-indicator"
+                *ngIf="isCandidateSelected(candidate.id)"
+              >
                 ✓
               </div>
             </div>
@@ -163,10 +185,13 @@
           </div>
 
           <div class="question-list">
-            <div class="question-item" *ngFor="
+            <div
+              class="question-item"
+              *ngFor="
                 let question of recommendedQuestions;
                 trackBy: trackByQuestion
-              ">
+              "
+            >
               <div class="question-content">
                 <h4>
                   {{ question.title }}
@@ -177,7 +202,10 @@
                 </p>
 
                 <div class="question-meta">
-                  <span class="difficulty" [ngClass]="question.difficulty?.toLowerCase()">
+                  <span
+                    class="difficulty"
+                    [ngClass]="question.difficulty.toLowerCase()"
+                  >
                     {{ question.difficulty }}
                   </span>
 
@@ -194,25 +222,38 @@
       </div>
 
       <div class="modal-footer flex items-center justify-end gap-3">
-        <app-button variant="secondary" *ngIf="step === 2" (btnClick)="prevStep()">
+        <app-button
+          variant="secondary"
+          *ngIf="step === 2"
+          (btnClick)="prevStep()"
+        >
           Back
         </app-button>
 
-        <app-button variant="secondary" (btnClick)="closeModal()">Cancel</app-button>
+        <app-button variant="secondary" (btnClick)="closeModal()"
+          >Cancel</app-button
+        >
 
-        <app-button *ngIf="step === 1"
-          [disabled]="!this.draft.candidateId || !this.draft.title.trim()"
+        <app-button
+          *ngIf="step === 1"
+          [disabled]="
+            !this.draft.candidateId ||
+            !this.assessmentForm.controls.title.value.trim()
+          "
           [loading]="isGeneratingQuestions"
           loadingText="Generating..."
-          (btnClick)="nextStep()">
+          (btnClick)="nextStep()"
+        >
           Generate Questions
         </app-button>
 
-        <app-button *ngIf="step === 2"
+        <app-button
+          *ngIf="step === 2"
           [disabled]="isCreatingAssessment"
           [loading]="isCreatingAssessment"
           loadingText="Creating..."
-          (btnClick)="createAssessment()">
+          (btnClick)="createAssessment()"
+        >
           Create Assessment
         </app-button>
       </div>

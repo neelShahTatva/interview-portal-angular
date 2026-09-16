@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { APIInterfaceService } from '@shared/services';
 import { Observable } from 'rxjs';
-import { ApiResponse } from '../../../shared/models/api-response.model';
-import { Category, Question } from '../models/question.model';
-import { APIInterfaceService } from '../../../shared/services/api-interface.service';
-import { API_ROUTES } from '../../../shared/constant/api-routes';
+import { Category, Question } from '@modules/question-bank/models';
+import { API_ROUTES } from '@shared/constant';
+import { ApiResponse } from '@shared/models';
 
 @Injectable({
   providedIn: 'root',

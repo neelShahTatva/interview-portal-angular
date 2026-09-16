@@ -10,7 +10,7 @@ import {
   Category,
   Question,
   QuestionSolution,
-} from '../../models/question.model';
+} from '@modules/question-bank/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,10 +20,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { QuestionService } from '../../services/question.service';
 import { ToastrService } from 'ngx-toastr';
-import { CustomValidators } from '../../../../shared/validators/custom-validators';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { QuestionService } from '@modules/question-bank/services';
+import { CustomValidators } from '@shared/validators';
+import { ButtonComponent } from '@shared/components';
 
 @Component({
   selector: 'app-question-bank-form',

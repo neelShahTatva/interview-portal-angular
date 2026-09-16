@@ -3,13 +3,12 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { LoginResponse } from '@core/auth/models';
+import { AuthService } from '@core/auth/services';
+import { ButtonComponent, InputFieldComponent } from '@shared/components';
+import { ApiResponse } from '@shared/models';
 import { BriefcaseBusiness, LucideAngularModule } from 'lucide-angular';
-import { ApiResponse } from '../../../../shared/models/api-response.model';
-import { LoginResponse } from '../../models/login-response.model';
-import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { InputFieldComponent } from '../../../../shared/components/input-field/input-field.component';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-login',
