@@ -35,15 +35,40 @@ export class CandidateDialogComponent {
   private fb = inject(FormBuilder);
 
   isEditMode = false;
+  submitted = false;
+
+  readonly designations: string[] = [
+    'TSE',
+    'ASE',
+    'SE',
+    'SSE',
+    'TL',
+    'STL',
+    'APM',
+    'PM',
+    'PPM',
+  ];
 
   form = this.fb.group({
-    firstName: ['', Validators.required],
+    firstName: [
+      '',
+      [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+    ],
 
-    lastName: ['', Validators.required],
+    lastName: [
+      '',
+      [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+    ],
 
-    email: ['', [Validators.required, Validators.email]],
+    email: [
+      '',
+      [Validators.required, Validators.email, Validators.maxLength(100)],
+    ],
 
-    experience: [0, Validators.required],
+    experience: [
+      null as number | null,
+      [Validators.required, Validators.min(0), Validators.max(50)],
+    ],
 
     designation: ['', Validators.required],
 
@@ -70,12 +95,23 @@ export class CandidateDialogComponent {
     }
   }
 
+  isFieldInvalid(field: string): boolean {
+    const control = this.form.get(field);
+    return !!control && control.invalid && (control.touched || this.submitted);
+  }
+
   submit(): void {
+    this.submitted = true;
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
 
       return;
     }
+
+    this.submitted = false;
+
+    this.submitted = false;
 
     this.dialogRef.close(this.form.getRawValue());
   }
