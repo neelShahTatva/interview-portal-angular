@@ -25,6 +25,7 @@
       "@modules/evaluations/*": ["app/modules/evaluations/*"],
       "@modules/file-submission/*": ["app/modules/file-submission/*"],
       "@modules/question-bank/*": ["app/modules/question-bank/*"],
+      "@modules/user-profile/*": ["app/modules/user-profile/*"],
       "@modules/users/*": ["app/modules/users/*"],
       "@core/*": ["app/core/*"],
       "@shared/*": ["app/shared/*"],
