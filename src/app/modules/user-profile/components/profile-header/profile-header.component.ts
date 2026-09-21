@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ToastrService } from 'ngx-toastr';
-import { UserProfile } from '../../models/user-profile.model';
-import { UsersService } from '../../../users/services/users.service';
-import { environment } from '../../../../../environments/environment';
+import { UserProfile } from '@modules/user-profile/models';
+import { UsersService } from '@modules/users/services/users.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-profile-header',

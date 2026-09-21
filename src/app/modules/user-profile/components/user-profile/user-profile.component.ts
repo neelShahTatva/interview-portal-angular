@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ToastrService } from 'ngx-toastr';
-import { UserProfile } from '../../models/user-profile.model';
-import { AuthService } from '../../../../core/auth/services/auth.service';
-import { UsersService } from '../../../users/services/users.service';
-import { UserDialogComponent } from '../../../users/components/user-dialog/user-dialog';
-import { ProfileHeaderComponent } from '../profile-header/profile-header.component';
-import { PersonalInfoComponent } from '../personal-info/personal-info.component';
+import { AuthService } from '@core/auth/services/auth.service';
+import { UsersService } from '@modules/users/services/users.service';
+import { UserDialogComponent } from '@modules/users/components/user-dialog/user-dialog';
+import { ProfileHeaderComponent } from '@modules/user-profile/components/profile-header/profile-header.component';
+import { PersonalInfoComponent } from '@modules/user-profile/components/personal-info/personal-info.component';
+import { UserProfile } from '@modules/user-profile/models';
 
 @Component({
   selector: 'app-user-profile',

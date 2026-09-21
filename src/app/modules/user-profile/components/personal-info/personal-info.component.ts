@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { UserProfile } from '../../models/user-profile.model';
+import { UserProfile } from '@modules/user-profile/models';
 
 @Component({
   selector: 'app-personal-info',
