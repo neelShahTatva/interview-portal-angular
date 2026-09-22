@@ -1,16 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { QuestionService } from '@modules/question-bank/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -21,35 +18,90 @@ import { environment } from 'environments/environment';
 import { API_ROUTES } from '@shared/constant';
 import { Category, Question } from '@modules/question-bank/models';
 import { ButtonComponent } from '@shared/components';
+import { GridComponent } from '@shared/components/grid';
+import {
+  GridAction,
+  GridColumn,
+  GridConfig,
+} from '@shared/components/grid/models';
 
 @Component({
   selector: 'app-question-bank',
   imports: [
     CommonModule,
     FormsModule,
-    MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatPaginatorModule,
     ButtonComponent,
+    GridComponent,
   ],
   templateUrl: './question-bank.component.html',
   styleUrl: './question-bank.component.scss',
 })
 export class QuestionBankComponent {
-  displayedColumns: string[] = [
-    'title',
-    'difficulty',
-    'categories',
-    'designations',
-    'status',
-    'actions',
+  readonly columns: readonly GridColumn<Question>[] = [
+    {
+      key: 'title',
+      header: 'Title',
+      type: 'title',
+      width: '30%',
+      secondaryKey: 'estimatedTime',
+      leadingIcon: 'help_outline',
+    },
+    {
+      key: 'difficulty',
+      header: 'Difficulty',
+      type: 'badge',
+      width: '12%',
+      formatter: (value) => this.toTitleCase(value),
+      badgeClass: (question) =>
+        this.getDifficultyBadgeClass(question.difficulty),
+    },
+    {
+      key: 'categories',
+      header: 'Categories',
+      type: 'badge',
+      width: '20%',
+      badgeValues: (question) => this.getCategoryBadges(question),
+      badgeClass: 'grid-badge--neutral',
+    },
+    {
+      key: 'designations',
+      header: 'Designation',
+      type: 'badge',
+      width: '20%',
+      badgeValues: (question) => this.getDesignationBadges(question),
+      badgeClass: 'grid-badge--primary',
+    },
+    {
+      key: 'isActive',
+      header: 'Status',
+      type: 'badge',
+      width: '10%',
+      formatter: (value) => (value ? 'Active' : 'Inactive'),
+      badgeClass: (question) =>
+        question.isActive ? 'grid-badge--success' : 'grid-badge--danger',
+    },
   ];
 
-  dataSource = new MatTableDataSource<Question>([]);
+  readonly actions: readonly GridAction<Question>[] = [
+    { id: 'edit', icon: 'edit', tooltip: 'Edit question' },
+    {
+      id: 'delete',
+      icon: 'delete',
+      tooltip: 'Delete question',
+      class: 'delete-action',
+    },
+  ];
+
+  questions: Question[] = [];
+  filteredQuestions: Question[] = [];
+  pagedQuestions: Question[] = [];
+  pageIndex = 0;
+  pageSize = 5;
 
   allCategories: Category[] = [];
 
@@ -59,9 +111,6 @@ export class QuestionBankComponent {
   statusFilter = '';
 
   isLoading = false;
-
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
 
   constructor(
     private readonly questionService: QuestionService,
@@ -76,10 +125,6 @@ export class QuestionBankComponent {
     this.getQuestions();
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
-
   getQuestions(): void {
     this.isLoading = true;
 
@@ -87,8 +132,8 @@ export class QuestionBankComponent {
       next: (response: ApiResponse<Question[]>) => {
         this.isLoading = false;
         if (response.result) {
-          this.dataSource.data = response.result;
-          this.dataSource.paginator = this.paginator;
+          this.questions = response.result;
+          this.applyFilters();
         }
       },
       error: () => {
@@ -110,37 +155,102 @@ export class QuestionBankComponent {
   }
 
   applyFilters(): void {
-    this.dataSource.filterPredicate = (data: Question, filter: string) => {
-      const parsed = JSON.parse(filter);
+    const search = this.searchText.trim().toLowerCase();
 
+    this.filteredQuestions = this.questions.filter((question) => {
       const matchesSearch =
-        !parsed.search || data.title?.toLowerCase().includes(parsed.search);
-
+        !search || question.title?.toLowerCase().includes(search);
       const matchesDifficulty =
-        !parsed.difficulty || data.difficulty === parsed.difficulty;
-
+        !this.difficultyFilter || question.difficulty === this.difficultyFilter;
       const matchesCategory =
-        !parsed.category ||
-        data.categories?.some((c) => c.id === Number(parsed.category));
-
+        !this.categoryFilter ||
+        question.categories?.some(
+          (category) => category.id === Number(this.categoryFilter)
+        );
       const matchesStatus =
-        parsed.status === '' || data.isActive === (parsed.status === 'true');
+        this.statusFilter === '' ||
+        question.isActive === (this.statusFilter === 'true');
 
       return (
         matchesSearch && matchesDifficulty && matchesCategory && matchesStatus
       );
-    };
-
-    this.dataSource.filter = JSON.stringify({
-      search: this.searchText.trim().toLowerCase(),
-      difficulty: this.difficultyFilter,
-      category: this.categoryFilter,
-      status: this.statusFilter,
     });
 
-    if (this.paginator) {
-      this.paginator.firstPage();
+    this.pageIndex = 0;
+    this.updatePagedQuestions();
+  }
+
+  onPageChanged(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagedQuestions();
+  }
+
+  onGridAction({
+    action,
+    row,
+  }: {
+    action: GridAction<Question>;
+    row: Question;
+  }): void {
+    if (action.id === 'edit') {
+      this.openEditPage(row);
+    } else if (action.id === 'delete') {
+      this.deleteQuestion(row);
     }
+  }
+
+  get gridConfig(): GridConfig {
+    return {
+      pagination: true,
+      pageSize: this.pageSize,
+      pageSizeOptions: [5, 10, 20],
+      emptyMessage: 'No questions found.',
+      loading: this.isLoading,
+      totalRecords: this.filteredQuestions.length,
+    };
+  }
+
+  private updatePagedQuestions(): void {
+    const start = this.pageIndex * this.pageSize;
+    this.pagedQuestions = this.filteredQuestions.slice(
+      start,
+      start + this.pageSize
+    );
+  }
+
+  private getCategoryBadges(question: Question): readonly string[] {
+    return this.toLimitedBadges(
+      question.categories?.map((category) => category.name) ?? []
+    );
+  }
+
+  private getDesignationBadges(question: Question): readonly string[] {
+    return this.toLimitedBadges(question.designations ?? []);
+  }
+
+  private toLimitedBadges(values: readonly string[]): readonly string[] {
+    const visibleValues = values.slice(0, 3);
+    return values.length > 3
+      ? [...visibleValues, `+${values.length - 3}`]
+      : visibleValues;
+  }
+
+  private getDifficultyBadgeClass(
+    difficulty: Question['difficulty']
+  ): string {
+    const classes: Record<Question['difficulty'], string> = {
+      EASY: 'grid-badge--success',
+      MEDIUM: 'grid-badge--warm',
+      HARD: 'grid-badge--danger',
+    };
+
+    return classes[difficulty];
+  }
+
+  private toTitleCase(value: unknown): string {
+    const text = String(value ?? '').toLowerCase();
+    return text ? `${text[0].toUpperCase()}${text.slice(1)}` : '';
   }
 
   openAddPage(): void {

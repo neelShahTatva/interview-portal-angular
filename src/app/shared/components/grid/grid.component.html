@@ -1,0 +1,142 @@
+<div class="grid-container">
+  @if (config().loading) {
+
+  <div class="grid-state">
+    <mat-spinner diameter="36"></mat-spinner>
+  </div>
+
+  } @else {
+
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="data()" class="data-grid">
+      @for ( column of columns(); track trackColumn($index, column) ) {
+
+      <ng-container [matColumnDef]="getColumnKey(column)">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          [style.width]="column.width"
+          [style.text-align]="column.align ?? 'left'"
+        >
+          {{ column.header }}
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let row"
+          [style.text-align]="column.align ?? 'left'"
+          [class]="getCellClass(row, column)"
+        >
+          @if (column.type === 'title') {
+
+          <div class="title-cell">
+            <div class="title-icon">
+              <mat-icon>
+                {{ column.leadingIcon ?? "help_outline" }}
+              </mat-icon>
+            </div>
+
+            <div class="title-content">
+              <div class="title-text">
+                {{ getFormattedValue(row, column) }}
+              </div>
+
+              @if (column.secondaryKey) {
+
+              <div class="title-secondary">
+                <mat-icon> schedule </mat-icon>
+
+                {{ getSecondaryValue(row, column) }}
+              </div>
+
+              }
+            </div>
+          </div>
+
+          } @else if (column.type === 'badge') {
+
+          <div class="grid-badges">
+            @for (badge of getBadges(row, column); track $index) {
+
+            <span
+              [class]="'grid-badge ' + getBadgeClass(row, column)"
+            >
+              {{ badge }}
+            </span>
+
+            }
+          </div>
+
+          } @else {
+
+          {{ getFormattedValue(row, column) }}
+
+          }
+        </td>
+      </ng-container>
+
+      } @if (showActions()) {
+
+      <ng-container matColumnDef="actions">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="actions-header"
+          [style.width]="actionColumnWidth()"
+        >
+          {{ config().actionColumnHeader ?? "Actions" }}
+        </th>
+
+        <td mat-cell *matCellDef="let row" class="actions-cell">
+          <div class="action-buttons">
+            @for ( action of actions(); track trackAction($index, action) ) {
+            @if (isActionVisible(action, row)) {
+
+            <button
+              mat-icon-button
+              type="button"
+              class="grid-action-button"
+              [class]="action.class ?? ''"
+              [disabled]="isActionDisabled(action, row)"
+              [matTooltip]="action.tooltip ?? action.id"
+              (click)="onActionClick(action, row)"
+            >
+              <mat-icon>
+                {{ action.icon }}
+              </mat-icon>
+            </button>
+
+            } }
+          </div>
+        </td>
+      </ng-container>
+
+      }
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+
+      <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+    </table>
+
+    @if (data().length === 0) {
+
+    <div class="empty-state">
+      {{ emptyMessage() }}
+    </div>
+
+    }
+  </div>
+
+  @if ( config().pagination && data().length > 0 ) {
+
+  <mat-paginator
+    class="grid-paginator"
+    [length]="totalRecords()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="pageSizeOptions()"
+    showFirstLastButtons
+    (page)="onPageChanged($event)"
+  />
+
+  } }
+</div>

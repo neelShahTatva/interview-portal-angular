@@ -15,8 +15,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 
 import { CandidateDialogComponent } from '@modules/candidates/components/candidate-dialog/candidate-dialog';
-import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog';
-import { AuthService } from '@core/auth/services/auth.service';
+import { ConfirmDialogComponent } from '@shared/components';
+import { AuthService } from '@core/auth/services';
 import { CandidatesService } from '@modules/candidates/services';
 import { ButtonComponent } from '@shared/components';
 
