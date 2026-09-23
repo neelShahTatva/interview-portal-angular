@@ -40,8 +40,6 @@ export class SubmissionViewDialogComponent {
     this.candidateSolutionService.getBySubmissionId(this.data.id).subscribe({
       next: (response: any) => {
         this.solutions = response.result;
-
-        console.log(this.solutions);
       },
     });
   }
