@@ -12,7 +12,10 @@ export interface GridColumn<T> {
   cellClass?: string | ((row: T) => string);
   badgeClass?: string | ((row: T) => string);
   secondaryKey?: keyof T;
+  showSecondaryIcon?: boolean;
   leadingIcon?: string;
+  leadingText?: (row: T) => string;
+  leadingClass?: string;
   badgeValues?: (row: T) => readonly string[];
 }
 

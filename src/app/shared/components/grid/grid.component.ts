@@ -99,6 +99,10 @@ export class GridComponent<T extends object> {
     return value == null ? '' : String(value);
   }
 
+  protected getLeadingText(row: T, column: GridColumn<T>): string {
+    return column.leadingText?.(row) ?? '';
+  }
+
   protected getBadges(row: T, column: GridColumn<T>): readonly string[] {
     return column.badgeValues?.(row) ?? [this.getFormattedValue(row, column)];
   }

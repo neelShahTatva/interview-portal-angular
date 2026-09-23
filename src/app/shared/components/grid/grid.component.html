@@ -30,10 +30,14 @@
           @if (column.type === 'title') {
 
           <div class="title-cell">
-            <div class="title-icon">
-              <mat-icon>
-                {{ column.leadingIcon ?? "help_outline" }}
-              </mat-icon>
+            <div [class]="'title-icon ' + (column.leadingClass ?? '')">
+              @if (column.leadingText) {
+                {{ getLeadingText(row, column) }}
+              } @else {
+                <mat-icon>
+                  {{ column.leadingIcon ?? "help_outline" }}
+                </mat-icon>
+              }
             </div>
 
             <div class="title-content">
@@ -44,7 +48,9 @@
               @if (column.secondaryKey) {
 
               <div class="title-secondary">
-                <mat-icon> schedule </mat-icon>
+                @if (column.showSecondaryIcon ?? true) {
+                  <mat-icon> schedule </mat-icon>
+                }
 
                 {{ getSecondaryValue(row, column) }}
               </div>
