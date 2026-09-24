@@ -1,24 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
-import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { CandidateDialogComponent } from '@modules/candidates/components/candidate-dialog/candidate-dialog';
-import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog';
-import { AuthService } from '@core/auth/services/auth.service';
+import { CandidateDialogComponent } from '@modules/candidates/components';
+import { ConfirmDialogComponent } from '@shared/components';
+import { AuthService } from '@core/auth/services';
 import { CandidatesService } from '@modules/candidates/services';
 import { ButtonComponent } from '@shared/components';
+import { GridComponent } from '@shared/components/grid';
+import {
+  GridAction,
+  GridColumn,
+  GridConfig,
+} from '@shared/components/grid/models';
+import { Candidate } from '@modules/candidates/models';
 
 @Component({
   selector: 'app-candidates',
@@ -29,30 +34,62 @@ import { ButtonComponent } from '@shared/components';
     CommonModule,
     FormsModule,
     HttpClientModule,
-    MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatPaginatorModule,
     ButtonComponent,
+    GridComponent,
   ],
 })
 export class CandidatesComponent implements OnInit {
-  displayedColumns = [
-    'candidate',
-    'email',
-    'experience',
-    'designation',
-    'status',
-    'actions',
+  readonly columns: readonly GridColumn<Candidate>[] = [
+    {
+      key: 'firstName',
+      header: 'Candidate',
+      type: 'title',
+      width: '30%',
+      formatter: (_value, candidate) =>
+        `${candidate.firstName} ${candidate.lastName}`.trim(),
+      secondaryKey: 'email',
+      showSecondaryIcon: false,
+      leadingText: (candidate) => candidate.firstName?.charAt(0).toUpperCase(),
+      leadingClass: 'grid-title-avatar',
+    },
+    { key: 'email', header: 'Email', width: '24%' },
+    {
+      key: 'experience',
+      header: 'Experience',
+      width: '12%',
+      formatter: (value) => `${value ?? 0} Years`,
+    },
+    { key: 'designation', header: 'Designation', width: '13%' },
+    {
+      key: 'isActive',
+      header: 'Status',
+      type: 'badge',
+      width: '11%',
+      formatter: (value) => (value ? 'Active' : 'Inactive'),
+      badgeClass: (candidate) =>
+        candidate.isActive ? 'grid-badge--success' : 'grid-badge--danger',
+    },
   ];
 
-  candidates: any[] = [];
-  dataSource = new MatTableDataSource<any>();
+  readonly actions: readonly GridAction<Candidate>[] = [
+    { id: 'edit', icon: 'edit', tooltip: 'Edit candidate' },
+    {
+      id: 'delete',
+      icon: 'delete',
+      tooltip: 'Delete candidate',
+      class: 'delete-action',
+    },
+  ];
 
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  candidates: Candidate[] = [];
+  filteredCandidates: Candidate[] = [];
+  pagedCandidates: Candidate[] = [];
+  pageIndex = 0;
+  pageSize = 5;
 
   searchText = '';
   isLoading = false;
@@ -73,18 +110,6 @@ export class CandidatesComponent implements OnInit {
     if (user) {
       this.role = user.roleName;
     }
-
-    this.displayedColumns = [
-      'candidate',
-      'email',
-      'experience',
-      'designation',
-      'status',
-    ];
-
-    if (this.role === 'ADMIN') {
-      this.displayedColumns.push('actions');
-    }
   }
 
   getCandidates(): void {
@@ -94,11 +119,8 @@ export class CandidatesComponent implements OnInit {
       next: (response: any) => {
         this.isLoading = false;
 
-        this.candidates = response.result;
-
-        this.dataSource.data = response.result;
-
-        this.dataSource.paginator = this.paginator;
+        this.candidates = response.result ?? [];
+        this.applyFilters();
       },
 
       error: () => {
@@ -108,25 +130,62 @@ export class CandidatesComponent implements OnInit {
   }
 
   applyFilters(): void {
-    this.dataSource.filterPredicate = (data: any, filter: string) => {
-      const search = filter;
+    const search = this.searchText.trim().toLowerCase();
 
-      return (
-        data.firstName?.toLowerCase().includes(search) ||
-        data.lastName?.toLowerCase().includes(search) ||
-        data.email?.toLowerCase().includes(search) ||
-        data.designation?.toLowerCase().includes(search)
-      );
-    };
+    this.filteredCandidates = this.candidates.filter((candidate) =>
+      [
+        candidate.firstName,
+        candidate.lastName,
+        candidate.email,
+        candidate.designation,
+      ].some((value) => value?.toLowerCase().includes(search))
+    );
 
-    this.dataSource.filter = this.searchText.trim().toLowerCase();
+    this.pageIndex = 0;
+    this.updatePagedCandidates();
+  }
 
-    if (this.paginator) {
-      this.paginator.firstPage();
+  onPageChanged(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagedCandidates();
+  }
+
+  onGridAction({
+    action,
+    row,
+  }: {
+    action: GridAction<Candidate>;
+    row: Candidate;
+  }): void {
+    if (action.id === 'edit') {
+      this.openEditDialog(row);
+    } else if (action.id === 'delete') {
+      this.deleteCandidate(row);
     }
   }
 
-  deleteCandidate(candidate: any): void {
+  get gridConfig(): GridConfig {
+    return {
+      pagination: true,
+      pageSize: this.pageSize,
+      pageSizeOptions: [5, 10, 20],
+      totalRecords: this.filteredCandidates.length,
+      loading: this.isLoading,
+      emptyMessage: 'No candidates found.',
+      showActions: this.role === 'ADMIN',
+    };
+  }
+
+  private updatePagedCandidates(): void {
+    const start = this.pageIndex * this.pageSize;
+    this.pagedCandidates = this.filteredCandidates.slice(
+      start,
+      start + this.pageSize
+    );
+  }
+
+  deleteCandidate(candidate: Candidate): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '420px',
       disableClose: true,
@@ -158,6 +217,7 @@ export class CandidatesComponent implements OnInit {
   openAddDialog(): void {
     const dialogRef = this.dialog.open(CandidateDialogComponent, {
       width: '520px',
+      autoFocus: false,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -186,9 +246,10 @@ export class CandidatesComponent implements OnInit {
     });
   }
 
-  openEditDialog(candidate: any): void {
+  openEditDialog(candidate: Candidate): void {
     const dialogRef = this.dialog.open(CandidateDialogComponent, {
       width: '520px',
+      autoFocus: false,
       data: {
         id: candidate.id,
         firstName: candidate.firstName,
