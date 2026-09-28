@@ -6,6 +6,36 @@
     <strong>{{ data?.name }}</strong>?
   </p>
 
+  <!-- COMMENT - ONLY FOR CANDIDATE DELETE -->
+  <div class="comment-section" *ngIf="data?.requireComment">
+
+    <label for="deleteComment">
+      Comment <span class="required">*</span>
+    </label>
+
+    <textarea
+      id="deleteComment"
+      [(ngModel)]="deleteComment"
+      maxlength="100"
+      rows="4"
+      placeholder="Enter reason for deleting candidate"
+    ></textarea>
+
+    <div class="comment-footer">
+      <span
+        class="error"
+        *ngIf="submitted && !deleteComment.trim()"
+      >
+        Comment is required
+      </span>
+
+      <span class="character-count">
+        {{ deleteComment.length }}/100
+      </span>
+    </div>
+
+  </div>
+
   <!-- ACTIONS -->
   <div class="actions">
     <app-button
@@ -17,6 +47,7 @@
 
     <app-button
       variant="danger"
+      [disabled]="data?.requireComment && !deleteComment.trim()"
       (btnClick)="confirm()"
     >
       Delete

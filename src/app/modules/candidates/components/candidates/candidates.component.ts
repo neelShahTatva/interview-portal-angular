@@ -125,26 +125,29 @@ export class CandidatesComponent implements OnInit {
       this.paginator.firstPage();
     }
   }
+deleteCandidate(candidate: any): void {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '420px',
+    disableClose: true,
+    data: {
+      title: 'Candidate',
+      name: candidate.firstName + ' ' + candidate.lastName,
+      requireComment: true,
+    },
+  });
 
-  deleteCandidate(candidate: any): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '420px',
-      disableClose: true,
-      data: {
-        title: 'Candidate',
-        name: candidate.firstName + ' ' + candidate.lastName,
-      },
-    });
+  dialogRef.afterClosed().subscribe((result) => {
+    if (!result?.confirmed) {
+      return;
+    }
 
-    dialogRef.afterClosed().subscribe((confirmed) => {
-      if (!confirmed) {
-        return;
-      }
+    const comment = result.comment;
 
-      this.candidatesService.deleteCandidate(candidate.id).subscribe({
+    this.candidatesService
+      .deleteCandidate(candidate.id, comment)
+      .subscribe({
         next: () => {
           this.toastr.success('Candidate deleted successfully');
-
           this.getCandidates();
         },
 
@@ -152,8 +155,8 @@ export class CandidatesComponent implements OnInit {
           this.toastr.error('Failed to delete candidate');
         },
       });
-    });
-  }
+  });
+}
 
   openAddDialog(): void {
     const dialogRef = this.dialog.open(CandidateDialogComponent, {
