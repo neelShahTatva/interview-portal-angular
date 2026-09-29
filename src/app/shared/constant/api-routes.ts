@@ -32,7 +32,6 @@ export const API_ROUTES = {
     GET_BY_ID: '/assessments/',
     CREATE: '/assessments',
     DELETE: '/assessments/',
-    CHANGE_STATUS: '/assessments/',
     AVAILABLE_CANDIDATES: '/assessments/available-candidates',
   },
   COMMON: {

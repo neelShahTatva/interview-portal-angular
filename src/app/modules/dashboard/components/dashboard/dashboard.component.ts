@@ -203,13 +203,12 @@ export class DashboardComponent {
     if (!this.statusChartRef) return;
     this.statusChart?.destroy();
 
-    const ordered: Array<'COMPLETED' | 'IN_PROGRESS' | 'PENDING'> = [
+    const ordered: Array<'COMPLETED' | 'PENDING'> = [
       'COMPLETED',
-      'IN_PROGRESS',
       'PENDING',
     ];
-    const labels = ['Completed', 'In progress', 'Pending'];
-    const colors = ['#185FA5', '#3B6D11', '#888780'];
+    const labels = ['Completed', 'Pending'];
+    const colors = ['#185FA5', '#888780'];
     const counts = ordered.map(
       (s) => data.find((d) => d.status === s)?.count ?? 0
     );
