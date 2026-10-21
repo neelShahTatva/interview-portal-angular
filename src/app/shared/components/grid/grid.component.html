@@ -32,11 +32,11 @@
           <div class="title-cell">
             <div [class]="'title-icon ' + (column.leadingClass ?? '')">
               @if (column.leadingText) {
-                {{ getLeadingText(row, column) }}
+              {{ getLeadingText(row, column) }}
               } @else {
-                <mat-icon>
-                  {{ column.leadingIcon ?? "help_outline" }}
-                </mat-icon>
+              <mat-icon>
+                {{ column.leadingIcon ?? "help_outline" }}
+              </mat-icon>
               }
             </div>
 
@@ -49,7 +49,7 @@
 
               <div class="title-secondary">
                 @if (column.showSecondaryIcon ?? true) {
-                  <mat-icon> schedule </mat-icon>
+                <mat-icon> schedule </mat-icon>
                 }
 
                 {{ getSecondaryValue(row, column) }}
@@ -64,9 +64,7 @@
           <div class="grid-badges">
             @for (badge of getBadges(row, column); track $index) {
 
-            <span
-              [class]="'grid-badge ' + getBadgeClass(row, column)"
-            >
+            <span [class]="'grid-badge ' + getBadgeClass(row, column)">
               {{ badge }}
             </span>
 
@@ -135,14 +133,20 @@
 
   @if ( config().pagination && data().length > 0 ) {
 
-  <mat-paginator
-    class="grid-paginator"
-    [length]="totalRecords()"
-    [pageSize]="pageSize()"
-    [pageSizeOptions]="pageSizeOptions()"
-    showFirstLastButtons
-    (page)="onPageChanged($event)"
-  />
+  <div class="grid-pagination">
+    <span class="grid-page-number" aria-live="polite">
+      Page: {{ pageIndex() + 1 }}
+    </span>
+    <mat-paginator
+      class="grid-paginator"
+      [length]="totalRecords()"
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="pageSizeOptions()"
+      showFirstLastButtons
+      (page)="onPageChanged($event)"
+    />
+  </div>
 
   } }
 </div>

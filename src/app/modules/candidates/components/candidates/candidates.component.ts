@@ -169,6 +169,7 @@ export class CandidatesComponent implements OnInit {
     return {
       pagination: true,
       pageSize: this.pageSize,
+      pageIndex: this.pageIndex,
       pageSizeOptions: [5, 10, 20],
       totalRecords: this.filteredCandidates.length,
       loading: this.isLoading,

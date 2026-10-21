@@ -228,6 +228,7 @@ export class UsersComponent implements OnInit {
     this.gridConfig = {
       pagination: true,
       pageSize: this.pageSize,
+      pageIndex: this.pageIndex,
       pageSizeOptions: [5, 10, 20],
       emptyMessage: 'No users found.',
       actionColumnHeader: 'Actions',

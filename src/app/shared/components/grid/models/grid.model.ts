@@ -37,5 +37,6 @@ export interface GridConfig {
   pagination?: boolean;
   pageSizeOptions?: readonly number[];
   pageSize?: number;
+  pageIndex?: number;
   totalRecords?: number;
 }

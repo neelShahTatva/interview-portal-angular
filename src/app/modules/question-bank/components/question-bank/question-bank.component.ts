@@ -204,6 +204,7 @@ export class QuestionBankComponent {
     return {
       pagination: true,
       pageSize: this.pageSize,
+      pageIndex: this.pageIndex,
       pageSizeOptions: [5, 10, 20],
       emptyMessage: 'No questions found.',
       loading: this.isLoading,

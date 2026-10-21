@@ -241,6 +241,25 @@
   border-top: 1px solid #eaecf0;
 }
 
+.grid-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: #faf9fd;
+  border-top: 1px solid #eaecf0;
+}
+
+.grid-page-number {
+  padding: 0 12px;
+  color: #344054;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.grid-paginator {
+  border-top: 0;
+}
+
 .grid-paginator .mat-mdc-paginator-container {
   min-height: 56px;
   padding: 0 20px;
@@ -252,6 +271,10 @@
   }
 
   .grid-paginator {
+    min-width: 760px;
+  }
+
+  .grid-pagination {
     min-width: 760px;
   }
 }

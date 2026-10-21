@@ -60,6 +60,7 @@ export class GridComponent<T extends object> {
     () => this.config().totalRecords ?? this.data().length
   );
   readonly pageSize = computed(() => this.config().pageSize ?? 5);
+  readonly pageIndex = computed(() => this.config().pageIndex ?? 0);
   readonly pageSizeOptions = computed(
     () => this.config().pageSizeOptions ?? [5, 10, 25, 50]
   );
