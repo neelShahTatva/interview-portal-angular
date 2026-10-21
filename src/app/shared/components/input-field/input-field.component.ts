@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Eye, EyeOff, LucideAngularModule } from 'lucide-angular';
-import { ErrorMessage } from './models/input';
+import { ErrorMessage } from './models/input.model';
 
 @Component({
   selector: 'app-input-field',
