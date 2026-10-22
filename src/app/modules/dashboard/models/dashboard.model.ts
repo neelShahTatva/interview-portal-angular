@@ -1,21 +1,20 @@
 export interface DashboardStats {
-    totalCandidates: number;
-    newCandidatesThisMonth: number;
+  totalCandidates: number;
+  newCandidatesThisMonth: number;
 
-    totalAssessments: number;
-    inProgressAssessments: number;
-    pendingAssessments: number;
-    completedAssessments: number;
+  totalAssessments: number;
+  pendingAssessments: number;
+  completedAssessments: number;
 
-    totalQuestions: number;
-    totalCategories: number;
+  totalQuestions: number;
+  totalCategories: number;
 
-    avgAiScore: number;
-    avgAiScoreLastMonth: number;
+  avgAiScore: number;
+  avgAiScoreLastMonth: number;
 }
 
 export interface AssessmentStatusBreakdown {
-    status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+    status: 'PENDING' | 'COMPLETED';
     count: number;
 }
 

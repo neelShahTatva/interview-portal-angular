@@ -25,7 +25,12 @@ export class CandidatesService {
     return this.http.put(`${this.apiUrl}/${id}`, payload);
   }
 
-  deleteCandidate(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  deleteCandidate(id: number, comment: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`,
+       {
+      body: {
+        comment: comment
+      }
+    });
   }
 }

@@ -218,7 +218,6 @@ $white: #ffffff;
 
 // ===== Status Badge =====
 .status-pending,
-.status-in_progress,
 .status-completed,
 .status-badge {
   padding: 6px 12px;
@@ -230,11 +229,6 @@ $white: #ffffff;
 .pending {
   background: #fef3c7;
   color: #92400e;
-}
-
-.in_progress {
-  background: #dbeafe;
-  color: #0f172a;
 }
 
 .completed {
