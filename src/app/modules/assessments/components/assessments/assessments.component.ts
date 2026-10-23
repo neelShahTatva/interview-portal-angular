@@ -214,10 +214,15 @@ export class AssessmentsComponent implements OnInit {
           this.isGeneratingQuestions = false;
         },
 
-        error: () => {
+        error: (error) => {
+          let errorMessage =
+            error?.error?.errorMessages?.join(', ') ||
+            error?.message ||
+            'Failed to generate questions';
+
           this.isGeneratingQuestions = false;
 
-          this.toastr.error('Failed to generate questions');
+          this.toastr.error(errorMessage);
         },
       });
   }
