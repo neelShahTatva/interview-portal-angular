@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -29,7 +28,6 @@ import { ERROR_MESSAGE, SYSTEM_CONSTANTS } from '@shared/constant';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     LucideAngularModule,
     InputFieldComponent,
@@ -260,9 +258,6 @@ export class AssessmentsComponent implements OnInit {
         let errorMessage = '';
 
         switch (apiCode) {
-          case 'ASSESSMENT_IN_PROGRESS':
-            errorMessage = 'Assessment already in progress for this candidate.';
-            break;
           case 'ASSESSMENT_PENDING':
             errorMessage = 'Assessment pending for this candidate.';
             break;
@@ -279,24 +274,6 @@ export class AssessmentsComponent implements OnInit {
         }
 
         this.toastr.error(errorMessage);
-      },
-    });
-  }
-
-  changeStatus(assessment: Assessment, status: string): void {
-    if (assessment.status === status) {
-      return;
-    }
-
-    this.assessmentService.updateStatus(assessment.id, status).subscribe({
-      next: () => {
-        assessment.status = status;
-
-        this.toastr.success('Status updated successfully');
-      },
-
-      error: () => {
-        this.toastr.error('Failed to update status');
       },
     });
   }
@@ -356,9 +333,6 @@ export class AssessmentsComponent implements OnInit {
     switch (status?.toUpperCase()) {
       case 'PENDING':
         return 'badge pending';
-
-      case 'IN_PROGRESS':
-        return 'badge progress';
 
       case 'COMPLETED':
         return 'badge completed';
