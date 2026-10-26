@@ -1,11 +1,5 @@
 <div class="grid-container">
-  @if (config().loading) {
 
-  <div class="grid-state">
-    <mat-spinner diameter="36"></mat-spinner>
-  </div>
-
-  } @else {
 
   <div class="table-wrapper">
     <table mat-table [dataSource]="data()" class="data-grid">
@@ -148,5 +142,5 @@
     />
   </div>
 
-  } }
+  }
 </div>

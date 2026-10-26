@@ -47,8 +47,6 @@ export class ConfirmDialogComponent {
   }
 
   cancel(): void {
-    this.dialogRef.close({
-      confirmed: false
-    });
+        this.dialogRef.close(false);
   }
 }
