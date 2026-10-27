@@ -185,7 +185,6 @@ export class CandidatesComponent implements OnInit {
       start + this.pageSize
     );
   }
-
   deleteCandidate(candidate: Candidate): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '420px',
@@ -193,23 +192,29 @@ export class CandidatesComponent implements OnInit {
       data: {
         title: 'Candidate',
         name: candidate.firstName + ' ' + candidate.lastName,
+        requireComment: true,
       },
     });
 
-    dialogRef.afterClosed().subscribe((confirmed) => {
-      if (!confirmed) {
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result?.confirmed) {
         return;
       }
 
-      this.candidatesService.deleteCandidate(candidate.id).subscribe({
+      const comment = result.comment;
+
+      this.candidatesService.deleteCandidate(candidate.id, comment).subscribe({
         next: () => {
           this.toastr.success('Candidate deleted successfully');
-
           this.getCandidates();
         },
 
-        error: () => {
-          this.toastr.error('Failed to delete candidate');
+        error: (error) => {
+          let errorMessage =
+            error?.error?.errorMessages?.join(', ') ||
+            error?.message ||
+            'Failed to delete candidate';
+          this.toastr.error(errorMessage);
         },
       });
     });

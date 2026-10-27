@@ -26,13 +26,6 @@ export class AssessmentService {
     return this.api.delete(`${API_ROUTES.ASSESSMENT.DELETE}${id}`);
   }
 
-  updateStatus(id: number, status: string) {
-    return this.api.post(
-      `${API_ROUTES.ASSESSMENT.CHANGE_STATUS}${id}/status?status=${status}`,
-      {}
-    );
-  }
-
   getAvailableCandidates() {
     return this.api.get<any>(`${API_ROUTES.ASSESSMENT.AVAILABLE_CANDIDATES}`);
   }

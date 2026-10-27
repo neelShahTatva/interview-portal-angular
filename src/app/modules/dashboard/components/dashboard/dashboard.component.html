@@ -50,9 +50,11 @@
                 Assessments
             </div>
             <div class="metric-val">{{ stats.totalAssessments }}</div>
-            <div class="metric-sub">
-                <span class="badge badge-warn">{{ stats.inProgressAssessments }} in progress</span>
-            </div>
+           <div class="metric-sub">
+    <span class="badge badge-warn">
+        {{ stats.pendingAssessments }} pending
+    </span>
+</div>
         </div>
 
         <div class="metric">
@@ -100,16 +102,12 @@
                     <span class="legend-dot" style="background:#185FA5"></span> Completed
                 </span>
                 <span class="legend-item">
-                    <span class="legend-dot" style="background:#3B6D11"></span> In progress
-                </span>
-                <span class="legend-item">
                     <span class="legend-dot" style="background:#888780"></span> Pending
                 </span>
             </div>
             <div class="chart-wrap" style="height:200px">
                 <canvas #statusChartRef role="img" aria-label="Bar chart showing assessment status breakdown">
                     Completed {{ stats.completedAssessments }},
-                    In progress {{ stats.inProgressAssessments }},
                     Pending {{ stats.pendingAssessments }}.
                 </canvas>
             </div>
