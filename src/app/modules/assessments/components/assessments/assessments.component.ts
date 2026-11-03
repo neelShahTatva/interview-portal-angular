@@ -212,14 +212,38 @@ export class AssessmentsComponent implements OnInit {
           this.isGeneratingQuestions = false;
         },
 
-        error: () => {
-          this.isGeneratingQuestions = false;
+        error: (err: any) => {
+  this.isGeneratingQuestions = false;
 
-          this.toastr.error('Failed to generate questions');
-        },
+  const errorMessage =
+    this.getBackendErrorMessage(err) ??
+    'Failed to generate questions';
+
+  this.toastr.error(errorMessage);
+},
       });
   }
 
+  private getBackendErrorMessage(err: any): string | null {
+  const errorMessages = err?.error?.errorMessages;
+
+  if (Array.isArray(errorMessages) && errorMessages.length > 0) {
+    return errorMessages.join(', ');
+  }
+
+  if (
+    typeof errorMessages === 'string' &&
+    errorMessages.trim().length > 0
+  ) {
+    return errorMessages;
+  }
+
+  const message = err?.error?.message;
+
+  return typeof message === 'string' && message.trim().length > 0
+    ? message
+    : null;
+}
   createAssessment(): void {
     if (!this.draft.candidateId || this.draft.questionIds.length === 0) {
       this.toastr.warning('No questions selected');
@@ -250,31 +274,29 @@ export class AssessmentsComponent implements OnInit {
         this.loadData();
       },
 
-      error: (err: any) => {
-        this.isCreatingAssessment = false;
+     error: (err: any) => {
+  this.isCreatingAssessment = false;
 
-        const apiCode = err?.error?.errorCode;
+  let errorMessage = this.getBackendErrorMessage(err);
 
-        let errorMessage = '';
+  if (!errorMessage) {
+    switch (err?.error?.errorCode) {
+      case 'ASSESSMENT_PENDING':
+        errorMessage = 'Assessment pending for this candidate.';
+        break;
 
-        switch (apiCode) {
-          case 'ASSESSMENT_PENDING':
-            errorMessage = 'Assessment pending for this candidate.';
-            break;
-          case 'ASSESSMENT_RECENTLY_COMPLETED':
-            errorMessage =
-              'Candidate completed an assessment recently; try after 6 months.';
-            break;
-          default:
-            errorMessage = Array.isArray(err?.error?.errorMessages)
-              ? err.error.errorMessages.join(', ')
-              : err?.error?.errorMessages ||
-                err?.error?.message ||
-                'Failed to create assessment';
-        }
+      case 'ASSESSMENT_RECENTLY_COMPLETED':
+        errorMessage =
+          'Candidate completed an assessment recently; try after 6 months.';
+        break;
 
-        this.toastr.error(errorMessage);
-      },
+      default:
+        errorMessage = 'Failed to create assessment';
+    }
+  }
+
+  this.toastr.error(errorMessage);
+},
     });
   }
 
@@ -296,9 +318,13 @@ export class AssessmentsComponent implements OnInit {
             this.loadData();
           },
 
-          error: () => {
-            this.toastr.error('Failed to delete assessment');
-          },
+        error: (err: any) => {
+  const errorMessage =
+    this.getBackendErrorMessage(err) ??
+    'Failed to delete assessment';
+
+  this.toastr.error(errorMessage);
+},
         });
     });
   }

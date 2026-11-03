@@ -294,9 +294,9 @@ export class UsersComponent implements OnInit {
           this.getUsers();
         },
 
-        error: () => {
+        error: (error) => {
           this.toastr.error(
-            'Failed to delete user'
+            this.getErrorMessage(error, 'Failed to delete user')
           );
         },
       });
@@ -333,9 +333,9 @@ export class UsersComponent implements OnInit {
           this.getUsers();
         },
 
-        error: () => {
+        error: (error) => {
           this.toastr.error(
-            'Failed to create user'
+            this.getErrorMessage(error, 'Failed to create user')
           );
         },
       });
@@ -381,12 +381,31 @@ export class UsersComponent implements OnInit {
             this.getUsers();
           },
 
-          error: () => {
+          error: (error) => {
             this.toastr.error(
-              'Failed to update user'
+              this.getErrorMessage(error, 'Failed to update user')
             );
           },
         });
     });
   }
+
+  private getErrorMessage(error: any, defaultMsg: string): string {
+    console.error('API Error:', error);
+    if (Array.isArray(error?.error?.errorMessages) && error.error.errorMessages.length > 0) {
+      return error.error.errorMessages.join(', ');
+    }
+    if (error?.error?.errorMessage) {
+      return error.error.errorMessage;
+    }
+    if (error?.error?.message) {
+      return error.error.message;
+    }
+    if (typeof error?.error === 'string') {
+      return error.error;
+    }
+    return defaultMsg;
+  }
+
+  
 }
