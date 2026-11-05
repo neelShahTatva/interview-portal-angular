@@ -16,7 +16,8 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog';
 import { ApiResponse } from '@shared/models';
 import { environment } from 'environments/environment';
 import { API_ROUTES } from '@shared/constant';
-import { Category, Question } from '@modules/question-bank/models';
+import { Category, Question, BulkUploadConflictItem } from '@modules/question-bank/models';
+import { BulkUploadConflictDialogComponent } from '../bulk-upload-conflict-dialog/bulk-upload-conflict-dialog.component';
 import { ButtonComponent } from '@shared/components';
 import { GridComponent } from '@shared/components/grid';
 import {
@@ -301,49 +302,103 @@ export class QuestionBankComponent {
     }
 
     this.questionService.uploadQuestions(file).subscribe({
-      next: () => {
-        this.toastr.success('Questions uploaded successfully');
+      next: (response: any) => {
+        const count = response?.result?.length ?? 0;
+        this.toastr.success(
+          count > 0
+            ? `${count} questions uploaded successfully!`
+            : 'Questions uploaded successfully!'
+        );
         this.getQuestions();
         event.target.value = '';
       },
       error: (err: HttpErrorResponse) => {
-        let message = 'Upload failed';
+        let rawMessages: string[] = [];
 
         const rawError = err?.error;
 
         if (typeof rawError === 'string') {
           try {
             const parsed = JSON.parse(rawError);
-            if (parsed?.errorMessages?.length) {
-              message = parsed.errorMessages.join('\n');
+            if (
+              Array.isArray(parsed?.errorMessages) &&
+              parsed.errorMessages.length
+            ) {
+              rawMessages = parsed.errorMessages;
             } else if (parsed?.message) {
-              message = parsed.message;
+              rawMessages = [parsed.message];
             } else {
-              message = rawError;
+              rawMessages = [rawError];
             }
           } catch {
-            message = rawError || err?.message || 'Upload failed';
+            rawMessages = [rawError || err?.message || 'Upload failed'];
           }
         } else if (rawError) {
           if (
             Array.isArray(rawError.errorMessages) &&
             rawError.errorMessages.length
           ) {
-            message = rawError.errorMessages.join('\n');
+            rawMessages = rawError.errorMessages;
           } else if (Array.isArray(rawError.errors) && rawError.errors.length) {
-            message = rawError.errors.join('\n');
+            rawMessages = rawError.errors;
           } else if (Array.isArray(rawError.result) && rawError.result.length) {
-            message = rawError.result.join('\n');
+            rawMessages = rawError.result;
           } else if (rawError.message) {
-            message = rawError.message;
+            rawMessages = [rawError.message];
           }
         }
 
-        if (!message || message === 'Upload failed') {
-          message = err?.message || 'Upload failed';
+        if (rawMessages.length === 0) {
+          rawMessages = [err?.message || 'Upload failed'];
         }
 
-        this.toastr.error(message, 'Upload failed');
+        // Pattern: Question {questionNumber} (Row {rowNumber}): {message}
+        const BULK_ERROR_PATTERN =
+          /^Question\s+(\d+)\s+\(Row\s+(\d+)\):\s*(.+)$/i;
+        const TITLE_PATTERN =
+          /(?:question|of)\s*[:\(]?\s*["']([^"']+)["']/i;
+
+        const conflictItems: BulkUploadConflictItem[] = [];
+
+        for (const raw of rawMessages) {
+          const lines = String(raw).split(/\s*\|\s*/);
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed) continue;
+
+            const match = trimmed.match(BULK_ERROR_PATTERN);
+            if (match) {
+              const questionNumber = Number(match[1]);
+              const rowNumber = Number(match[2]);
+              const message = match[3]?.trim();
+              const titleMatch = message.match(TITLE_PATTERN);
+              const title = titleMatch ? titleMatch[1] : undefined;
+
+              conflictItems.push({
+                questionNumber,
+                rowNumber,
+                title,
+                message,
+              });
+            } else {
+              conflictItems.push({
+                message: trimmed,
+              });
+            }
+          }
+        }
+
+        // Open interactive conflict dialog with manual close (no error toaster)
+        this.dialog.open(BulkUploadConflictDialogComponent, {
+          width: '620px',
+          maxWidth: '92vw',
+          maxHeight: '90vh',
+          data: {
+            title: 'Bulk Upload Conflicts',
+            conflicts: conflictItems,
+          },
+        });
+
         event.target.value = '';
       },
     });

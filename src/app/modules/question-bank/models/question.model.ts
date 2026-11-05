@@ -19,3 +19,29 @@ export interface QuestionSolution {
   language: string;
   solutionCode: string;
 }
+
+export interface DuplicateQuestion {
+  title?: string;
+  description?: string;
+  reason?: string;
+}
+
+export interface QuestionSimilarityResult {
+  isASimilarQuestion: boolean;
+  isUnique: boolean;
+  reason?: string;
+  duplicateQuestions: DuplicateQuestion[];
+  redundantQuestions: DuplicateQuestion[];
+}
+
+export interface BulkUploadConflictItem {
+  questionNumber?: number;
+  rowNumber?: number;
+  title?: string;
+  message: string;
+}
+
+export interface BulkUploadDialogData {
+  title?: string;
+  conflicts: BulkUploadConflictItem[];
+}
