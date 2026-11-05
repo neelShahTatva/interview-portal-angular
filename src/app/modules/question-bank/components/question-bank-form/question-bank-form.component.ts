@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import {
   Category,
+  DuplicateQuestion,
   Question,
   QuestionSolution,
 } from '@modules/question-bank/models';
@@ -47,6 +48,9 @@ export class QuestionBankFormComponent {
   isEditMode = false;
   submitted = false;
   question: Question | null = null;
+
+  similarQuestions: DuplicateQuestion[] = [];
+  similarityReason = '';
 
   difficulties = ['EASY', 'MEDIUM', 'HARD'];
 
@@ -223,6 +227,64 @@ export class QuestionBankFormComponent {
     }
   }
 
+  dismissSimilarQuestions(): void {
+    this.similarQuestions = [];
+    this.similarityReason = '';
+  }
+
+  private handleSaveError(err: any, fallbackMessage: string): void {
+    const errorMessages: string[] =
+      err?.error?.errorMessages || (err?.error?.message ? [err.error.message] : []);
+
+    const isSimilarity = errorMessages.some(
+      (m) => m.toLowerCase().includes('similar') || m.toLowerCase().includes('duplicate')
+    );
+
+    if (isSimilarity) {
+      this.parseAndDisplaySimilarQuestions(errorMessages);
+      this.toastr.error(
+        'Question is similar to existing question(s). Please review the similar questions list shown above.',
+        'Duplicate Question Detected',
+        { timeOut: 7000, closeButton: true }
+      );
+    } else {
+      const msg = errorMessages.length > 0 ? errorMessages.join(' | ') : fallbackMessage;
+      this.toastr.error(msg, 'Error');
+    }
+  }
+
+  private parseAndDisplaySimilarQuestions(errorMessages: string[]): void {
+    const list: DuplicateQuestion[] = [];
+    let reason = '';
+
+    // Pattern to match: Similar to question: 'Title' - Reason: Description
+    const SIMILAR_PATTERN =
+      /(?:Similar to|Duplicate of)(?:\s+existing)?(?:\s+question)?:\s*['"]?([^'"\-]+)['"]?(?:\s*-\s*(?:Reason:\s*)?(.+))?/i;
+
+    for (const msg of errorMessages) {
+      if (msg.startsWith('Reason:')) {
+        reason = msg.replace('Reason:', '').trim();
+      } else {
+        const match = msg.match(SIMILAR_PATTERN);
+        if (match) {
+          const title = match[1]?.trim();
+          const itemReason = match[2]?.trim() || reason;
+          list.push({ title, reason: itemReason });
+        }
+      }
+    }
+
+    if (list.length === 0 && errorMessages.length > 0) {
+      list.push({
+        title: 'Similar Question Found',
+        reason: reason || errorMessages.join('; '),
+      });
+    }
+
+    this.similarQuestions = list;
+    this.similarityReason = reason;
+  }
+
   private createNewQuestion(payload: any): void {
     this.questionService.createQuestion(payload).subscribe({
       next: () => {
@@ -230,8 +292,8 @@ export class QuestionBankFormComponent {
         this.goBack();
       },
       error: (err) => {
-        this.toastr.error('Failed to create question.');
         console.error('Create error:', err);
+        this.handleSaveError(err, 'Failed to create question.');
       },
     });
   }
@@ -243,8 +305,8 @@ export class QuestionBankFormComponent {
         this.goBack();
       },
       error: (err) => {
-        this.toastr.error('Failed to update question.');
         console.error('Update error:', err);
+        this.handleSaveError(err, 'Failed to update question.');
       },
     });
   }

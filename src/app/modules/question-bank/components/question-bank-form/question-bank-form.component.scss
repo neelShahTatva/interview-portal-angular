@@ -555,3 +555,126 @@
   color: #94a3b8;
   cursor: not-allowed;
 }
+
+/* ── SIMILAR QUESTIONS ALERT ── */
+.similar-questions-alert {
+  background: #fffbeb;
+  border: 1.5px solid #f59e0b;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.2s ease-in-out;
+
+  .alert-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .alert-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #b45309;
+    font-size: 15px;
+
+    .alert-icon {
+      color: #d97706;
+      font-size: 22px;
+      height: 22px;
+      width: 22px;
+    }
+  }
+
+  .alert-close-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #92400e;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+
+    mat-icon {
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+    }
+
+    &:hover {
+      background: #fde68a;
+    }
+  }
+
+  .alert-reason-text {
+    font-size: 13.5px;
+    color: #78350f;
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+  }
+
+  .similar-questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .similar-question-item {
+    background: white;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    .similar-question-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .similar-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: #92400e;
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .similar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .similar-desc {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0 0 6px 0;
+      line-height: 1.4;
+    }
+
+    .similar-item-reason {
+      font-size: 12px;
+      color: #b45309;
+      margin: 0;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
