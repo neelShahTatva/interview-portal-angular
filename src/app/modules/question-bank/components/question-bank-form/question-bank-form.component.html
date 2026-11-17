@@ -21,9 +21,39 @@
 
                 <!-- Basic Info Card -->
                 <div class="form-card">
-                    <div class="card-title">
+                    <div class="card-title flex items-center gap-2">
                         <mat-icon>info_outline</mat-icon>
-                        Basic Information
+                        <span>Basic Information</span>
+                    </div>
+
+                    <!-- Similar Questions Alert -->
+                    <div class="similar-questions-alert" *ngIf="similarQuestions.length > 0">
+                        <div class="alert-top">
+                            <div class="alert-heading">
+                                <mat-icon class="alert-icon">warning_amber</mat-icon>
+                                <span class="font-semibold">Similar Question(s) Detected ({{ similarQuestions.length }})</span>
+                            </div>
+                            <button type="button" class="alert-close-btn" (click)="dismissSimilarQuestions()" title="Dismiss">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                        <p class="alert-reason-text" *ngIf="similarityReason">
+                            <strong>Reason:</strong> {{ similarityReason }}
+                        </p>
+                        <div class="similar-questions-list">
+                            <div class="similar-question-item" *ngFor="let dup of similarQuestions">
+                                <div class="similar-question-header">
+                                    <span class="similar-badge">Similar</span>
+                                    <span class="similar-title font-medium">{{ dup.title }}</span>
+                                </div>
+                                <p class="similar-desc" *ngIf="dup.description">
+                                    {{ dup.description | slice:0:180 }}{{ dup.description.length > 180 ? '...' : '' }}
+                                </p>
+                                <p class="similar-item-reason" *ngIf="dup.reason && dup.reason !== similarityReason">
+                                    <small>{{ dup.reason }}</small>
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-field">

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { APIInterfaceService } from '@shared/services';
 import { Observable } from 'rxjs';
-import { Category, Question } from '@modules/question-bank/models';
+import { Category, Question, QuestionSimilarityResult } from '@modules/question-bank/models';
 import { API_ROUTES } from '@shared/constant';
 import { ApiResponse } from '@shared/models';
 
@@ -35,6 +35,17 @@ export class QuestionService {
   deleteQuestion(id: number): Observable<ApiResponse<string>> {
     return this.apiInterface.delete<string>(
       `${API_ROUTES.QUESTIONS.DELETE}${id}`
+    );
+  }
+
+  checkQuestionSimilarity(payload: {
+    id?: number;
+    title: string;
+    description: string;
+  }): Observable<ApiResponse<QuestionSimilarityResult>> {
+    return this.apiInterface.post<QuestionSimilarityResult>(
+      API_ROUTES.QUESTIONS.CHECK_SIMILARITY,
+      payload
     );
   }
 
