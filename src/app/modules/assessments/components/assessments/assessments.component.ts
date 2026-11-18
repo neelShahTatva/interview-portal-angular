@@ -7,7 +7,12 @@ import {
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
-import { Assessment, AssessmentRequest } from '@modules/assessments/models';
+import {
+  Assessment,
+  AssessmentRequest,
+  AssessmentErrorCode,
+  AssessmentHttpError,
+} from '@modules/assessments/models';
 import { Question } from '@modules/question-bank/models';
 import { CandidatesService } from '@modules/candidates/services';
 import {
@@ -22,6 +27,11 @@ import { InputFieldComponent, ButtonComponent } from '@shared/components';
 import { ErrorMessage } from '@shared/components/input-field/models';
 import { AssessmentService } from '@modules/assessments/services';
 import { ERROR_MESSAGE, SYSTEM_CONSTANTS } from '@shared/constant';
+import {
+  TypedHttpError,
+  getBackendErrorMessage,
+} from '@shared/models';
+
 
 @Component({
   selector: 'app-assessments',
@@ -114,10 +124,10 @@ export class AssessmentsComponent implements OnInit {
         this.isLoading = false;
       },
 
-      error: () => {
+      error: (err: TypedHttpError) => {
         this.isLoading = false;
 
-        this.toastr.error('Failed to load assessments');
+        this.handleApiError(err, 'Failed to load assessments');
       },
     });
   }
@@ -212,38 +222,43 @@ export class AssessmentsComponent implements OnInit {
           this.isGeneratingQuestions = false;
         },
 
-        error: (err: any) => {
-  this.isGeneratingQuestions = false;
+        error: (err: AssessmentHttpError) => {
+          this.isGeneratingQuestions = false;
 
-  const errorMessage =
-    this.getBackendErrorMessage(err) ??
-    'Failed to generate questions';
-
-  this.toastr.error(errorMessage);
-},
+          this.handleApiError(err, 'Failed to generate questions');
+        },
       });
   }
 
-  private getBackendErrorMessage(err: any): string | null {
-  const errorMessages = err?.error?.errorMessages;
+  private handleApiError<TCode extends string = string>(
+    err: TypedHttpError<TCode> | unknown,
+    fallbackMessage: string,
+    codeMap?: Partial<Record<TCode, string>>
+  ): void {
+    let message: string | null = null;
 
-  if (Array.isArray(errorMessages) && errorMessages.length > 0) {
-    return errorMessages.join(', ');
+    if (err && typeof err === 'object' && 'error' in err) {
+      const payload = (err as TypedHttpError<TCode>).error;
+      const code = payload?.errorCode;
+      if (code && codeMap?.[code]) {
+        message = codeMap[code]!;
+      }
+    }
+
+    if (!message) {
+      message = this.getBackendErrorMessage(err);
+    }
+
+    this.toastr.error(message ?? fallbackMessage);
   }
 
-  if (
-    typeof errorMessages === 'string' &&
-    errorMessages.trim().length > 0
-  ) {
-    return errorMessages;
+  private getBackendErrorMessage<TCode extends string = string>(
+    err: TypedHttpError<TCode> | unknown
+  ): string | null {
+    const message = getBackendErrorMessage(err, '');
+    return message.length > 0 ? message : null;
   }
 
-  const message = err?.error?.message;
-
-  return typeof message === 'string' && message.trim().length > 0
-    ? message
-    : null;
-}
   createAssessment(): void {
     if (!this.draft.candidateId || this.draft.questionIds.length === 0) {
       this.toastr.warning('No questions selected');
@@ -274,29 +289,15 @@ export class AssessmentsComponent implements OnInit {
         this.loadData();
       },
 
-     error: (err: any) => {
-  this.isCreatingAssessment = false;
+      error: (err: AssessmentHttpError) => {
+        this.isCreatingAssessment = false;
 
-  let errorMessage = this.getBackendErrorMessage(err);
-
-  if (!errorMessage) {
-    switch (err?.error?.errorCode) {
-      case 'ASSESSMENT_PENDING':
-        errorMessage = 'Assessment pending for this candidate.';
-        break;
-
-      case 'ASSESSMENT_RECENTLY_COMPLETED':
-        errorMessage =
-          'Candidate completed an assessment recently; try after 6 months.';
-        break;
-
-      default:
-        errorMessage = 'Failed to create assessment';
-    }
-  }
-
-  this.toastr.error(errorMessage);
-},
+        this.handleApiError(err, 'Failed to create assessment', {
+          ASSESSMENT_ALREADY_PENDING: 'Assessment pending for this candidate.',
+          ASSESSMENT_NOT_ELIGIBLE:
+            'Candidate completed an assessment recently; try after 6 months.',
+        });
+      },
     });
   }
 
@@ -318,13 +319,9 @@ export class AssessmentsComponent implements OnInit {
             this.loadData();
           },
 
-        error: (err: any) => {
-  const errorMessage =
-    this.getBackendErrorMessage(err) ??
-    'Failed to delete assessment';
-
-  this.toastr.error(errorMessage);
-},
+          error: (err: TypedHttpError) => {
+            this.handleApiError(err, 'Failed to delete assessment');
+          },
         });
     });
   }
@@ -335,8 +332,8 @@ export class AssessmentsComponent implements OnInit {
         this.assessments = response.result ?? [];
       },
 
-      error: () => {
-        this.toastr.error('Failed to refresh assessments');
+      error: (err: TypedHttpError) => {
+        this.handleApiError(err, 'Failed to refresh assessments');
       },
     });
   }
