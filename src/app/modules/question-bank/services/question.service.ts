@@ -38,17 +38,6 @@ export class QuestionService {
     );
   }
 
-  checkQuestionSimilarity(payload: {
-    id?: number;
-    title: string;
-    description: string;
-  }): Observable<ApiResponse<QuestionSimilarityResult>> {
-    return this.apiInterface.post<QuestionSimilarityResult>(
-      API_ROUTES.QUESTIONS.CHECK_SIMILARITY,
-      payload
-    );
-  }
-
   getCategories(): Observable<ApiResponse<Category[]>> {
     return this.apiInterface.get<Category[]>(
       API_ROUTES.QUESTIONS.GET_ALL_CATEGORIES

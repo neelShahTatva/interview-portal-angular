@@ -17,7 +17,6 @@ export const API_ROUTES = {
     RECOMMANDED_QUESTIONS: '/questions/recommend',
     UPLOAD: '/questions/upload',
     DOWNLOAD_TEMPLATE: '/questions/download-template',
-    CHECK_SIMILARITY: '/questions/check-similarity',
   },
   DASHBOARD: {
     STATS: 'dashboard/stats',
