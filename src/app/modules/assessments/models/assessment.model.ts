@@ -1,3 +1,4 @@
+import { TypedHttpError } from '@shared/models';
 import { Question } from '@modules/question-bank/models';
 
 export interface Assessment {
@@ -16,3 +17,11 @@ export interface AssessmentRequest {
   timeLimitMinutes: number;
   questionIds: number[];
 }
+
+export type AssessmentErrorCode =
+  | 'ASSESSMENT_ALREADY_PENDING'
+  | 'ASSESSMENT_NOT_ELIGIBLE';
+
+export type AssessmentHttpError = TypedHttpError<AssessmentErrorCode>;
+
+
