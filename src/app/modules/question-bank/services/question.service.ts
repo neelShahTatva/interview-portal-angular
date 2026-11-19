@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { APIInterfaceService } from '@shared/services';
 import { Observable } from 'rxjs';
-import { Category, Question, QuestionSimilarityResult } from '@modules/question-bank/models';
+import { Category, Question } from '@modules/question-bank/models';
 import { API_ROUTES } from '@shared/constant';
 import { ApiResponse } from '@shared/models';
 
