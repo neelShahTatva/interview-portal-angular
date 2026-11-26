@@ -21,7 +21,7 @@ export interface QuestionSolution {
 }
 
 export interface DuplicateQuestion {
-  id: number;
+  id?: number;
   title?: string;
   description?: string;
   reason?: string;

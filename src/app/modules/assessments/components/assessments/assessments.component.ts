@@ -240,8 +240,8 @@ export class AssessmentsComponent implements OnInit {
     if (err && typeof err === 'object' && 'error' in err) {
       const payload = (err as TypedHttpError<TCode>).error;
       const code = payload?.errorCode;
-      if (code && codeMap?.[code]) {
-        message = codeMap[code]!;
+      if (code && codeMap?.[code as TCode]) {
+        message = codeMap[code as TCode]!;
       }
     }
 
