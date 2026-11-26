@@ -1,0 +1,58 @@
+<div class="conflict-dialog">
+  <!-- Dialog Header -->
+  <div class="dialog-header">
+    <div class="header-title-group">
+      <div class="icon-circle">
+        <mat-icon>warning_amber</mat-icon>
+      </div>
+      <div>
+        <h2 class="dialog-title">{{ title }}</h2>
+        <p class="dialog-subtitle">
+          The uploaded file contains {{ conflicts.length }} issue{{ conflicts.length === 1 ? '' : 's' }} that prevent it from being imported.
+        </p>
+      </div>
+    </div>
+    <button type="button" class="close-icon-btn" (click)="close()" title="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Body / Scrollable Content -->
+  <div class="dialog-content">
+    <div class="conflicts-list">
+      <div class="conflict-card" *ngFor="let item of conflicts; let i = index">
+        <div class="conflict-card-header">
+          <div class="badges-row">
+            <span class="badge question-badge" *ngIf="item.questionNumber">
+              Question #{{ item.questionNumber }}
+            </span>
+            <span class="badge row-badge" *ngIf="item.rowNumber">
+              Row {{ item.rowNumber }}
+            </span>
+            <span class="badge issue-badge">Conflict</span>
+          </div>
+          <span class="conflict-index">#{{ i + 1 }}</span>
+        </div>
+
+        <div class="conflict-title" *ngIf="item.title">
+          <strong>Question:</strong> {{ item.title }}
+        </div>
+
+        <div class="conflict-message">
+          <mat-icon class="msg-icon">error_outline</mat-icon>
+          <span class="msg-text">{{ item.message }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog Actions / Footer -->
+  <div class="dialog-actions">
+    <span class="footer-summary">
+      Total issues: <strong>{{ conflicts.length }}</strong>
+    </span>
+    <app-button variant="secondary" (btnClick)="close()">
+      Close
+    </app-button>
+  </div>
+</div>
